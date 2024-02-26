@@ -196,7 +196,9 @@ class Driver:
                 first_name_score = self.__similar(result_first_name, first_name)
                 last_name_score = self.__similar(result_last_name, last_name) 
                 final_score = first_name_score + last_name_score
-                min_score = 1.4
+                #TODO: LOGIC FOR SHOWER ENTRIES, VALUE MODIFIED
+                #min_score = 1.4
+                min_score = 1
 
                 # if a decent match, store the value and compare with other viable matches
                 if final_score >= min_score:

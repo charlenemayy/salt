@@ -43,6 +43,7 @@ class DailyData:
             client_dict = {}
             row = self.df.iloc[row_index]
 
+            '''
             # rearrange birthday and update row
             if not isinstance(row['DoB'], float):
                 date = row['DoB']
@@ -51,6 +52,10 @@ class DailyData:
                 client_dict['DoB'] = month + day + date[6:(len(date))]
                 # update sheet for readability
                 self.df.at[row_index, 'DoB'] = client_dict['DoB']
+            '''
+
+            # TODO: LOGIC FOR SHOWER ENTRIES
+            client_dict['DoB'] = row['DoB']
 
             # get total number of services and items
             services_dict = self.__get_service_totals(row, row_index)
