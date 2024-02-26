@@ -350,13 +350,8 @@ class Driver:
                                 break
                 if not enrollment_found:
                     # enroll the client and try again, enrollment should be found in recursive call
-                    print("Client is not enrolled -- Enrolling client")
-                    self.navigate_to_client_dashboard()
-                    if not self.enroll_client(service_date):
-                        return False
-
-                    print("Successfully enrolled client -- Entering services")
-                    return self.enter_client_services(viable_enrollment_list, service_date, services_dict)
+                    print("Client is not enrolled -- Please enroll manually")
+                    return False
             except Exception as e:
                 print("Error finding enrollment")
                 return False
