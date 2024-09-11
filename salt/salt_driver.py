@@ -28,6 +28,9 @@ class Driver:
         firefox_options.profile = profile
         firefox_options.desired = desired
 
+        # added for linux build
+        firefox_options.add_argument("--headless")
+
         self.browser = Firefox(options=firefox_options)
 
     def open_saltwebapp(self, location):

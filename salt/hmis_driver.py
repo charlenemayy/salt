@@ -33,6 +33,10 @@ class Driver:
     def __init__(self):
         chrome_options = Options()
         chrome_options.add_experimental_option("detach", True)
+
+        # added for linux build
+        chrome_options.add_argument("--headless")
+
         self.browser = Chrome(options=chrome_options)
 
     def open_clienttrack(self):
