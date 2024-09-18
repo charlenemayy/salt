@@ -31,11 +31,12 @@ class Driver:
         self.browser = Firefox(options=firefox_options)
 
     def open_saltwebapp(self, location):
-        if location == "ORL": 
-            self.browser.get('https://saltoutreachapp.com/')
-        else:
+        if location == "SEM": 
             self.browser.get('https://sanford.saltoutreachapp.com/')
-
+        elif location == "BIT":
+            self.browser.get('https://bithlo.saltoutreachapp.com/')
+        else:
+            self.browser.get('https://saltoutreachapp.com/')
 
     def login_saltwebapp_google(self, username, password):
         try:
@@ -105,12 +106,16 @@ class Driver:
     
     def download_daily_report_by_client(self, location):
         self.__wait_until_page_fully_loaded('SALT Homepage')
-        if location == "ORL":
-            download_url = "https://saltoutreachapp.com/dashboard/export"
-            time.sleep(20)
-        else:
+        if location == "BIT":
+            download_url = "https://bithlo.saltoutreachapp.com/dashboard/export"
+            time.sleep(3)
+        elif location == "SEM":
             download_url = "https://sanford.saltoutreachapp.com/dashboard/export"
             time.sleep(3)
+        else:
+            download_url = "https://saltoutreachapp.com/dashboard/export"
+            time.sleep(20)
+
         try:
             WebDriverWait(self.browser, self.wait_time).until(
                 EC.element_to_be_clickable((By.XPATH, '//form[@action="{}"]/button'.format(download_url)))
