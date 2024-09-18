@@ -104,6 +104,7 @@ if not args.skipsanford:
 '''
 BITHLO DAILY DATA
 '''
+'''
 if not args.skipbithlo:
     # check if report has already been downloaded
     files = os.listdir(output_path)
@@ -155,6 +156,7 @@ if not args.skipbithlo:
     subprocess.run(["rm {0}".format(report_path)], shell=True)
 
     print("SUCCESS: Finished running BITHLO entries!\n")
+'''
 
 '''
 ORLANDO DAILY DATA
