@@ -2,6 +2,7 @@ from datetime import date
 from datetime import timedelta
 from datetime import datetime
 import os
+import platform
 import subprocess
 import json
 import time
@@ -37,6 +38,7 @@ parser.add_argument("-lu", "--leaveunlocked", action="store_true")
 parser.add_argument("-ssf", "--skipsanford", action="store_true")
 
 args = parser.parse_args()
+
 if args.date:
     date_str = args.date
 else:
