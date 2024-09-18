@@ -21,16 +21,25 @@ class DailyData:
     bedding_item_codes_orl = ['Blankets']
 
     # Sanford Item Keys
-    service_item_codes_sem = ['Shower', 'Laundry']
-    clothing_item_codes_sem = ['Black Bags', 'Men\'s pant', 'Men\'s Top', 'Shoes', 'Socks', 'Underwear', 
+    service_item_codes_bit = ['Shower', 'Laundry']
+    clothing_item_codes_bit = ['Black Bags', 'Men\'s pant', 'Men\'s Top', 'Shoes', 'Socks', 'Underwear', 
                            'Women\'s Bottom', 'Women\'s Top', 'Boxer']
-    grooming_item_codes_sem = ['Feminine pads', 'Hygiene Bag', 'Razors', 'Soap bars', 'Tampons', 'Toothbrush',
+    grooming_item_codes_bit = ['Feminine pads', 'Hygiene Bag', 'Razors', 'Soap bars', 'Tampons', 'Toothbrush',
                            'Toothpaste', 'Deodorant']
-    food_item_codes_sem = ['Snack', 'Water']
-    bedding_item_codes_sem = ['Tent', 'Blankets']
+    food_item_codes_bit = ['Snack', 'Water']
+    bedding_item_codes_bit = ['Tent', 'Blankets']
+
+    # Bithlo Item Keys #TODO: CHECK ITEM KEYS WITH NAINA
+    service_item_codes_bit = ['Shower', 'Laundry']
+    clothing_item_codes_bit = ['Black Bags', 'Men\'s pant', 'Men\'s Top', 'Shoes', 'Socks', 'Underwear', 
+                           'Women\'s Bottom', 'Women\'s Top', 'Boxer']
+    grooming_item_codes_bit = ['Feminine pads', 'Hygiene Bag', 'Razors', 'Soap bars', 'Tampons', 'Toothbrush',
+                           'Toothpaste', 'Deodorant']
+    food_item_codes_bit = ['Snack', 'Water']
+    bedding_item_codes_bit = ['Tent', 'Blankets']
 
     # Locations
-    location_codes = ["SEM", "ORL"]
+    location_codes = ["BIT", "SEM", "ORL"]
 
     def __init__(self, filename, automate, manual, show_output, location, list_items):
         self.automate = automate
@@ -182,6 +191,8 @@ class DailyData:
         # order matters - from most desirable option to last
         if self.location == "SEM":
             salt_enrollment_names = ["SALT Outreach-SEM Street Outreach"]
+        elif self.location == "BIT":
+            salt_enrollment_names = ["SALT Outreach-BIT Street Outreach"] #TODO: CHANGE TO BITHLO NAME
         else:
             salt_enrollment_names = ["SALT Outreach-ORL ESG Street Outreach", 
                                      "SALT Outreach-ORN ESG-CV Street Outreach",
@@ -264,6 +275,11 @@ class DailyData:
             grooming_item_codes = DailyData.grooming_item_codes_sem
             food_item_codes = DailyData.food_item_codes_sem
             bedding_item_codes = DailyData.bedding_item_codes_sem
+        elif self.location == 'BIT':
+            clothing_item_codes = DailyData.clothing_item_codes_bit
+            grooming_item_codes = DailyData.grooming_item_codes_bit
+            food_item_codes = DailyData.food_item_codes_bit
+            bedding_item_codes = DailyData.bedding_item_codes_bit
 
         if self.show_output:
             print("Raw Excel Data:")
