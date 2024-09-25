@@ -21,13 +21,13 @@ class DailyData:
     bedding_item_codes_orl = ['Blankets']
 
     # Sanford Item Keys
-    service_item_codes_bit = ['Shower', 'Laundry']
-    clothing_item_codes_bit = ['Black Bags', 'Men\'s pant', 'Men\'s Top', 'Shoes', 'Socks', 'Underwear', 
+    service_item_codes_sem = ['Shower', 'Laundry']
+    clothing_item_codes_sem = ['Black Bags', 'Men\'s pant', 'Men\'s Top', 'Shoes', 'Socks', 'Underwear', 
                            'Women\'s Bottom', 'Women\'s Top', 'Boxer']
-    grooming_item_codes_bit = ['Feminine pads', 'Hygiene Bag', 'Razors', 'Soap bars', 'Tampons', 'Toothbrush',
+    grooming_item_codes_sem = ['Feminine pads', 'Hygiene Bag', 'Razors', 'Soap bars', 'Tampons', 'Toothbrush',
                            'Toothpaste', 'Deodorant']
-    food_item_codes_bit = ['Snack', 'Water']
-    bedding_item_codes_bit = ['Tent', 'Blankets']
+    food_item_codes_sem = ['Snack', 'Water']
+    bedding_item_codes_sem = ['Tent', 'Blankets']
 
     # Bithlo Item Keys #TODO: CHECK ITEM KEYS WITH NAINA
     service_item_codes_bit = ['Shower', 'Laundry']
