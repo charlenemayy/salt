@@ -8,3 +8,7 @@ node_modules/
 package-lock.json
 package.json
 saltoutreachdata/
+successful_exits/Example Files/
+successful_exits/Services.csv
+successful_exits/Successes.csv
+next_step_services/
