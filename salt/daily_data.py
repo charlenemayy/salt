@@ -84,17 +84,28 @@ class DailyData:
             print("Not a valid location code, please see README for details")
             quit()
 
-        self.df = pd.read_excel(io=filename,
-                             dtype={'': object,
-                                    'DoB': object,
-                                    'Client Name': object,
-                                    'HMIS ID': object,
-                                    'Race': object,
-                                    'Ethnicity': object,
-                                    'Verification of homeless': object,
-                                    'Gross monthly income': object,
-                                    'Service': object,
-                                    'Items': object})
+        if self.location == "ORL2.0":
+            self.df = pd.read_excel(io=filename,
+                                 dtype={'': object,
+                                        'DoB': object,
+                                        'Client Name': object,
+                                        'HMIS ID': object,
+                                        'Services': object,
+                                        'ITEMS': object})
+
+            self.df = self.df.rename(columns={'Services': 'Service', 'ITEMS' : 'Items'})
+        else:
+            self.df = pd.read_excel(io=filename,
+                                 dtype={'': object,
+                                        'DoB': object,
+                                        'Client Name': object,
+                                        'HMIS ID': object,
+                                        'Race': object,
+                                        'Ethnicity': object,
+                                        'Verification of homeless': object,
+                                        'Gross monthly income': object,
+                                        'Service': object,
+                                        'Items': object})
         if self.df.empty:
             print("No data to enter into HMIS today, closing now")
             quit()
@@ -245,7 +256,7 @@ class DailyData:
 
     # Remove unecessary columns and reorganize for easier entry
     def __clean_dataframe(self, drop_columns, reorder_columns):
-        self.df = self.df.drop(columns=drop_columns, axis=1)
+        self.df = self.df.drop(columns=drop_columns, axis=1, errors='ignore')
         reorder = reorder_columns
         self.df = self.df.reindex(columns=reorder)
 
@@ -259,7 +270,7 @@ class DailyData:
             index = row['Service'].lower().find('shower')
             if index >= 0:
                 # find num value attributed to shower
-                string_list = row['Service'].split('shower')
+                string_list = row['Service'].lower().split('shower')
                 substring = string_list[1]
 
                 # get first ':' following 'Shower'
@@ -269,7 +280,7 @@ class DailyData:
             index = row['Service'].lower().find('laundry')
             if index >= 0:
                 # find num value attributed to laundry
-                string_list = row['Service'].split('laundry')
+                string_list = row['Service'].lower().split('laundry')
                 substring = string_list[1]
 
                 # get first ':' following 'Laundry' ()
@@ -279,7 +290,7 @@ class DailyData:
 
             index = row['Service'].lower().find('charging')
             if index >= 0:
-                string_list = row['Service'].split('charging')
+                string_list = row['Service'].lower().split('charging')
                 substring = string_list[1]
                 print(string_list)
 
@@ -288,7 +299,7 @@ class DailyData:
 
             index = row['Service'].lower().find('case management')
             if index >= 0:
-                string_list = row['Service'].split('case management')
+                string_list = row['Service'].lower().split('case management')
                 substring = string_list[1]
                 print(string_list)
 
@@ -298,7 +309,7 @@ class DailyData:
             index = row['Service'].lower().find('hope and help')
             if index >= 0:
                 # find num value attributed to laundry
-                string_list = row['Service'].split('hope and help')
+                string_list = row['Service'].lower().split('hope and help')
                 substring = string_list[1]
                 print(string_list)
 
@@ -312,7 +323,7 @@ class DailyData:
     # and store all items into a dictionary
     def __count_item_totals(self, row, services_dict):
         items_dict = {}
-        row_items = row['Items'].lower()
+        row_items = row['Items']
 
         if self.location == 'ORL':
             clothing_item_codes = DailyData.clothing_item_codes_orl
@@ -364,6 +375,7 @@ class DailyData:
                     if item.isalpha():
                         self.unique_items.add(item)
 
+            row_items = row_items.lower()
             items_string = ""
 
             # Clothing 
