@@ -39,7 +39,7 @@ class DailyData:
     bedding_item_codes_bit = ['Tent', 'Blankets']
 
     # Orlando Item Keys
-    service_item_codes_orl_2 = ['Shower', 'Laundry', 'Inside shower']
+    service_item_codes_orl_2 = ['Shower', 'Laundry', 'Inside shower', 'Charging']
     clothing_item_codes_orl_2 = ['TOP', 'BTM', 'UND', 'SKS', 'SHO', 'BXR', 'Diabetic Socks', 'Backpacks', 'Belts']
     grooming_item_codes_orl_2 = ['DDR', 'TBR', 'TPS', 'Razors', 'Adult Depends', 'Band Aid', 'Tampons', 'Bar Soap', 
                                'Deodorant', 'QTIPS', 'Hygiene Bag', 'Comb', 'Nail Clippers', 'Q-tips', 'Conditioner',
@@ -234,30 +234,20 @@ class DailyData:
         if isinstance(row['Service'], float):
             return services_dict
         else:
-            index = row['Service'].find('Shower')
+            index = row['Service'].lower().find('shower')
             if index >= 0:
                 # find num value attributed to shower
-                string_list = row['Service'].split('Shower')
+                string_list = row['Service'].split('shower')
                 substring = string_list[1]
 
                 # get first ':' following 'Shower'
                 i = substring.index(':')
                 services_dict['Shower'] = int(substring[i+2])
 
-            index = row['Service'].find('Inside shower')
-            if index >= 0:
-                # find num value attributed to shower
-                string_list = row['Service'].split('shower')
-                substring = string_list[1]
-
-                # get first ':' following 'shower'
-                i = substring.index(':')
-                services_dict['Shower'] = int(substring[i+2])
-
-            index = row['Service'].find('Laundry')
+            index = row['Service'].lower().find('laundry')
             if index >= 0:
                 # find num value attributed to laundry
-                string_list = row['Service'].split('Laundry')
+                string_list = row['Service'].split('laundry')
                 substring = string_list[1]
 
                 # get first ':' following 'Laundry' ()
@@ -265,16 +255,34 @@ class DailyData:
                 i = substring.index(':')
                 services_dict['Laundry'] = int(substring[i+2]) * 2
 
-            index = row['Service'].find('Case Management')
+            index = row['Service'].lower().find('charging')
             if index >= 0:
-                # find num value attributed to laundry
-                string_list = row['Service'].split('Case Management')
+                string_list = row['Service'].split('charging')
                 substring = string_list[1]
+                print(string_list)
 
-                # get first ':' following 'Laundry' ()
-                # multiply laundry x2 (one wash, one dry)
+                i = substring.index(':')
+                services_dict['Device Charging'] = int(substring[i+2])
+
+            index = row['Service'].lower().find('case management')
+            if index >= 0:
+                string_list = row['Service'].split('case management')
+                substring = string_list[1]
+                print(string_list)
+
                 i = substring.index(':')
                 services_dict['Case Management'] = int(substring[i+2])
+
+            index = row['Service'].lower().find('hope and help')
+            if index >= 0:
+                # find num value attributed to laundry
+                string_list = row['Service'].split('hope and help')
+                substring = string_list[1]
+                print(string_list)
+
+
+                i = substring.index(':')
+                services_dict['Healthcare'] = int(substring[i+2])
 
         return services_dict
 
