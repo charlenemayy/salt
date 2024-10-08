@@ -38,8 +38,17 @@ class DailyData:
     food_item_codes_bit = ['Snack', 'Water']
     bedding_item_codes_bit = ['Tent', 'Blankets']
 
+    # Orlando Item Keys
+    service_item_codes_orl_2 = ['Shower', 'Laundry', 'Inside shower']
+    clothing_item_codes_orl_2 = ['TOP', 'BTM', 'UND', 'SKS', 'SHO', 'BXR', 'Diabetic Socks', 'Backpacks', 'Belts']
+    grooming_item_codes_orl_2 = ['DDR', 'TBR', 'TPS', 'Razors', 'Adult Depends', 'Band Aid', 'Tampons', 'Bar Soap', 
+                               'Deodorant', 'QTIPS', 'Hygiene Bag', 'Comb', 'Nail Clippers', 'Q-tips', 'Conditioner',
+                               'Chapstick']
+    food_item_codes_orl_2 = ['SBG']
+    bedding_item_codes_orl_2 = ['Blankets']
+
     # Locations
-    location_codes = ["BIT", "SEM", "ORL"]
+    location_codes = ["BIT", "SEM", "ORL", "ORL2.0"]
 
     def __init__(self, filename, automate, manual, show_output, location, list_items):
         self.automate = automate
@@ -235,6 +244,16 @@ class DailyData:
                 i = substring.index(':')
                 services_dict['Shower'] = int(substring[i+2])
 
+            index = row['Service'].find('Inside shower')
+            if index >= 0:
+                # find num value attributed to shower
+                string_list = row['Service'].split('shower')
+                substring = string_list[1]
+
+                # get first ':' following 'shower'
+                i = substring.index(':')
+                services_dict['Shower'] = int(substring[i+2])
+
             index = row['Service'].find('Laundry')
             if index >= 0:
                 # find num value attributed to laundry
@@ -280,6 +299,11 @@ class DailyData:
             grooming_item_codes = DailyData.grooming_item_codes_bit
             food_item_codes = DailyData.food_item_codes_bit
             bedding_item_codes = DailyData.bedding_item_codes_bit
+        if self.location == 'ORL2.0': # for new salt app
+            clothing_item_codes = DailyData.clothing_item_codes_orl_2
+            grooming_item_codes = DailyData.grooming_item_codes_orl_2
+            food_item_codes = DailyData.food_item_codes_orl_2
+            bedding_item_codes = DailyData.bedding_item_codes_orl_2
 
         if self.show_output:
             print("Raw Excel Data:")
