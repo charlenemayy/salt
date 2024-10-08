@@ -13,39 +13,61 @@ SALT 2.0.
 class DailyData:
     # Orlando Item Keys
     service_item_codes_orl = ['Shower', 'Laundry']
-    clothing_item_codes_orl = ['TOP', 'BTM', 'UND', 'SKS', 'SHO', 'BXR', 'Diabetic Socks', 'Backpacks', 'Belts']
-    grooming_item_codes_orl = ['DDR', 'TBR', 'TPS', 'Razors', 'Adult Depends', 'Band Aid', 'Tampons', 'Bar Soap', 
-                               'Deodorant', 'QTIPS', 'Hygiene Bag', 'Comb', 'Nail Clippers', 'Q-tips', 'Conditioner',
-                               'Chapstick']
-    food_item_codes_orl = ['SBG']
-    bedding_item_codes_orl = ['Blankets']
+    clothing_item_codes_orl = ['top', 'btm', 'und', 'sks', 'sho', 'bxr', 'diabetic socks', 'backpacks', 'belts']
+    grooming_item_codes_orl = ['ddr', 'tbr', 'tps', 'razors', 'adult depends', 'band aid', 'tampons', 'bar soap', 
+                               'deodorant', 'qtips', 'hygiene bag', 'comb', 'nail clippers', 'q-tips', 'conditioner',
+                               'chapstick']
+    food_item_codes_orl = ['sbg']
+    bedding_item_codes_orl = ['blankets']
+    electronic_item_codes_orl = ['power bank', 'batteries', 'earphones']
+    homebased_item_codes_orl = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
+                                   'sharpies']
+    petgoods_item_codes_orl = ['cat food', 'dog food']
 
     # Sanford Item Keys
-    service_item_codes_sem = ['Shower', 'Laundry']
-    clothing_item_codes_sem = ['Black Bags', 'Men\'s pant', 'Men\'s Top', 'Shoes', 'Socks', 'Underwear', 
-                           'Women\'s Bottom', 'Women\'s Top', 'Boxer']
-    grooming_item_codes_sem = ['Feminine pads', 'Hygiene Bag', 'Razors', 'Soap bars', 'Tampons', 'Toothbrush',
-                           'Toothpaste', 'Deodorant']
-    food_item_codes_sem = ['Snack', 'Water']
-    bedding_item_codes_sem = ['Tent', 'Blankets']
+    service_item_codes_sem = ['shower', 'laundry']
+    clothing_item_codes_sem = ['black bags', 'men\'s pant', 'men\'s top', 'shoes', 'socks', 'underwear', 
+                           'women\'s bottom', 'women\'s top', 'boxer']
+    grooming_item_codes_sem = ['feminine pads', 'hygiene bag', 'razors', 'soap bars', 'tampons', 'toothbrush',
+                           'toothpaste', 'deodorant']
+    food_item_codes_sem = ['snack', 'water']
+    bedding_item_codes_sem = ['tent', 'blankets']
+    electronic_item_codes_sem = ['power bank', 'batteries', 'earphones']
+    homebased_item_codes_sem = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
+                                   'sharpies']
+    petgoods_item_codes_sem = ['cat food', 'dog food']
 
     # Bithlo Item Keys #TODO: CHECK ITEM KEYS WITH NAINA
-    service_item_codes_bit = ['Shower', 'Laundry']
-    clothing_item_codes_bit = ['Black Bags', 'Men\'s pant', 'Men\'s Top', 'Shoes', 'Socks', 'Underwear', 
-                           'Women\'s Bottom', 'Women\'s Top', 'Boxer']
-    grooming_item_codes_bit = ['Feminine pads', 'Hygiene Bag', 'Razors', 'Soap bars', 'Tampons', 'Toothbrush',
-                           'Toothpaste', 'Deodorant']
-    food_item_codes_bit = ['Snack', 'Water']
-    bedding_item_codes_bit = ['Tent', 'Blankets']
+    service_item_codes_bit = ['shower', 'laundry']
+    clothing_item_codes_bit = ['black bags', 'men\'s pant', 'men\'s top', 'shoes', 'socks', 'underwear', 
+                           'women\'s bottom', 'women\'s top', 'boxer']
+    grooming_item_codes_bit = ['feminine pads', 'hygiene bag', 'razors', 'soap bars', 'tampons', 'toothbrush',
+                           'toothpaste', 'deodorant']
+    food_item_codes_bit = ['snack', 'water']
+    bedding_item_codes_bit = ['tent', 'blankets']
+    electronic_item_codes_bit = ['power bank', 'batteries', 'earphones']
+    homebased_item_codes_bit = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
+                                   'sharpies']
+    petgoods_item_codes_bit = ['cat food', 'dog food']
 
-    # Orlando Item Keys
-    service_item_codes_orl_2 = ['Shower', 'Laundry', 'Inside shower', 'Charging']
-    clothing_item_codes_orl_2 = ['TOP', 'BTM', 'UND', 'SKS', 'SHO', 'BXR', 'Diabetic Socks', 'Backpacks', 'Belts']
-    grooming_item_codes_orl_2 = ['DDR', 'TBR', 'TPS', 'Razors', 'Adult Depends', 'Band Aid', 'Tampons', 'Bar Soap', 
-                               'Deodorant', 'QTIPS', 'Hygiene Bag', 'Comb', 'Nail Clippers', 'Q-tips', 'Conditioner',
-                               'Chapstick']
-    food_item_codes_orl_2 = ['SBG']
-    bedding_item_codes_orl_2 = ['Blankets']
+    # orlando item keys
+    service_item_codes_orl_2 = ['shower', 'laundry', 'inside shower', 'charging']
+    clothing_item_codes_orl_2 = ['belt', 'bra', 'boxer', 'backpack', 'hat', 'jewelry', 'pants', 'purse', 'shirt', 'shoes', 
+                                 'socks', 'sunglasses', 'ties', 'underwear', 'gloves', 'hand warmer', 'phone case', 'glasses',
+                                 'scarf', 'suitcase']
+    grooming_item_codes_orl_2 = ['diapers', 'alcohol pad', 'aloe gel', 'band aid', 'soap', 'body lotion', 'body wash', 'wipes', 
+                                 'chapstick', 'conditioner', 'condom', 'cotton ball', 'cotton gauze', 'deodorant', 
+                                 'face mask', 'first aid', 'floss', 'brush', 'comb', 'hair gel', 'sanitizer', 'hygiene', 
+                                 'ice packs', 'makeup', 'male guard', 'mini iphone fan', 'mirror', 'mouth wash', 'nail file', 
+                                 'nail polish', 'nail trimmer', 'narcan', 'pad', 'perfume', 'pullups', 'q-tip', 'razor',
+                                 'shaving cream', 'shower cap', 'sunscreen', 'tampon', 'tissue', 'toothbrush', 'toothpaste',
+                                 'underpads', 'underwear']
+    food_item_codes_orl_2 = ['snack bag']
+    bedding_item_codes_orl_2 = ['blankets', 'ear plugs']
+    electronics_item_codes_orl_2 = ['power bank', 'batteries', 'earphones']
+    homebased_item_codes_orl_2 = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
+                                   'sharpies']
+    petgoods_item_codes_orl_2 = ['cat food', 'dog food']
 
     # Locations
     location_codes = ["BIT", "SEM", "ORL", "ORL2.0"]
@@ -290,28 +312,40 @@ class DailyData:
     # and store all items into a dictionary
     def __count_item_totals(self, row, services_dict):
         items_dict = {}
-        row_items = row['Items']
+        row_items = row['Items'].lower()
 
         if self.location == 'ORL':
             clothing_item_codes = DailyData.clothing_item_codes_orl
             grooming_item_codes = DailyData.grooming_item_codes_orl
             food_item_codes = DailyData.food_item_codes_orl
             bedding_item_codes = DailyData.bedding_item_codes_orl
+            electronics_item_codes = DailyData.electronic_item_codes_orl
+            homebased_item_codes = DailyData.homebased_item_codes_orl
+            petgoods_item_codes = DailyData.petgoods_item_codes_orl
         elif self.location == 'SEM':
             clothing_item_codes = DailyData.clothing_item_codes_sem
             grooming_item_codes = DailyData.grooming_item_codes_sem
             food_item_codes = DailyData.food_item_codes_sem
             bedding_item_codes = DailyData.bedding_item_codes_sem
+            electronics_item_codes = DailyData.electronic_item_codes_sem
+            homebased_item_codes = DailyData.homebased_item_codes_sem
+            petgoods_item_codes = DailyData.petgoods_item_codes_sem
         elif self.location == 'BIT':
             clothing_item_codes = DailyData.clothing_item_codes_bit
             grooming_item_codes = DailyData.grooming_item_codes_bit
             food_item_codes = DailyData.food_item_codes_bit
             bedding_item_codes = DailyData.bedding_item_codes_bit
+            electronics_item_codes = DailyData.electronic_item_codes_bit
+            homebased_item_codes = DailyData.homebased_item_codes_bit
+            petgoods_item_codes = DailyData.petgoods_item_codes_bit
         if self.location == 'ORL2.0': # for new salt app
             clothing_item_codes = DailyData.clothing_item_codes_orl_2
             grooming_item_codes = DailyData.grooming_item_codes_orl_2
             food_item_codes = DailyData.food_item_codes_orl_2
             bedding_item_codes = DailyData.bedding_item_codes_orl_2
+            electronics_item_codes = DailyData.electronics_item_codes_orl_2
+            homebased_item_codes = DailyData.homebased_item_codes_orl_2
+            petgoods_item_codes = DailyData.petgoods_item_codes_orl_2
 
         if self.show_output:
             print("Raw Excel Data:")
@@ -417,6 +451,61 @@ class DailyData:
                 items_dict['Bedding'] = bedding_count
             if self.show_output: 
                 print("Bedding: " + str(bedding_count))
+
+            # Electronics 
+            electronics_count = 0
+            for item in electronics_item_codes:
+                index = row_items.find(item)
+                if index >= 0:
+                    # find num value attributed to item code
+                    string_list = row_items.split(item)
+                    substring = string_list[1]
+
+                    # get first ':' following item code
+                    i = substring.index(':')
+                    electronics_count += int(substring[i+2])
+            if electronics_count > 0:
+                items_string = (items_string + "Electronics: " + str(electronics_count) + "\n")
+                items_dict['Electronics'] = electronics_count
+            if self.show_output: 
+                print("Electronics: " + str(electronics_count))
+
+            # Home Based 
+            homebased_count = 0
+            for item in homebased_item_codes:
+                index = row_items.find(item)
+                if index >= 0:
+                    # find num value attributed to item code
+                    string_list = row_items.split(item)
+                    substring = string_list[1]
+
+                    # get first ':' following item code
+                    i = substring.index(':')
+                    homebased_count += int(substring[i+2])
+            if homebased_count > 0:
+                items_string = (items_string + "Home Based: " + str(homebased_count) + "\n")
+                items_dict['Home Based'] = homebased_count
+            if self.show_output: 
+                print("Home Based: " + str(homebased_count))
+
+            # Pet Goods 
+            petgoods_count = 0
+            for item in petgoods_item_codes:
+                index = row_items.find(item)
+                if index >= 0:
+                    # find num value attributed to item code
+                    string_list = row_items.split(item)
+                    substring = string_list[1]
+
+                    # get first ':' following item code
+                    i = substring.index(':')
+                    petgoods_count += int(substring[i+2])
+            if petgoods_count > 0:
+                items_string = (items_string + "Pet Goods: " + str(petgoods_count) + "\n")
+                items_dict['Pet Goods'] = petgoods_count
+            if self.show_output: 
+                print("Pet Goods: " + str(petgoods_count))
+
         # if there are no items in the item column but the service column is not empty
         elif (services_dict): 
             items_string = ""

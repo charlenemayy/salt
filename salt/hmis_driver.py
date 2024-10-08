@@ -259,7 +259,9 @@ class Driver:
                                   'Food' : '359',
                                   'Case Management': '372',
                                   'Device Charging': '724',
-                                  'Healthcare': '367'}
+                                  'Healthcare': '367',
+                                  'Home Based': '455',
+                                  'Pet Goods': '574'}
         
         field_units_id = "1000007095_Renderer"
         field_date_id = "1000007086_Renderer"
