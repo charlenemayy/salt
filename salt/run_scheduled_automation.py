@@ -46,9 +46,8 @@ else:
     # get yesterday's date
     yesterday = date.today() - timedelta(days=1)
     date_str = datetime.fromordinal(yesterday.toordinal()).strftime("%m-%d-%Y")
-'''
-SANFORD DAILY DATA
-'''
+
+####### SANFORD DAILY DATA
 if not args.skipsanford:
     # check if report has already been downloaded
     files = os.listdir(output_path)
@@ -102,9 +101,7 @@ if not args.skipsanford:
     print("SUCCESS: Finished running Sanford entries!\n")
 
 '''
-BITHLO DAILY DATA
-'''
-'''
+####### BITHLO DAILY DATA
 if not args.skipbithlo:
     # check if report has already been downloaded
     files = os.listdir(output_path)
@@ -158,9 +155,7 @@ if not args.skipbithlo:
     print("SUCCESS: Finished running BITHLO entries!\n")
 '''
 
-'''
-ORLANDO DAILY DATA
-'''
+####### ORLANDO DAILY DATA
 if not args.skipfirstrun:
     # check if report has already been downloaded
     files = os.listdir(output_path)
@@ -212,11 +207,61 @@ else:
 # delete report from ORLANDO location
 subprocess.run(["rm {0}".format(report_path)], shell=True)
 
+####### ORLANDO 2.0 - NEW SALT APP - DAILY DATA
+if not args.skipfirstrun:
+    # check if report has already been downloaded
+    files = os.listdir(output_path)
 
+    year_str = args.date[6:10]
+    month_str = args.date[0:2]
+    day_str = args.date[3:5]
+    date_str = year_str + '-' + month_str + '-' + day_str # fixed for rearranged date (why???)
 
-'''
-END OF AUTOMATION
-'''
+    report_filename = "Export-" + date_str + ".xlsx"
+    print(report_filename)
+
+    # delete any existing reports
+    if report_filename in files:
+        subprocess.run(["rm {0}".format(report_filename)], shell=True)
+
+    # double check that report has been downloaded / exists
+    report_path = output_path + report_filename
+    if not os.path.exists(report_path):
+        print("ERROR: Downloaded report from SALT 2.0 - NEW WEB APP cannot be found")
+        quit()
+
+    # download pretty xlsx file to upload to drive
+    print("RUNNING: Processing simplified report file")
+    subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l ORL2.0 -f {0} -m".format(report_path)], shell=True)
+
+    # start first run of automation
+    print("RUNNING: Starting first run of automation for ORLANDO 2.0")
+    subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l ORL2.0 -f {0} -a".format(report_path)], shell=True)
+
+# run the failed entries three more times
+location = "ORL2.0"
+failed_report_filename = location + "_Failed_entries_" + date_str + ".xlsx"
+failed_report_path = output_path + failed_report_filename
+
+if not os.path.exists(failed_report_path):
+    print("Failed entry report for ORLANDO 2.0 from SALT cannot be found")
+else:
+    for i in range(run_count):
+        print("\nRUNNING: Automating failed ORLANDO 2.0 entries, {0} more round(s) to go".format(run_count-1-i))
+        subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l ORL2.0 -f {0} -a".format(failed_report_path)], shell=True)
+
+    # upload final instance of the failed entry report to drive
+    gauth = GoogleAuth() 
+    drive = GoogleDrive(gauth)
+
+    gfile = drive.CreateFile({'parents': [{'id': '15sT6EeVyeUsMd_vinRYgSpncosPW7B2s'}], 'title': failed_report_filename}) 
+    gfile.SetContentFile(failed_report_path)
+    gfile.Upload()
+
+# delete report from ORLANDO location
+subprocess.run(["rm {0}".format(report_path)], shell=True)
+
+####### END OF AUTOMATION
 print("SUCCESS: Finished running scheduled automation!")
 # lock mac when done
 if not args.leaveunlocked:
