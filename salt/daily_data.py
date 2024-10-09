@@ -184,8 +184,11 @@ class DailyData:
                 client_dict['First Name'] = ''
             client_dict['Last Name'] = string_list[0]
 
-            # if HMIS ID is encrypted, set it to None
-            if not isinstance(row['HMIS ID'], float) and len(row['HMIS ID']) > 9:
+            if isinstance(row['HMIS ID'], float):
+                client_dict['Client ID'] = ''
+            elif len(row['HMIS ID']) > 9: # encrypted id
+                client_dict['Client ID'] = ''
+            elif row['HMIS ID'] == '0' or any(c.isalpha for c in row['HMIS ID']): #0 or 'no id' (why is this allowed???)
                 client_dict['Client ID'] = ''
             else:
                 client_dict['Client ID'] = row['HMIS ID']

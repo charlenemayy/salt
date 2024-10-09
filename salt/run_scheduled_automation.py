@@ -212,8 +212,12 @@ else:
 # delete report from ORLANDO location
 subprocess.run(["rm {0}".format(report_path)], shell=True)
 
-print("SUCCESS: Finished running scheduled automation!")
 
+
+'''
+END OF AUTOMATION
+'''
+print("SUCCESS: Finished running scheduled automation!")
 # lock mac when done
 if not args.leaveunlocked:
     os.system("pmset displaysleepnow")
