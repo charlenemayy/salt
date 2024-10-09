@@ -151,15 +151,15 @@ class DailyData:
                 else:
                     date = row['DoB']
 
-                day = date[0:3]
-                month = date[3:6]
-                client_dict['DoB'] = month + day + date[6:(len(date))]
+                if self.location == "ORL2.0":
+                    client_dict['DoB'] = date
+                else: # rearrange birthdate if not the new salt app
+                    day = date[0:3]
+                    month = date[3:6]
+                    client_dict['DoB'] = month + day + date[6:(len(date))]
+
                 # # update sheet for readability
                 self.df.at[row_index, 'DoB'] = client_dict['DoB']
-                '''
-                client_dict['DoB'] = date
-                self.df.at[row_index, 'DoB'] = client_dict['DoB']
-                '''
 
             # get total number of services and items
             services_dict = self.__get_service_totals(row)
@@ -173,6 +173,8 @@ class DailyData:
             # no_quotes_name = re.sub('(".*")', "", row['Client Name'])
             # OR:
             # just remove quotes, as it might be a potential middle name
+            if isinstance(row['Client Name'], float):
+                row['Client Name'] = ''
             no_quotes_name = row['Client Name'].replace('"', '')
             stripped_name = no_quotes_name.strip()
             string_list = stripped_name.rsplit(' ', 1)
@@ -182,8 +184,11 @@ class DailyData:
                 client_dict['First Name'] = ''
             client_dict['Last Name'] = string_list[0]
 
-            # add remaining client info
-            client_dict['Client ID'] = row['HMIS ID']
+            # if HMIS ID is encrypted, set it to None
+            if not isinstance(row['HMIS ID'], float) and len(row['HMIS ID']) > 9:
+                client_dict['Client ID'] = ''
+            else:
+                client_dict['Client ID'] = row['HMIS ID']
 
             if self.show_output:
                 print()
@@ -292,7 +297,6 @@ class DailyData:
             if index >= 0:
                 string_list = row['Service'].lower().split('charging')
                 substring = string_list[1]
-                print(string_list)
 
                 i = substring.index(':')
                 services_dict['Device Charging'] = int(substring[i+2])
@@ -301,7 +305,6 @@ class DailyData:
             if index >= 0:
                 string_list = row['Service'].lower().split('case management')
                 substring = string_list[1]
-                print(string_list)
 
                 i = substring.index(':')
                 services_dict['Case Management'] = int(substring[i+2])
@@ -311,7 +314,6 @@ class DailyData:
                 # find num value attributed to laundry
                 string_list = row['Service'].lower().split('hope and help')
                 substring = string_list[1]
-                print(string_list)
 
 
                 i = substring.index(':')

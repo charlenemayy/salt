@@ -388,7 +388,14 @@ class Driver:
         table_row_family_members_xpath = '//table[@id="RendererSF1ResultSet"]//tbody/tr'
 
         # 1217 for downtown, 1157 for sanford
-        option_salt_enrollment_value = "1217" if location == "ORL" else "1157"
+        if location == "ORL" or location == "ORL2.0":
+            option_salt_enrollment_value = "1217"
+        elif location == "SEM":
+            option_salt_enrollment_value = "1157"
+        else:
+            print("IMPORTANT!!! ENROLLMENT CODE FOR NEW LOCATION HAS NOT BEEN ADDED TO THE CODE. PLEASE UPDATE")
+            print("Quitting now...")
+            quit()
 
         self.navigate_to_enrollment_list()
 
