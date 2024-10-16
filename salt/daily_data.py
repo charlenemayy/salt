@@ -186,6 +186,8 @@ class DailyData:
 
             if isinstance(row['HMIS ID'], float):
                 client_dict['Client ID'] = ''
+            elif isinstance(row['HMIS ID'], int):
+                client_dict['Client ID'] = str(row['HMIS ID']) 
             elif len(row['HMIS ID']) > 9: # encrypted id
                 client_dict['Client ID'] = ''
             elif row['HMIS ID'] == '0' or any(c.isalpha for c in row['HMIS ID']): #0 or 'no id' (why is this allowed???)
@@ -555,6 +557,9 @@ class DailyData:
     
     # Expects to find substring in format MM-DD-YEAR; returns in format MM-DD-YEAR
     def __get_date_from_filename(self, filename):
+        date_string = re.search("([0-9]{2}\-[0-9]{2}\-[0-9]{4})", filename)
+        date = datetime.strptime(date_string[0], '%m-%d-%Y')
+        '''
         if self.location == "ORL2.0":
             date_string = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", filename)
             original_date = datetime.strptime(date_string[0], '%Y-%m-%d')
@@ -563,6 +568,7 @@ class DailyData:
         else:
             date_string = re.search("([0-9]{2}\-[0-9]{2}\-[0-9]{4})", filename)
             date = datetime.strptime(date_string[0], '%m-%d-%Y')
+        '''
         return date
 
     # Export cleaned and readable spreadsheet for data to be entered manually
