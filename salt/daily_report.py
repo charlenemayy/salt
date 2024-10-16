@@ -21,12 +21,24 @@ class DailyReport:
         settings = data["data"][0]
         self.username = settings["salt_username"]
         self.password = settings["salt_password"]
+
+        if "google_username" not in data or "google_password" not in data:
+            self.use_google_login = False
+        else:
+            self.use_google_login = True
+            self.username = settings["google_username"]
+            self.password = settings["google_password"]
+
         self.output_path = settings["output_path"]
     
     def download_report(self):
         self.driver.open_saltwebapp(self.location)
-        if not self.driver.login_saltwebapp_google(self.username, self.password):
-            return
+        if not self.use_google_login:
+            if not self.driver.login_saltwebapp_native(self.username, self.password):
+                return
+        else:
+            if not self.driver.login_saltwebapp_google(self.username, self.password):
+                return
         # salt date search requires format YYYY-MM-DD
         date = datetime.strptime(self.date, "%m-%d-%Y").strftime("%Y-%m-%d")
         if not self.driver.navigate_to_daily_data_by_client(date):

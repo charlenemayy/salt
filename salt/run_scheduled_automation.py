@@ -47,6 +47,10 @@ else:
     yesterday = date.today() - timedelta(days=1)
     date_str = datetime.fromordinal(yesterday.toordinal()).strftime("%m-%d-%Y")
 
+# LINUX: activate virtual environment
+subprocess.run([". ~/salt_venv/bin/activate"], shell=True)
+time.sleep(2)
+
 ####### SANFORD DAILY DATA
 if not args.skipsanford:
     # check if report has already been downloaded
@@ -59,7 +63,7 @@ if not args.skipsanford:
 
     # download yesterday's report
     print("RUNNING: Downloading SANFORD report from the SALT Web App")
-    subprocess.run(["/usr/bin/python3 salt/run_daily_report.py -l \"SEM\" -d {0}".format(date_str)], shell=True)
+    subprocess.run(["python salt/run_daily_report.py -l \"SEM\" -d {0}".format(date_str)], shell=True)
     time.sleep(5)
 
     # double check that report has been downloaded / exists
@@ -70,11 +74,11 @@ if not args.skipsanford:
 
     # download pretty xlsx file to upload to drive
     print("RUNNING: Processing simplified report file")
-    subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l SEM -f {0} -m".format(report_path)], shell=True)
+    subprocess.run(["python salt/run_daily_data.py -l SEM -f {0} -m".format(report_path)], shell=True)
 
     # start first run of automation
     print("RUNNING: Starting first run of automation for SANFORD")
-    subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l SEM -f {0} -a".format(report_path)], shell=True)
+    subprocess.run(["python salt/run_daily_data.py -l SEM -f {0} -a".format(report_path)], shell=True)
 
     # run the failed entries
     location = "SEM"
@@ -85,7 +89,7 @@ if not args.skipsanford:
         print("Failed entry report for SANFORD from SALT cannot be found, continuing data entry")
     else:
         print("\nRUNNING: Automating failed SANFORD entries")
-        subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l SEM -f {0} -a".format(failed_report_path)], shell=True)
+        subprocess.run(["python salt/run_daily_data.py -l SEM -f {0} -a".format(failed_report_path)], shell=True)
 
         # upload final instance of the failed entry report to drive
         gauth = GoogleAuth() 
@@ -167,7 +171,7 @@ if not args.skipfirstrun:
 
     # download new report
     print("RUNNING: Downloading ORLANDO report from the SALT Web App")
-    subprocess.run(["/usr/bin/python3 salt/run_daily_report.py -d {0}".format(date_str)], shell=True)
+    subprocess.run(["python salt/run_daily_report.py -d {0}".format(date_str)], shell=True)
     time.sleep(5)
 
     # double check that report has been downloaded / exists
@@ -178,11 +182,11 @@ if not args.skipfirstrun:
 
     # download pretty xlsx file to upload to drive
     print("RUNNING: Processing simplified report file")
-    subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -f {0} -m".format(report_path)], shell=True)
+    subprocess.run(["python salt/run_daily_data.py -f {0} -m".format(report_path)], shell=True)
 
     # start first run of automation
     print("RUNNING: Starting first run of automation for ORLANDO")
-    subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -f {0} -a".format(report_path)], shell=True)
+    subprocess.run(["python salt/run_daily_data.py -f {0} -a".format(report_path)], shell=True)
 
 # run the failed entries three more times
 location = "ORL"
@@ -194,7 +198,7 @@ if not os.path.exists(failed_report_path):
 else:
     for i in range(run_count):
         print("\nRUNNING: Automating failed ORLANDO entries, {0} more round(s) to go".format(run_count-1-i))
-        subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -f {0} -a".format(failed_report_path)], shell=True)
+        subprocess.run(["python salt/run_daily_data.py -f {0} -a".format(failed_report_path)], shell=True)
 
     # upload final instance of the failed entry report to drive
     gauth = GoogleAuth() 
@@ -207,6 +211,7 @@ else:
 # delete report from ORLANDO location
 subprocess.run(["rm {0}".format(report_path)], shell=True)
 
+'''
 ####### ORLANDO 2.0 - NEW SALT APP - DAILY DATA
 if not args.skipfirstrun:
     # check if report has already been downloaded
@@ -232,11 +237,11 @@ if not args.skipfirstrun:
 
     # download pretty xlsx file to upload to drive
     print("RUNNING: Processing simplified report file")
-    subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l ORL2.0 -f {0} -m".format(report_path)], shell=True)
+    subprocess.run(["python salt/run_daily_data.py -l ORL2.0 -f {0} -m".format(report_path)], shell=True)
 
     # start first run of automation
     print("RUNNING: Starting first run of automation for ORLANDO 2.0")
-    subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l ORL2.0 -f {0} -a".format(report_path)], shell=True)
+    subprocess.run(["python salt/run_daily_data.py -l ORL2.0 -f {0} -a".format(report_path)], shell=True)
 
 # run the failed entries three more times
 location = "ORL2.0"
@@ -260,9 +265,7 @@ else:
 
 # delete report from ORLANDO location
 subprocess.run(["rm {0}".format(report_path)], shell=True)
+'''
 
 ####### END OF AUTOMATION
 print("SUCCESS: Finished running scheduled automation!")
-# lock mac when done
-if not args.leaveunlocked:
-    os.system("pmset displaysleepnow")

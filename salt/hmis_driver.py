@@ -5,6 +5,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 import difflib
 import time
 import traceback
@@ -33,7 +36,11 @@ class Driver:
     def __init__(self):
         chrome_options = Options()
         chrome_options.add_experimental_option("detach", True)
-        self.browser = Chrome(options=chrome_options)
+
+        # added for linux build
+        chrome_options.add_argument("--headless")
+        self.browser = Chrome(options=chrome_options, 
+                              service=ChromeService(ChromeDriverManager().install()))
 
     def open_clienttrack(self):
         self.browser.get('https://clienttrack.eccovia.com/login/HSNCFL')
