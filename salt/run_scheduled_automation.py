@@ -211,7 +211,6 @@ else:
 # delete report from ORLANDO location
 subprocess.run(["rm {0}".format(report_path)], shell=True)
 
-'''
 ####### ORLANDO 2.0 - NEW SALT APP - DAILY DATA
 if not args.skipfirstrun:
     # check if report has already been downloaded
@@ -256,7 +255,7 @@ if not os.path.exists(failed_report_path):
 else:
     for i in range(run_count):
         print("\nRUNNING: Automating failed ORLANDO 2.0 entries, {0} more round(s) to go".format(run_count-1-i))
-        subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l ORL2.0 -f {0} -a".format(failed_report_path)], shell=True)
+        subprocess.run(["python salt/run_daily_data.py -l ORL2.0 -f {0} -a".format(failed_report_path)], shell=True)
 
     # upload final instance of the failed entry report to drive
     gauth = GoogleAuth() 
@@ -268,7 +267,6 @@ else:
 
 # delete report from ORLANDO location
 subprocess.run(["rm {0}".format(report_path)], shell=True)
-'''
 
 ####### END OF AUTOMATION
 print("SUCCESS: Finished running scheduled automation!")

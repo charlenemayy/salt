@@ -62,6 +62,8 @@ class Driver:
         except Exception as e:
             print("Login didn't navigate back to SALT web app")
             print(e)
+            print(username, password)
+            self.browser.save_screenshot('debug.png')
             return False
         return True
 
