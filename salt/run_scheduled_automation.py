@@ -212,6 +212,7 @@ if not args.skipfirstrun:
     # check if report has already been downloaded
     files = os.listdir(output_path)
 
+    '''
     year_str = args.date[6:10]
     month_str = args.date[0:2]
     day_str = args.date[3:5]
@@ -219,6 +220,8 @@ if not args.skipfirstrun:
 
     report_filename = "Export-" + date_str + ".xlsx"
     print(report_filename)
+    '''
+    report_filename = "Export-" + date_str + ".xlsx"
 
     # delete any existing reports
     if report_filename in files:

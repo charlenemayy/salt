@@ -178,11 +178,19 @@ class DailyData:
             no_quotes_name = row['Client Name'].replace('"', '')
             stripped_name = no_quotes_name.strip()
             string_list = stripped_name.rsplit(' ', 1)
-            if len(string_list) > 1:
-                client_dict['First Name'] = string_list[1]
+
+            if self.location == 'ORL2.0':
+                if len(string_list) > 1:
+                    client_dict['Last Name'] = string_list[1]
+                else:
+                    client_dict['First Name'] = ''
+                client_dict['First Name'] = string_list[0]
             else:
-                client_dict['First Name'] = ''
-            client_dict['Last Name'] = string_list[0]
+                if len(string_list) > 1:
+                    client_dict['First Name'] = string_list[1]
+                else:
+                    client_dict['First Name'] = ''
+                client_dict['Last Name'] = string_list[0]
 
             if isinstance(row['HMIS ID'], float):
                 client_dict['Client ID'] = ''

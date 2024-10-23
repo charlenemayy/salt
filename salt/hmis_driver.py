@@ -34,6 +34,8 @@ class Driver:
         chrome_options = Options()
         chrome_options.add_experimental_option("detach", True)
         self.browser = Chrome(options=chrome_options)
+        self.browser.maximize_window()
+        time.sleep(2)
 
     def open_clienttrack(self):
         self.browser.get('https://clienttrack.eccovia.com/login/HSNCFL')
@@ -161,7 +163,9 @@ class Driver:
                 first_name_score = self.__similar(result_first_name, first_name)
                 last_name_score = self.__similar(result_last_name, last_name) 
                 final_score = first_name_score + last_name_score
-                min_score = 1.4
+                min_score = 1.0
+
+                # DEBUG: print(result_first_name, "-", result_last_name, final_score)
 
                 # if a decent match, store the value and compare with other viable matches
                 if final_score >= min_score:
