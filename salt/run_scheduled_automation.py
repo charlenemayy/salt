@@ -92,12 +92,14 @@ if not args.skipsanford:
         subprocess.run(["python salt/run_daily_data.py -l SEM -f {0} -a".format(failed_report_path)], shell=True)
 
         # upload final instance of the failed entry report to drive
+        '''
         gauth = GoogleAuth() 
         drive = GoogleDrive(gauth)
 
         gfile = drive.CreateFile({'parents': [{'id': '15sT6EeVyeUsMd_vinRYgSpncosPW7B2s'}], 'title': failed_report_filename}) 
         gfile.SetContentFile(failed_report_path)
         gfile.Upload()
+        '''
 
     # delete report file from sanford location
     subprocess.run(["rm {0}".format(report_path)], shell=True)
@@ -201,12 +203,14 @@ else:
         subprocess.run(["python salt/run_daily_data.py -f {0} -a".format(failed_report_path)], shell=True)
 
     # upload final instance of the failed entry report to drive
+    '''
     gauth = GoogleAuth() 
     drive = GoogleDrive(gauth)
 
     gfile = drive.CreateFile({'parents': [{'id': '15sT6EeVyeUsMd_vinRYgSpncosPW7B2s'}], 'title': failed_report_filename}) 
     gfile.SetContentFile(failed_report_path)
     gfile.Upload()
+    '''
 
 # delete report from ORLANDO location
 subprocess.run(["rm {0}".format(report_path)], shell=True)
