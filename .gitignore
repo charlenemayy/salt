@@ -1,3 +1,4 @@
+*.pyc
 salt/settings.json
 geckodriver.log
 client_secrets.json
