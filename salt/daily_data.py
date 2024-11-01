@@ -144,6 +144,10 @@ class DailyData:
             client_dict = {}
             row = self.df.iloc[row_index]
 
+            # IF EMPTY ROW
+            if isinstance(row['Client Name'], float):
+                continue
+
             # rearrange birthday and update row
             if not isinstance(row['DoB'], float):
                 if isinstance(row['DoB'], datetime):
