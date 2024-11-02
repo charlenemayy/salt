@@ -91,16 +91,6 @@ if not args.skipsanford:
         print("\nRUNNING: Automating failed SANFORD entries")
         subprocess.run(["python salt/run_daily_data.py -l SEM -f {0} -a".format(failed_report_path)], shell=True)
 
-        # upload final instance of the failed entry report to drive
-        '''
-        gauth = GoogleAuth() 
-        drive = GoogleDrive(gauth)
-
-        gfile = drive.CreateFile({'parents': [{'id': '15sT6EeVyeUsMd_vinRYgSpncosPW7B2s'}], 'title': failed_report_filename}) 
-        gfile.SetContentFile(failed_report_path)
-        gfile.Upload()
-        '''
-
     # delete report file from sanford location
     subprocess.run(["rm {0}".format(report_path)], shell=True)
 
@@ -203,14 +193,6 @@ else:
         subprocess.run(["python salt/run_daily_data.py -f {0} -a".format(failed_report_path)], shell=True)
 
     # upload final instance of the failed entry report to drive
-    '''
-    gauth = GoogleAuth() 
-    drive = GoogleDrive(gauth)
-
-    gfile = drive.CreateFile({'parents': [{'id': '15sT6EeVyeUsMd_vinRYgSpncosPW7B2s'}], 'title': failed_report_filename}) 
-    gfile.SetContentFile(failed_report_path)
-    gfile.Upload()
-    '''
 
 # delete report from ORLANDO location
 subprocess.run(["rm {0}".format(report_path)], shell=True)
@@ -220,23 +202,10 @@ if not args.skipfirstrun:
     # check if report has already been downloaded
     files = os.listdir(output_path)
 
-    '''
-    year_str = args.date[6:10]
-    month_str = args.date[0:2]
-    day_str = args.date[3:5]
-    date_str = year_str + '-' + month_str + '-' + day_str # fixed for rearranged date (why???)
-
     report_filename = "Export-" + date_str + ".xlsx"
-    print(report_filename)
-    '''
-    report_filename = "Export-" + date_str + ".xlsx"
-
-    # delete any existing reports
-    if report_filename in files:
-        subprocess.run(["rm {0}".format(report_filename)], shell=True)
+    report_path = output_path + report_filename
 
     # double check that report has been downloaded / exists
-    report_path = output_path + report_filename
     if not os.path.exists(report_path):
         print("ERROR: Downloaded report from SALT 2.0 - NEW WEB APP cannot be found")
         quit()
@@ -260,14 +229,6 @@ else:
     for i in range(run_count):
         print("\nRUNNING: Automating failed ORLANDO 2.0 entries, {0} more round(s) to go".format(run_count-1-i))
         subprocess.run(["python salt/run_daily_data.py -l ORL2.0 -f {0} -a".format(failed_report_path)], shell=True)
-
-    # upload final instance of the failed entry report to drive
-    gauth = GoogleAuth() 
-    drive = GoogleDrive(gauth)
-
-    gfile = drive.CreateFile({'parents': [{'id': '15sT6EeVyeUsMd_vinRYgSpncosPW7B2s'}], 'title': failed_report_filename}) 
-    gfile.SetContentFile(failed_report_path)
-    gfile.Upload()
 
 # delete report from ORLANDO location
 subprocess.run(["rm {0}".format(report_path)], shell=True)
