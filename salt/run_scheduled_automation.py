@@ -37,6 +37,7 @@ parser.add_argument("-sfr", "--skipfirstrun", action="store_true")
 parser.add_argument("-lu", "--leaveunlocked", action="store_true")
 parser.add_argument("-ssf", "--skipsanford", action="store_true")
 parser.add_argument("-sbl", "--skipbithlo", action="store_true")
+parser.add_argument("-soa", "--skipoldapp", action="store_true")
 
 args = parser.parse_args()
 
@@ -100,7 +101,6 @@ if not args.skipsanford:
 
     print("SUCCESS: Finished running Sanford entries!\n")
 
-'''
 ####### BITHLO DAILY DATA
 if not args.skipbithlo:
     # check if report has already been downloaded
@@ -127,7 +127,7 @@ if not args.skipbithlo:
     subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l BIT -f {0} -m".format(report_path)], shell=True)
 
     # start first run of automation
-    print("RUNNING: Starting first run of automation for SANFORD")
+    print("RUNNING: Starting first run of automation for BITHLO")
     subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l BIT -f {0} -a".format(report_path)], shell=True)
 
     # run the failed entries
@@ -153,10 +153,9 @@ if not args.skipbithlo:
     subprocess.run(["rm {0}".format(report_path)], shell=True)
 
     print("SUCCESS: Finished running BITHLO entries!\n")
-'''
 
-####### ORLANDO DAILY DATA
-if not args.skipfirstrun:
+####### ORLANDO DAILY DATA (OLD SALT APP)
+if not args.skipoldapp:
     # check if report has already been downloaded
     files = os.listdir(output_path)
     report_filename = "Report_by_client_" + date_str + ".xlsx"
@@ -184,28 +183,28 @@ if not args.skipfirstrun:
     print("RUNNING: Starting first run of automation for ORLANDO")
     subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -f {0} -a".format(report_path)], shell=True)
 
-# run the failed entries three more times
-location = "ORL"
-failed_report_filename = location + "_Failed_entries_" + date_str + ".xlsx"
-failed_report_path = output_path + failed_report_filename
+    # run the failed entries three more times
+    location = "ORL"
+    failed_report_filename = location + "_Failed_entries_" + date_str + ".xlsx"
+    failed_report_path = output_path + failed_report_filename
 
-if not os.path.exists(failed_report_path):
-    print("Failed entry report for ORLANDO from SALT cannot be found")
-else:
-    for i in range(run_count):
-        print("\nRUNNING: Automating failed ORLANDO entries, {0} more round(s) to go".format(run_count-1-i))
-        subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -f {0} -a".format(failed_report_path)], shell=True)
+    if not os.path.exists(failed_report_path):
+        print("Failed entry report for ORLANDO from SALT cannot be found")
+    else:
+        for i in range(run_count):
+            print("\nRUNNING: Automating failed ORLANDO entries, {0} more round(s) to go".format(run_count-1-i))
+            subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -f {0} -a".format(failed_report_path)], shell=True)
 
-    # upload final instance of the failed entry report to drive
-    gauth = GoogleAuth() 
-    drive = GoogleDrive(gauth)
+        # upload final instance of the failed entry report to drive
+        gauth = GoogleAuth() 
+        drive = GoogleDrive(gauth)
 
-    gfile = drive.CreateFile({'parents': [{'id': '15sT6EeVyeUsMd_vinRYgSpncosPW7B2s'}], 'title': failed_report_filename}) 
-    gfile.SetContentFile(failed_report_path)
-    gfile.Upload()
+        gfile = drive.CreateFile({'parents': [{'id': '15sT6EeVyeUsMd_vinRYgSpncosPW7B2s'}], 'title': failed_report_filename}) 
+        gfile.SetContentFile(failed_report_path)
+        gfile.Upload()
 
-# delete report from ORLANDO location
-subprocess.run(["rm {0}".format(report_path)], shell=True)
+    # delete report from ORLANDO location
+    subprocess.run(["rm {0}".format(report_path)], shell=True)
 
 ####### ORLANDO 2.0 - NEW SALT APP - DAILY DATA
 if not args.skipfirstrun:
@@ -261,8 +260,9 @@ else:
     gfile.SetContentFile(failed_report_path)
     gfile.Upload()
 
-# delete report from ORLANDO location
-subprocess.run(["rm {0}".format(report_path)], shell=True)
+if not args.skipfirstrun:
+    # delete report from ORLANDO location
+    subprocess.run(["rm {0}".format(report_path)], shell=True)
 
 ####### END OF AUTOMATION
 print("SUCCESS: Finished running scheduled automation!")

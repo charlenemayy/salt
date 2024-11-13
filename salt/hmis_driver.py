@@ -379,7 +379,7 @@ class Driver:
     # @param: [str] service_date: date of service
     # @return: [bool] success / fail
     def enroll_client(self, service_date, location):
-        button_new_enrollment_id = "Renderer_1000000424"
+        button_new_enrollment_id = "Renderer_1000000231"
         dropdown_veteran_status_id = "1000006680_Renderer"
         option_data_not_collected_value = "99"
         button_finish_id = "Renderer_SAVE"
@@ -396,6 +396,8 @@ class Driver:
             option_salt_enrollment_value = "1217"
         elif location == "SEM":
             option_salt_enrollment_value = "1157"
+        elif location == "BIT":
+            option_salt_enrollment_value = "1275"
         else:
             print("IMPORTANT!!! ENROLLMENT CODE FOR NEW LOCATION HAS NOT BEEN ADDED TO THE CODE. PLEASE UPDATE")
             print("Quitting now...")
