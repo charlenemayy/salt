@@ -256,7 +256,7 @@ class DailyData:
         if self.location == "SEM":
             salt_enrollment_names = ["SALT Outreach-SEM Street Outreach"]
         elif self.location == "BIT":
-            salt_enrollment_names = ["SALT Outreach-BIT Street Outreach"] #TODO: CHANGE TO BITHLO NAME
+            salt_enrollment_names = ["SALT Outreach-Bithlo Street Outreach"] #TODO: CHANGE TO BITHLO NAME
         else:
             salt_enrollment_names = ["SALT Outreach-ORL ESG Street Outreach", 
                                      "SALT Outreach-ORN ESG-CV Street Outreach",
