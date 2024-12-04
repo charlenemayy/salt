@@ -69,8 +69,18 @@ class DailyData:
                                    'sharpies']
     petgoods_item_codes_orl_2 = ['cat food', 'dog food']
 
+    # Youth
+    service_item_codes_yya = []
+    clothing_item_codes_yya = []
+    grooming_item_codes_yya = ['hygiene bag']
+    food_item_codes_yya = ['snack bags']
+    bedding_item_codes_yya = []
+    electronics_item_codes_yya = []
+    homebased_item_codes_yya = []
+    petgoods_item_codes_yya = []
+
     # Locations
-    location_codes = ["BIT", "SEM", "ORL", "ORL2.0"]
+    location_codes = ["BIT", "SEM", "ORL", "ORL2.0", "YYA"]
 
     def __init__(self, filename, automate, manual, show_output, location, list_items):
         self.automate = automate
@@ -258,7 +268,9 @@ class DailyData:
         if self.location == "SEM":
             salt_enrollment_names = ["SALT Outreach-SEM Street Outreach"]
         elif self.location == "BIT":
-            salt_enrollment_names = ["SALT Outreach-Bithlo Street Outreach"] #TODO: CHANGE TO BITHLO NAME
+            salt_enrollment_names = ["SALT Outreach-Bithlo Street Outreach"] 
+        elif self.location == "YYA":
+            salt_enrollment_names = ["SALT Outreach-YHDP Drop In Center"]
         else:
             salt_enrollment_names = ["SALT Outreach-ORL ESG Street Outreach", 
                                      "SALT Outreach-ORN ESG-CV Street Outreach",
@@ -387,6 +399,14 @@ class DailyData:
             electronics_item_codes = DailyData.electronics_item_codes_orl_2
             homebased_item_codes = DailyData.homebased_item_codes_orl_2
             petgoods_item_codes = DailyData.petgoods_item_codes_orl_2
+        elif self.location == 'YYA':
+            clothing_item_codes = DailyData.clothing_item_codes_yya
+            grooming_item_codes = DailyData.grooming_item_codes_yya
+            food_item_codes = DailyData.food_item_codes_yya
+            bedding_item_codes = DailyData.bedding_item_codes_yya
+            electronics_item_codes = DailyData.electronics_item_codes_yya
+            homebased_item_codes = DailyData.homebased_item_codes_yya
+            petgoods_item_codes = DailyData.petgoods_item_codes_yya
 
         if self.show_output:
             print("Raw Excel Data:")

@@ -398,6 +398,8 @@ class Driver:
             option_salt_enrollment_value = "1157"
         elif location == "BIT":
             option_salt_enrollment_value = "1275"
+        elif location == "YYA":
+            option_salt_enrollment_value = "1226"
         else:
             print("IMPORTANT!!! ENROLLMENT CODE FOR NEW LOCATION HAS NOT BEEN ADDED TO THE CODE. PLEASE UPDATE")
             print("Quitting now...")
@@ -560,6 +562,7 @@ class Driver:
         option_orange_county_id = '1'
         option_sem_county_id = '2'
         option_place_not_meant_for_habitation_id = '16'
+        option_client_prefers_not_to_answer_id = '9'
         button_save_id = 'Renderer_SAVE'
         button_default_assessment_id = 'B1000006792_Renderer'
 
@@ -589,7 +592,10 @@ class Driver:
             dropdown_county_id = '1000006849_Renderer'
             dropdown_county = self.browser.find_element(By.ID, dropdown_county_id)
             if self.__dropdown_empty(dropdown_county):
-                option_county_id = option_orange_county_id if location == 'ORL' else option_sem_county_id
+                if location == 'ORL' or location == 'BIT' or location == 'YYA' or location == 'ORL2.0':
+                    option_county_id = option_orange_county_id
+                else:
+                    option_county_id = option_sem_county_id
                 self.__select_assessment_dropdown_option(dropdown_county, option_county_id)
 
             # Living Situation
@@ -601,7 +607,7 @@ class Driver:
             dropdown_length_of_stay_id = '1000006812_Renderer'
             dropdown_length_of_stay = self.browser.find_element(By.ID, dropdown_length_of_stay_id)
             if self.__dropdown_empty(dropdown_length_of_stay):
-                self.__select_assessment_dropdown_option(dropdown_length_of_stay, option_data_not_collected_id)
+                self.__select_assessment_dropdown_option(dropdown_length_of_stay, option_client_prefers_not_to_answer_id)
 
             field_homeless_start_date_id = '1000006795_Renderer'
             field_homeless_start_date = self.browser.find_element(By.ID,field_homeless_start_date_id)
@@ -619,12 +625,12 @@ class Driver:
             dropdown_street_frequency_id = '1000006807_Renderer'
             dropdown_street_frequency = self.browser.find_element(By.ID, dropdown_street_frequency_id)
             if self.__dropdown_empty(dropdown_street_frequency):
-                self.__select_assessment_dropdown_option(dropdown_street_frequency, option_data_not_collected_id)
+                self.__select_assessment_dropdown_option(dropdown_street_frequency, option_client_prefers_not_to_answer_id)
 
             dropdown_months_homeless_id = '1000006813_Renderer'
             dropdown_months_homeless = self.browser.find_element(By.ID, dropdown_months_homeless_id)
             if self.__dropdown_empty(dropdown_months_homeless):
-                self.__select_assessment_dropdown_option(dropdown_months_homeless, option_data_not_collected_id)
+                self.__select_assessment_dropdown_option(dropdown_months_homeless, option_client_prefers_not_to_answer_id)
 
             # Insurance Status
             button_default_assessment_id = 'B1000006761_Renderer'
@@ -634,7 +640,7 @@ class Driver:
             dropdown_covered_by_health_ins_id = '1000006802_Renderer'
             dropdown_covered_by_health_ins = self.browser.find_element(By.ID, dropdown_covered_by_health_ins_id)
             if self.__dropdown_empty(dropdown_covered_by_health_ins):
-                self.__select_assessment_dropdown_option(dropdown_covered_by_health_ins, option_data_not_collected_id)
+                self.__select_assessment_dropdown_option(dropdown_covered_by_health_ins, option_no_id)
 
             # Save
             button_save = self.browser.find_element(By.ID, button_save_id)
@@ -646,7 +652,7 @@ class Driver:
             return False
 
         # BARRIER ASSESSMENT
-        barrier_assessment_locations = ['ORL', 'ORL2.0', 'SEM']
+        barrier_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA']
         no_barrier_assessment_locations = ['BIT']
 
         if location not in barrier_assessment_locations and location not in no_barrier_assessment_locations:
@@ -677,7 +683,7 @@ class Driver:
                 # every fouth dropdown is a 'Barrier Present?' field
                 for i in range(0, len(dropdowns), 4):
                     if self.__dropdown_empty(dropdowns[i]):
-                        self.__select_assessment_dropdown_option(dropdowns[i], option_data_not_collected_id)
+                        self.__select_assessment_dropdown_option(dropdowns[i], option_no_id)
 
                 # Save
                 button_save_and_close = self.browser.find_element(By.ID, button_save_and_close_id)
@@ -696,7 +702,7 @@ class Driver:
                 return False
 
         # DOMESTIC VIOLENCE ASSESSMENT
-        domestic_violence_assessment_locations = ['ORL', 'ORL2.0', 'SEM']
+        domestic_violence_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA']
         no_domestic_violence_assessment_locations = ['BIT']
 
         if location not in domestic_violence_assessment_locations and location not in no_domestic_violence_assessment_locations:
@@ -723,7 +729,7 @@ class Driver:
                     if button.is_selected():
                         is_empty = False
                 if is_empty:
-                    buttons_domestic_violence[4].click()
+                    buttons_domestic_violence[1].click() # 'No' option
                     time.sleep(1)
 
                 # Save
@@ -736,7 +742,7 @@ class Driver:
                 return False
 
         # INCOME ASSESSMENT
-        income_assessment_locations = ['ORL', 'ORL2.0', 'SEM']
+        income_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA']
         no_income_assessment_locations = ['BIT']
 
         if location not in income_assessment_locations and location not in no_income_assessment_locations:
@@ -774,8 +780,42 @@ class Driver:
                 print(traceback.format_exc())
                 return False
 
+        # RHY ASSESSMENT
+        rhy_assessment_locations = ['YYA']
+        no_rhy_assessment_locations = ['BIT', 'SEM', 'ORL', 'ORL2.0']
+
+        if location not in rhy_assessment_locations and location not in no_rhy_assessment_locations:
+            print("DID NOT ADD NEW LOCATION TO RHY ENROLLMENT LIST, FIX AND RERUN")
+            print("Quitting now...")
+            quit()
+        elif location in rhy_assessment_locations:
+            field_assessment_date_id = '107266_Renderer'
+            dropdown_sexual_orientation_id = '107275_Renderer'
+            button_save_id = "Renderer_SAVE"
+
+            self.__wait_until_page_fully_loaded("RHY Entry Assessment")
+
+            try:
+                WebDriverWait(self.browser, self.wait_time).until(
+                    EC.element_to_be_clickable((By.ID, field_assessment_date_id))
+                )
+
+                dropdown_sexual_orientation = self.browser.find_element(By.ID, dropdown_sexual_orientation_id)
+                if self.__dropdown_empty(dropdown_sexual_orientation):
+                    self.__select_assessment_dropdown_option(dropdown_sexual_orientation, option_client_prefers_not_to_answer_id)
+
+                # Save
+                button_save = self.browser.find_element(By.ID, button_save_id)
+                button_save.click()
+                time.sleep(1)
+            except Exception as e:
+                print("Couldn't complete RHY assessment")
+                print(traceback.format_exc())
+                return False
+
+
         # CURRENT LIVING SITUATION ASSESSMENT
-        living_situation_assessment_locations = ['ORL', 'ORL2.0', 'SEM']
+        living_situation_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA']
         no_living_situation_assessment_locations = ['BIT']
 
         if location not in living_situation_assessment_locations and location not in no_living_situation_assessment_locations:
@@ -804,8 +844,44 @@ class Driver:
                 print(traceback.format_exc())
                 return False
 
+        # YOUTH EDUCATION ASSESSMENT
+        youth_education_assessment_locations = ['YYA']
+        no_youth_education_assessment_locations = ['BIT', 'SEM', 'ORL', 'ORL2.0']
+
+        if location not in youth_education_assessment_locations and location not in no_youth_education_assessment_locations:
+            print("DID NOT ADD NEW LOCATION TO youth_education ENROLLMENT LIST, FIX AND RERUN")
+            print("Quitting now...")
+            quit()
+        elif location in youth_education_assessment_locations:
+            field_assessment_date_id = '102833_Renderer'
+            dropdown_current_school_id = '102834_Renderer'
+            button_save_id = "Renderer_SAVE"
+            button_default_assessment_id = 'B102839_Renderer'
+
+            self.__default_last_assessment(button_default_assessment_id)
+            self.__wait_until_page_fully_loaded("Youth Education Entry Assessment")
+
+            try:
+                WebDriverWait(self.browser, self.wait_time).until(
+                    EC.element_to_be_clickable((By.ID, field_assessment_date_id))
+                )
+
+                dropdown_current_school = self.browser.find_element(By.ID, dropdown_current_school_id)
+                if self.__dropdown_empty(dropdown_current_school):
+                    self.__select_assessment_dropdown_option(dropdown_current_school, option_client_prefers_not_to_answer_id)
+
+                # Save
+                button_save = self.browser.find_element(By.ID, button_save_id)
+                button_save.click()
+                time.sleep(1)
+            except Exception as e:
+                print("Couldn't complete RHY assessment")
+                print(traceback.format_exc())
+                return False
+
+
         # TRANSLATION ASSISTANCE ASSESSMENT
-        translation_assistance_assessment_locations = ['ORL', 'ORL2.0', 'SEM']
+        translation_assistance_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA']
         no_translation_assistance_assessment_locations = ['BIT']
 
         if location not in translation_assistance_assessment_locations and location not in no_translation_assistance_assessment_locations:
@@ -826,7 +902,7 @@ class Driver:
                 )
                 dropdown_translation = self.browser.find_element(By.ID, dropdown_translation_id)
                 if self.__dropdown_empty(dropdown_translation):
-                    self.__select_assessment_dropdown_option(dropdown_translation, option_data_not_collected_id)
+                    self.__select_assessment_dropdown_option(dropdown_translation, option_no_id)
 
                 # Save
                 button_save = self.browser.find_element(By.ID, button_save_id)
