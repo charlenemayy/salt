@@ -379,7 +379,7 @@ class Driver:
     # @param: [str] service_date: date of service
     # @return: [bool] success / fail
     def enroll_client(self, service_date, location):
-        button_new_enrollment_id = "Renderer_1000000231"
+        button_new_enrollment_id = "Renderer_1000000424"
         dropdown_veteran_status_id = "1000006680_Renderer"
         option_data_not_collected_value = "99"
         button_finish_id = "Renderer_SAVE"

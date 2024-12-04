@@ -37,12 +37,12 @@ class DailyData:
                                    'sharpies']
     petgoods_item_codes_sem = ['cat food', 'dog food']
 
-    # Bithlo Item Keys #TODO: CHECK ITEM KEYS WITH NAINA
+    # Bithlo Item Keys 
     service_item_codes_bit = ['shower', 'laundry']
     clothing_item_codes_bit = ['black bags', 'men\'s pant', 'men\'s top', 'shoes', 'socks', 'underwear', 
-                           'women\'s bottom', 'women\'s top', 'boxer']
+                           'women\'s bottom', 'women\'s top', 'boxer', 'clothing item']
     grooming_item_codes_bit = ['feminine pads', 'hygiene bag', 'razors', 'soap bars', 'tampons', 'toothbrush',
-                           'toothpaste', 'deodorant']
+                           'toothpaste', 'deodorant', 'hygiene item']
     food_item_codes_bit = ['snack', 'water']
     bedding_item_codes_bit = ['tent', 'blankets']
     electronic_item_codes_bit = ['power bank', 'batteries', 'earphones']
@@ -50,18 +50,18 @@ class DailyData:
                                    'sharpies']
     petgoods_item_codes_bit = ['cat food', 'dog food']
 
-    # orlando item keys
+    # Orlando 2.0 Item Keys
     service_item_codes_orl_2 = ['shower', 'laundry', 'inside shower', 'charging']
     clothing_item_codes_orl_2 = ['belt', 'bra', 'boxer', 'backpack', 'hat', 'jewelry', 'pants', 'purse', 'shirt', 'shoes', 
                                  'socks', 'sunglasses', 'ties', 'underwear', 'gloves', 'hand warmer', 'phone case', 'glasses',
-                                 'scarf', 'suitcase']
+                                 'scarf', 'suitcase', 'clothing item']
     grooming_item_codes_orl_2 = ['diapers', 'alcohol pad', 'aloe gel', 'band aid', 'soap', 'body lotion', 'body wash', 'wipes', 
                                  'chapstick', 'conditioner', 'condom', 'cotton ball', 'cotton gauze', 'deodorant', 
                                  'face mask', 'first aid', 'floss', 'brush', 'comb', 'hair gel', 'sanitizer', 'hygiene', 
                                  'ice packs', 'makeup', 'male guard', 'mini iphone fan', 'mirror', 'mouth wash', 'nail file', 
                                  'nail polish', 'nail trimmer', 'narcan', 'pad', 'perfume', 'pullups', 'q-tip', 'razor',
                                  'shaving cream', 'shower cap', 'sunscreen', 'tampon', 'tissue', 'toothbrush', 'toothpaste',
-                                 'underpads', 'underwear']
+                                 'underpads', 'underwear', 'hygiene item']
     food_item_codes_orl_2 = ['snack bag']
     bedding_item_codes_orl_2 = ['blankets', 'ear plugs']
     electronics_item_codes_orl_2 = ['power bank', 'batteries', 'earphones']
@@ -146,6 +146,7 @@ class DailyData:
 
             # IF EMPTY ROW
             if isinstance(row['Client Name'], float):
+                self.failed_df = self.failed_df.drop([row_index])
                 continue
 
             # rearrange birthday and update row
@@ -179,15 +180,16 @@ class DailyData:
             # just remove quotes, as it might be a potential middle name
             if isinstance(row['Client Name'], float):
                 row['Client Name'] = ''
-            no_quotes_name = row['Client Name'].replace('"', '')
-            stripped_name = no_quotes_name.strip()
+
+            no_special_char_name = re.sub(r'[^a-zA-Z0-9\s]', '', row['Client Name'])
+            stripped_name = no_special_char_name.strip()
             string_list = stripped_name.rsplit(' ', 1)
 
             if self.location == 'ORL2.0':
                 if len(string_list) > 1:
                     client_dict['Last Name'] = string_list[1]
                 else:
-                    client_dict['First Name'] = ''
+                    client_dict['Last Name'] = ''
                 client_dict['First Name'] = string_list[0]
             else:
                 if len(string_list) > 1:
@@ -325,6 +327,15 @@ class DailyData:
 
                 i = substring.index(':')
                 services_dict['Case Management'] = int(substring[i+2])
+            else: # sometimes case management is just 'case' (why ??????)
+                index = row['Service'].lower().find('case')
+                if index >= 0:
+                    string_list = row['Service'].lower().split('case')
+                    substring = string_list[1]
+
+                    i = substring.index(':')
+                    services_dict['Case Management'] = int(substring[i+2])
+
 
             index = row['Service'].lower().find('hope and help')
             if index >= 0:
