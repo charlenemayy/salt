@@ -35,6 +35,8 @@ class Driver:
             self.browser.get('https://sanford.saltoutreachapp.com/')
         elif location == "BIT":
             self.browser.get('https://bithlo.saltoutreachapp.com/')
+        elif location == "YYA":
+            self.browser.get('https://youth.saltoutreachapp.com/')
         else:
             self.browser.get('https://saltoutreachapp.com/')
 
@@ -111,6 +113,9 @@ class Driver:
             time.sleep(3)
         elif location == "SEM":
             download_url = "https://sanford.saltoutreachapp.com/dashboard/export"
+            time.sleep(3)
+        elif location == "YYA":
+            download_url = "https://youth.saltoutreachapp.com/dashboard/export"
             time.sleep(3)
         else:
             download_url = "https://saltoutreachapp.com/dashboard/export"

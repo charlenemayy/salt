@@ -154,6 +154,59 @@ if not args.skipbithlo:
 
     print("SUCCESS: Finished running BITHLO entries!\n")
 
+if not args.skipyouth:
+    # check if report has already been downloaded
+    files = os.listdir(output_path)
+    report_filename = "Report_by_client_" + date_str + ".xlsx"
+
+    # delete any existing reports
+    if report_filename in files:
+        subprocess.run(["rm {0}".format(report_filename)], shell=True)
+
+    # download yesterday's report
+    print("RUNNING: Downloading YOUTH report from the SALT Web App")
+    subprocess.run(["/usr/bin/python3 salt/run_daily_report.py -l \"YYA\" -d {0}".format(date_str)], shell=True)
+    time.sleep(5)
+
+    # double check that report has been downloaded / exists
+    report_path = output_path + report_filename
+    if not os.path.exists(report_path):
+        print("ERROR: Downloaded report from SALT cannot be found")
+        quit()
+
+    # download pretty xlsx file to upload to drive
+    print("RUNNING: Processing simplified report file")
+    subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l YYA -f {0} -m".format(report_path)], shell=True)
+
+    # start first run of automation
+    print("RUNNING: Starting first run of automation for SANFORD")
+    subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l YYA -f {0} -a".format(report_path)], shell=True)
+
+    # run the failed entries
+    location = "YYA"
+    failed_report_filename = location + "_Failed_entries_" + date_str + ".xlsx"
+    failed_report_path = output_path + failed_report_filename
+
+    if not os.path.exists(failed_report_path):
+        print("Failed entry report for YOUTH from SALT cannot be found, continuing data entry")
+    else:
+        print("\nRUNNING: Automating failed YOUTH entries")
+        subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l YYA -f {0} -a".format(failed_report_path)], shell=True)
+
+        # upload final instance of the failed entry report to drive
+        gauth = GoogleAuth() 
+        drive = GoogleDrive(gauth)
+
+        gfile = drive.CreateFile({'parents': [{'id': '15sT6EeVyeUsMd_vinRYgSpncosPW7B2s'}], 'title': failed_report_filename}) 
+        gfile.SetContentFile(failed_report_path)
+        gfile.Upload()
+
+    # delete report file from youth location
+    subprocess.run(["rm {0}".format(report_path)], shell=True)
+
+    print("SUCCESS: Finished running Youth entries!\n")
+
+
 ####### ORLANDO DAILY DATA (OLD SALT APP)
 if not args.skipoldapp:
     # check if report has already been downloaded
