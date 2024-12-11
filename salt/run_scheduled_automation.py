@@ -38,6 +38,7 @@ parser.add_argument("-lu", "--leaveunlocked", action="store_true")
 parser.add_argument("-ssf", "--skipsanford", action="store_true")
 parser.add_argument("-sbl", "--skipbithlo", action="store_true")
 parser.add_argument("-soa", "--skipoldapp", action="store_true")
+parser.add_argument("-syo", "--skipyouth", action="store_true")
 
 args = parser.parse_args()
 
