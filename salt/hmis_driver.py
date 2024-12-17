@@ -89,6 +89,11 @@ class Driver:
             WebDriverWait(self.browser, self.wait_time).until(
                 EC.presence_of_element_located((By.XPATH, label_client_name_xpath))
             )
+
+            # if name is not provided
+            if first_name == '' and last_name == '':
+                return True
+                
             dashboard_title = self.browser.find_element(By.XPATH, label_client_name_xpath).get_attribute("title")
             dashboard_name = dashboard_title.split("'s")[0]
             dashboard_first_name = dashboard_name.split(" ", 1)[0]
@@ -1141,6 +1146,102 @@ class Driver:
             return False
         return True
 
+    # Miomics logic of 'update_date_of_engagement', 'navigate_to_edit_enrollment' and 'open_link_in_enrollment_action_menu'
+    #   special case scenario - fix for error reports from HSN
+    #       # @return: [bool] success / fail
+    def fix_enrollment_entry_assessment(self, enrollment_id, viable_enrollment_list, entry_date):
+        self.__switch_to_iframe(self.iframe_id)
+        self.__wait_until_page_fully_loaded('Client Dashboard')
+
+        self.navigate_to_edit_project_entry_workflow(viable_enrollment_list)
+
+        self.__switch_to_iframe(self.iframe_id)
+        self.__wait_until_page_fully_loaded('Intake - Basic Client Information')
+
+        # BASIC CLIENT INFORMATION
+        button_finish_id = 'FinishButton'
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable((By.ID, button_finish_id))
+            )
+            button_finish = self.browser.find_element(By.ID, button_finish_id)
+            button_finish.click()
+            time.sleep(1)
+        except Exception as e:
+            print("Couldn't click the finish enrollment button")
+            print(traceback.format_exc())
+            return False
+
+        # FAMILY MEMBERS
+        self.__switch_to_iframe(self.iframe_id)
+        self.__wait_until_page_fully_loaded('Intake - Family Members')
+        button_save_and_close_id = 'Renderer_SAVEFINISH'
+
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable((By.ID, button_save_and_close_id))
+            )
+            button_save_and_close = self.browser.find_element(By.ID, button_save_and_close_id)
+            button_save_and_close.click()
+        except Exception as e:
+            print("Couldn't Save 'Family Members' section of Intake")
+            print(traceback.format_exc())
+            return False
+
+        # PROGRAM ENROLLMENT
+        self.__switch_to_iframe(self.iframe_id)
+        self.__wait_until_page_fully_loaded('Intake - Program Enrollment')
+        button_save_id = 'Renderer_SAVE'
+        
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable((By.ID, button_save_id))
+            )
+            button_save = self.browser.find_element(By.ID, button_save_id)
+            button_save.click()
+            time.sleep(1)
+        except Exception as e:
+            print("Couldn't save 'Program Enrollment' section of Intake")
+            print(traceback.format_exc())
+            return False
+
+        # Redo Entry Assessment
+        return self.__assess_client(entry_date, 'ORL')
+        '''
+        self.__switch_to_iframe(self.iframe_id)
+        self.__wait_until_page_fully_loaded('Intake - Universal Data Assessment')
+        button_default_assessment_id = 'B1000006792_Renderer'
+
+        self.__default_last_assessment(button_default_assessment_id)
+        self.__wait_until_page_fully_loaded("Intake - Universal Data Assessment")
+
+        # Data Error: 'Missing Enrollment CoC'
+        dropdown_county_id = '1000006849_Renderer'
+        dropdown_county = self.browser.find_element(By.ID, dropdown_county_id)
+        option_orange_county_id = '1'
+        if self.__dropdown_empty(dropdown_county):
+            option_county_id = option_orange_county_id
+            self.__select_assessment_dropdown_option(dropdown_county, option_county_id)
+
+        # Data Error: 'Missing Length of Stay'
+        dropdown_length_of_stay_id = '1000006812_Renderer'
+        dropdown_length_of_stay = self.browser.find_element(By.ID, dropdown_length_of_stay_id)
+        option_client_prefers_not_to_answer_id = '9'
+        if self.__dropdown_empty(dropdown_length_of_stay):
+            self.__select_assessment_dropdown_option(dropdown_length_of_stay, option_client_prefers_not_to_answer_id)
+            
+        # Data Error: 'Missing Months or Times Homeless'
+        dropdown_street_frequency_id = '1000006807_Renderer'
+        dropdown_street_frequency = self.browser.find_element(By.ID, dropdown_street_frequency_id)
+        if self.__dropdown_empty(dropdown_street_frequency):
+            self.__select_assessment_dropdown_option(dropdown_street_frequency, option_client_prefers_not_to_answer_id)
+
+        dropdown_months_homeless_id = '1000006813_Renderer'
+        dropdown_months_homeless = self.browser.find_element(By.ID, dropdown_months_homeless_id)
+        if self.__dropdown_empty(dropdown_months_homeless):
+            self.__select_assessment_dropdown_option(dropdown_months_homeless, option_client_prefers_not_to_answer_id)
+        '''
+
     '''
     ------------------------ NAVIGATION ------------------------
     '''
@@ -1249,6 +1350,15 @@ class Driver:
         self.__switch_to_iframe(self.iframe_id)
 
         return self.__open_link_in_enrollment_action_menu(viable_enrollment_list, "Edit Enrollment")
+
+    # IMPORTANT: This function can only work if the browser is navigating from the 'Client Dashboard' page
+    #   Navigates to the edit project entry page from the client's enrollment list on the dashboard
+    # @return: [bool] success / fail
+    def navigate_to_edit_project_entry_workflow(self, viable_enrollment_list):
+        self.__wait_until_page_fully_loaded("Client Dashboard")
+        self.__switch_to_iframe(self.iframe_id)
+
+        return self.__open_link_in_enrollment_action_menu(viable_enrollment_list, "Edit Project Entry Workflow")
 
     # Finds a favorable enrollment under the list of enrollments on the 'Client Dashboard' page
     #   and clicks its action menu
