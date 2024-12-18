@@ -44,22 +44,18 @@ class ErrorFixes:
             client_dict = {}
             row = self.df.iloc[row_index]
 
-            # if empty row
-            if isinstance(row['Client Name'], float):
-                self.failed_df = self.failed_df.drop([row_index])
-                continue
-
             # ensure HMIS ID in right format
             if isinstance(row['HMIS ID'], float):
-                client_dict['Client ID'] = ''
+                client_dict['Client ID'] = str(row['HMIS ID'])
             elif isinstance(row['HMIS ID'], int):
                 client_dict['Client ID'] = str(row['HMIS ID']) 
             elif len(row['HMIS ID']) > 9: # encrypted id
                 client_dict['Client ID'] = ''
-            elif row['HMIS ID'] == '0' or any(c.isalpha for c in row['HMIS ID']): #0 or 'no id' (why is this allowed???)
-                client_dict['Client ID'] = ''
             else:
                 client_dict['Client ID'] = row['HMIS ID']
+
+            # set Client Name to bypass check
+            client_dict['Client Name'] = ''
 
             # format dates (if necessary)
             client_dict['Entry Date'] = row['Entry Date']
@@ -71,15 +67,12 @@ class ErrorFixes:
             client_dict['Issue'] = row['Issue']
             client_dict['Project Name'] = row['Project Name']
 
-            if client_dict['Issue'] == "Missing Enrollment CoC":
-                self.__automate_enrollment_entry_assessment_fix(client_dict, row_index)
-            elif client_dict['Issue'] == "":
-                print("TODO")
+            self.__automate_enrollment_entry_assessment_fix(client_dict, row_index)
 
         # For Loop End
 
     def __automate_enrollment_entry_assessment_fix(self, client_dict, row_index):
-        print("\nFixing Error for Client:" + client_dict['HMIS ID'])
+        print("\nFixing Error for Client:" + client_dict['Client ID'])
         success = False
         # STEP ONE: SEARCH FOR CLIENT
         if not isinstance(client_dict['Client ID'], float) and client_dict['Client ID'] != "":

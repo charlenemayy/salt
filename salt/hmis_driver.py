@@ -1146,7 +1146,7 @@ class Driver:
             return False
         return True
 
-    # Miomics logic of 'update_date_of_engagement', 'navigate_to_edit_enrollment' and 'open_link_in_enrollment_action_menu'
+    # Mimics logic of 'update_date_of_engagement', 'navigate_to_edit_enrollment' and 'open_link_in_enrollment_action_menu'
     #   special case scenario - fix for error reports from HSN
     #       # @return: [bool] success / fail
     def fix_enrollment_entry_assessment(self, enrollment_id, viable_enrollment_list, entry_date):
@@ -1368,7 +1368,7 @@ class Driver:
     #                    options that are under the action menu
     # @return: [bool] success / fail
     def __open_link_in_enrollment_action_menu(self, viable_enrollment_list, link_name):
-        label_enrollment_row_name_xpath = ('//table[@id="wp85039573formResultSet"]/tbody//td[6]')
+        label_enrollment_row_name_xpath = ('//table[@id="wp85039573formResultSet"]/tbody//td')
         links_enrollment_action_ids = {'Edit Enrollment': 'amb3',
                                        'Edit Project Entry Workflow': 'amb4'}
 
@@ -1391,6 +1391,7 @@ class Driver:
 
             rows_enrollment = self.browser.find_elements(By.XPATH, rows_enrollment_xpath)
             stored_ranking = len(enrollment_ranking_dict)
+
             for row in rows_enrollment:
                 if not cont:
                     break
@@ -1403,7 +1404,7 @@ class Driver:
                         break
                 # if row contains enrollment data
                 else:
-                    label_enrollment_name = row.find_element(By.XPATH, './td[6]').text
+                    label_enrollment_name = row.find_element(By.XPATH, './td[7]').text
                     for enrollment, ranking in enrollment_ranking_dict.items():
                         if enrollment in label_enrollment_name and ranking < stored_ranking:
                             # ranking indicates that we'd like to update newer enrollments over older ones
@@ -1412,19 +1413,27 @@ class Driver:
                             stored_row = row
                             break
             # For Loop End
-
             # click the best match
             if stored_ranking < len(enrollment_ranking_dict):
                 menu_action = stored_row.find_element(By.CLASS_NAME, 'action-menu')
                 self.browser.execute_script("arguments[0].scrollIntoView();", menu_action)
                 time.sleep(1)
-                menu_action.click()
             else:
                 return False
         except Exception as e:
-            print("Couldn't open Enrollment Action Menu")
+            print("Couldn't find Enrollment Action Menu")
             print(traceback.format_exc())
             return e
+
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable(menu_action)
+            )
+            menu_action.click()
+        except Exception as e:
+            print("Attempting to click action menu button again")
+            time.sleep(1)
+            menu_action.click()
 
         # wait for action menu to appear
         try:
