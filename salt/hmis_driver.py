@@ -1159,7 +1159,7 @@ class Driver:
         self.__wait_until_page_fully_loaded('Intake - Basic Client Information')
 
         # BASIC CLIENT INFORMATION
-        button_finish_id = 'FinishButton'
+        button_finish_id = 'Renderer_SAVE'
         try:
             WebDriverWait(self.browser, self.wait_time).until(
                 EC.element_to_be_clickable((By.ID, button_finish_id))
@@ -1206,41 +1206,54 @@ class Driver:
             return False
 
         # Redo Entry Assessment
-        return self.__assess_client(entry_date, 'ORL')
-        '''
         self.__switch_to_iframe(self.iframe_id)
         self.__wait_until_page_fully_loaded('Intake - Universal Data Assessment')
-        button_default_assessment_id = 'B1000006792_Renderer'
 
-        self.__default_last_assessment(button_default_assessment_id)
-        self.__wait_until_page_fully_loaded("Intake - Universal Data Assessment")
+        try:
+            button_default_assessment_id = 'B1000006859_Renderer'
+            button_save_id = 'Renderer_SAVE'
 
-        # Data Error: 'Missing Enrollment CoC'
-        dropdown_county_id = '1000006849_Renderer'
-        dropdown_county = self.browser.find_element(By.ID, dropdown_county_id)
-        option_orange_county_id = '1'
-        if self.__dropdown_empty(dropdown_county):
-            option_county_id = option_orange_county_id
-            self.__select_assessment_dropdown_option(dropdown_county, option_county_id)
+            self.__default_last_assessment(button_default_assessment_id)
 
-        # Data Error: 'Missing Length of Stay'
-        dropdown_length_of_stay_id = '1000006812_Renderer'
-        dropdown_length_of_stay = self.browser.find_element(By.ID, dropdown_length_of_stay_id)
-        option_client_prefers_not_to_answer_id = '9'
-        if self.__dropdown_empty(dropdown_length_of_stay):
-            self.__select_assessment_dropdown_option(dropdown_length_of_stay, option_client_prefers_not_to_answer_id)
-            
-        # Data Error: 'Missing Months or Times Homeless'
-        dropdown_street_frequency_id = '1000006807_Renderer'
-        dropdown_street_frequency = self.browser.find_element(By.ID, dropdown_street_frequency_id)
-        if self.__dropdown_empty(dropdown_street_frequency):
-            self.__select_assessment_dropdown_option(dropdown_street_frequency, option_client_prefers_not_to_answer_id)
+            # Data Error: 'Missing Enrollment CoC'
+            dropdown_county_id = '1000006950_Renderer'
+            dropdown_county = self.browser.find_element(By.ID, dropdown_county_id)
+            option_orange_county_id = '1'
+            if self.__dropdown_empty(dropdown_county):
+                option_county_id = option_orange_county_id
+                self.__select_assessment_dropdown_option(dropdown_county, option_county_id)
 
-        dropdown_months_homeless_id = '1000006813_Renderer'
-        dropdown_months_homeless = self.browser.find_element(By.ID, dropdown_months_homeless_id)
-        if self.__dropdown_empty(dropdown_months_homeless):
-            self.__select_assessment_dropdown_option(dropdown_months_homeless, option_client_prefers_not_to_answer_id)
-        '''
+            # Data Error: 'Missing Residence Prior'
+            option_place_not_meant_for_habitation_id = '16'
+            dropdown_prior_living_sit_id = '1000006811_Renderer'
+            dropdown_prior_living_sit = self.browser.find_element(By.ID, dropdown_prior_living_sit_id)
+            if self.__dropdown_empty(dropdown_prior_living_sit):
+                self.__select_assessment_dropdown_option(dropdown_prior_living_sit, option_place_not_meant_for_habitation_id)
+
+            # Data Error: 'Missing Length of Stay'
+            dropdown_length_of_stay_id = '1000006946_Renderer'
+            dropdown_length_of_stay = self.browser.find_element(By.ID, dropdown_length_of_stay_id)
+            option_client_prefers_not_to_answer_id = '9'
+            if self.__dropdown_empty(dropdown_length_of_stay):
+                self.__select_assessment_dropdown_option(dropdown_length_of_stay, option_client_prefers_not_to_answer_id)
+
+            # Data Error: 'Missing Months or Times Homeless'
+            dropdown_street_frequency_id = '1000006938_Renderer'
+            dropdown_street_frequency = self.browser.find_element(By.ID, dropdown_street_frequency_id)
+            if self.__dropdown_empty(dropdown_street_frequency):
+                self.__select_assessment_dropdown_option(dropdown_street_frequency, option_client_prefers_not_to_answer_id)
+
+            dropdown_months_homeless_id = '1000006942_Renderer'
+            dropdown_months_homeless = self.browser.find_element(By.ID, dropdown_months_homeless_id)
+            if self.__dropdown_empty(dropdown_months_homeless):
+                self.__select_assessment_dropdown_option(dropdown_months_homeless, option_client_prefers_not_to_answer_id)
+
+            button_save = self.browser.find_element(By.ID, button_save_id)
+            button_save.click()
+        except Exception as e:
+            print("Couldn't save 'Universal Data Assessment' section of Intake")
+            print(traceback.format_exc())
+            return False
 
     '''
     ------------------------ NAVIGATION ------------------------
@@ -1416,8 +1429,8 @@ class Driver:
             # click the best match
             if stored_ranking < len(enrollment_ranking_dict):
                 menu_action = stored_row.find_element(By.CLASS_NAME, 'action-menu')
+                print(stored_row.find_element(By.XPATH, './td[7]').text)
                 self.browser.execute_script("arguments[0].scrollIntoView();", menu_action)
-                time.sleep(1)
             else:
                 return False
         except Exception as e:
@@ -1425,15 +1438,18 @@ class Driver:
             print(traceback.format_exc())
             return e
 
+        # try clicking the button
         try:
             WebDriverWait(self.browser, self.wait_time).until(
                 EC.element_to_be_clickable(menu_action)
             )
-            menu_action.click()
+            # had to use javascript here as the element was constantly being intercepted
+            self.browser.execute_script("arguments[0].click();", menu_action)
+            time.sleep(2)
         except Exception as e:
-            print("Attempting to click action menu button again")
-            time.sleep(1)
-            menu_action.click()
+            print("Couldn't click Action Menu")
+            print(traceback.format_exc())
+            return e
 
         # wait for action menu to appear
         try:
