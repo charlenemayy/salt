@@ -1216,8 +1216,7 @@ class Driver:
             self.__default_last_assessment(button_default_assessment_id)
 
             # Data Error: 'Missing Enrollment CoC'
-            dropdown_county_id = '1000006950_Renderer'
-            dropdown_county = self.browser.find_element(By.ID, dropdown_county_id)
+            dropdown_county = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="1000000001"]')
             option_orange_county_id = '1'
             if self.__dropdown_empty(dropdown_county):
                 option_county_id = option_orange_county_id
@@ -1225,26 +1224,22 @@ class Driver:
 
             # Data Error: 'Missing Residence Prior'
             option_place_not_meant_for_habitation_id = '16'
-            dropdown_prior_living_sit_id = '1000006811_Renderer'
-            dropdown_prior_living_sit = self.browser.find_element(By.ID, dropdown_prior_living_sit_id)
+            dropdown_prior_living_sit = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3830"]')
             if self.__dropdown_empty(dropdown_prior_living_sit):
                 self.__select_assessment_dropdown_option(dropdown_prior_living_sit, option_place_not_meant_for_habitation_id)
 
             # Data Error: 'Missing Length of Stay'
-            dropdown_length_of_stay_id = '1000006946_Renderer'
-            dropdown_length_of_stay = self.browser.find_element(By.ID, dropdown_length_of_stay_id)
+            dropdown_length_of_stay = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3838"]')
             option_client_prefers_not_to_answer_id = '9'
             if self.__dropdown_empty(dropdown_length_of_stay):
                 self.__select_assessment_dropdown_option(dropdown_length_of_stay, option_client_prefers_not_to_answer_id)
 
             # Data Error: 'Missing Months or Times Homeless'
-            dropdown_street_frequency_id = '1000006938_Renderer'
-            dropdown_street_frequency = self.browser.find_element(By.ID, dropdown_street_frequency_id)
+            dropdown_street_frequency = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3028"]')
             if self.__dropdown_empty(dropdown_street_frequency):
                 self.__select_assessment_dropdown_option(dropdown_street_frequency, option_client_prefers_not_to_answer_id)
 
-            dropdown_months_homeless_id = '1000006942_Renderer'
-            dropdown_months_homeless = self.browser.find_element(By.ID, dropdown_months_homeless_id)
+            dropdown_months_homeless = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3377"]')
             if self.__dropdown_empty(dropdown_months_homeless):
                 self.__select_assessment_dropdown_option(dropdown_months_homeless, option_client_prefers_not_to_answer_id)
 
