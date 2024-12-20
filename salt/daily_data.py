@@ -23,6 +23,7 @@ class DailyData:
     homebased_item_codes_orl = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
                                    'sharpies']
     petgoods_item_codes_orl = ['cat food', 'dog food']
+    loungeaccess_item_codes_orl = []
 
     # Sanford Item Keys
     service_item_codes_sem = ['shower', 'laundry']
@@ -36,6 +37,7 @@ class DailyData:
     homebased_item_codes_sem = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
                                    'sharpies']
     petgoods_item_codes_sem = ['cat food', 'dog food']
+    loungeaccess_item_codes_sem = []
 
     # Bithlo Item Keys 
     service_item_codes_bit = ['shower', 'laundry']
@@ -49,6 +51,7 @@ class DailyData:
     homebased_item_codes_bit = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
                                    'sharpies']
     petgoods_item_codes_bit = ['cat food', 'dog food']
+    loungeaccess_item_codes_bit = []
 
     # Orlando 2.0 Item Keys
     service_item_codes_orl_2 = ['shower', 'laundry', 'inside shower', 'charging']
@@ -68,16 +71,18 @@ class DailyData:
     homebased_item_codes_orl_2 = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
                                    'sharpies']
     petgoods_item_codes_orl_2 = ['cat food', 'dog food']
+    loungeaccess_item_codes_orl_2 = []
 
     # Youth
     service_item_codes_yya = []
-    clothing_item_codes_yya = []
+    clothing_item_codes_yya = ['clothing', 'socks', 'underwear']
     grooming_item_codes_yya = ['hygiene bag']
     food_item_codes_yya = ['snack bags']
     bedding_item_codes_yya = []
     electronics_item_codes_yya = []
     homebased_item_codes_yya = []
     petgoods_item_codes_yya = []
+    loungeaccess_item_codes_yya = ['respite room']
 
     # Locations
     location_codes = ["BIT", "SEM", "ORL", "ORL2.0", "YYA"]
@@ -375,6 +380,7 @@ class DailyData:
             electronics_item_codes = DailyData.electronic_item_codes_orl
             homebased_item_codes = DailyData.homebased_item_codes_orl
             petgoods_item_codes = DailyData.petgoods_item_codes_orl
+            loungeaccess_item_codes = DailyData.loungeaccess_item_codes_orl
         elif self.location == 'SEM':
             clothing_item_codes = DailyData.clothing_item_codes_sem
             grooming_item_codes = DailyData.grooming_item_codes_sem
@@ -383,6 +389,7 @@ class DailyData:
             electronics_item_codes = DailyData.electronic_item_codes_sem
             homebased_item_codes = DailyData.homebased_item_codes_sem
             petgoods_item_codes = DailyData.petgoods_item_codes_sem
+            loungeaccess_item_codes = DailyData.loungeaccess_item_codes_sem
         elif self.location == 'BIT':
             clothing_item_codes = DailyData.clothing_item_codes_bit
             grooming_item_codes = DailyData.grooming_item_codes_bit
@@ -391,6 +398,7 @@ class DailyData:
             electronics_item_codes = DailyData.electronic_item_codes_bit
             homebased_item_codes = DailyData.homebased_item_codes_bit
             petgoods_item_codes = DailyData.petgoods_item_codes_bit
+            loungeaccess_item_codes = DailyData.loungeaccess_item_codes_bit
         if self.location == 'ORL2.0': # for new salt app
             clothing_item_codes = DailyData.clothing_item_codes_orl_2
             grooming_item_codes = DailyData.grooming_item_codes_orl_2
@@ -399,6 +407,7 @@ class DailyData:
             electronics_item_codes = DailyData.electronics_item_codes_orl_2
             homebased_item_codes = DailyData.homebased_item_codes_orl_2
             petgoods_item_codes = DailyData.petgoods_item_codes_orl_2
+            loungeaccess_item_codes = DailyData.loungeaccess_item_codes_orl_2
         elif self.location == 'YYA':
             clothing_item_codes = DailyData.clothing_item_codes_yya
             grooming_item_codes = DailyData.grooming_item_codes_yya
@@ -407,6 +416,7 @@ class DailyData:
             electronics_item_codes = DailyData.electronics_item_codes_yya
             homebased_item_codes = DailyData.homebased_item_codes_yya
             petgoods_item_codes = DailyData.petgoods_item_codes_yya
+            loungeaccess_item_codes = DailyData.loungeaccess_item_codes_yya
 
         if self.show_output:
             print("Raw Excel Data:")
@@ -567,6 +577,21 @@ class DailyData:
                 items_dict['Pet Goods'] = petgoods_count
             if self.show_output: 
                 print("Pet Goods: " + str(petgoods_count))
+
+            loungeaccess_count = 0
+            for item in loungeaccess_item_codes:
+                index = row_items.find(item)
+                if index >= 0:
+                    string_list = row_items.split(item)
+                    substring = string_list[1]
+
+                    i = substring.index(':')
+                    loungeaccess_count += int(substring[i+2])
+                if loungeaccess_count > 0:
+                    items_string = (items_string + "Lounge Access: " + str(loungeaccess_count) + "\n")
+                    items_dict['Lounge Access'] = loungeaccess_count
+                if self.show_output:
+                    print("Lounge Access: " + str(loungeaccess_count))
 
         # if there are no items in the item column but the service column is not empty
         elif (services_dict): 
