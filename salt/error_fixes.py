@@ -1,5 +1,5 @@
 from datetime import datetime
-import re
+import os
 import hmis_driver
 import pandas as pd
 import json
@@ -104,8 +104,7 @@ class ErrorFixes:
     # This way we can keep looping the failed entries and try again
     def __export_failed_automation_data(self):
         # get date from original file and output into new excel sheet
-        output_name = (self.location + "_Failed_entries_" 
-                       + self.filename)
+        output_name = ("Failed_entries_" + os.path.basename(self.filename))
 
         # create sheet for remaining clients that need to be entered and could not be automated
         self.failed_df.to_excel(self.output_path + output_name + ".xlsx", sheet_name = "Failed Entries Report - " + output_name)

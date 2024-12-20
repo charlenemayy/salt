@@ -960,7 +960,7 @@ class Driver:
             time.sleep(3)
         except Exception as e:
             # sometimes this button doesn't exist, just skip over
-            print("Couldn't click last assessment button")
+            print("Couldn't click last assessment button -- ignoring")
     
     # Mimics logic of 'update_date_of_engagement', 'navigate_to_edit_enrollment' and 'open_link_in_enrollment_action_menu'
     #   for special case scenario: deleting date of engagement fields that are supposed to be empty, but 
@@ -1150,6 +1150,11 @@ class Driver:
     #   special case scenario - fix for error reports from HSN
     #       # @return: [bool] success / fail
     def fix_enrollment_entry_assessment(self, enrollment_id, viable_enrollment_list, entry_date):
+        option_no_id = '0'
+        option_orange_county_id = '1'
+        option_place_not_meant_for_habitation_id = '16'
+        option_client_prefers_not_to_answer_id = '9'
+
         self.__switch_to_iframe(self.iframe_id)
         self.__wait_until_page_fully_loaded('Client Dashboard')
 
@@ -1205,7 +1210,7 @@ class Driver:
             print(traceback.format_exc())
             return False
 
-        # Redo Entry Assessment
+        # INTAKE - UNIVERSAL DATA ASSESSMENT
         self.__switch_to_iframe(self.iframe_id)
         self.__wait_until_page_fully_loaded('Intake - Universal Data Assessment')
 
@@ -1217,20 +1222,17 @@ class Driver:
 
             # Data Error: 'Missing Enrollment CoC'
             dropdown_county = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="1000000001"]')
-            option_orange_county_id = '1'
             if self.__dropdown_empty(dropdown_county):
                 option_county_id = option_orange_county_id
                 self.__select_assessment_dropdown_option(dropdown_county, option_county_id)
 
             # Data Error: 'Missing Residence Prior'
-            option_place_not_meant_for_habitation_id = '16'
             dropdown_prior_living_sit = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3830"]')
             if self.__dropdown_empty(dropdown_prior_living_sit):
                 self.__select_assessment_dropdown_option(dropdown_prior_living_sit, option_place_not_meant_for_habitation_id)
 
             # Data Error: 'Missing Length of Stay'
             dropdown_length_of_stay = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3838"]')
-            option_client_prefers_not_to_answer_id = '9'
             if self.__dropdown_empty(dropdown_length_of_stay):
                 self.__select_assessment_dropdown_option(dropdown_length_of_stay, option_client_prefers_not_to_answer_id)
 
@@ -1249,6 +1251,176 @@ class Driver:
             print("Couldn't save 'Universal Data Assessment' section of Intake")
             print(traceback.format_exc())
             return False
+
+        # INTAKE - BARRIER ASSESSMENT
+        button_default_assessment_id = 'B1000006792_Renderer'
+        field_identified_date_id = '90688_Renderer'
+        button_save_and_close_id = 'Renderer_SAVEFINISH'
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable((By.ID, field_identified_date_id))
+            )
+
+            # sometimes this button isn't available
+            button_default_assessment = self.browser.find_elements(By.ID, button_default_assessment_id)
+            already_assessed = False
+            if len(button_default_assessment) > 1:
+                already_assessed = True
+                button_default_assessment[0].click()
+                time.sleep(3)
+
+            dropdowns_xpath = '//table[@id="RendererResultSet"]//tr/td/select[@class="form-control"]'
+            dropdowns = self.browser.find_elements(By.XPATH, dropdowns_xpath)
+
+            # every fouth dropdown is a 'Barrier Present?' field
+            for i in range(0, len(dropdowns), 4):
+                if self.__dropdown_empty(dropdowns[i]):
+                    self.__select_assessment_dropdown_option(dropdowns[i], option_no_id)
+
+            # Save
+            button_save_and_close = self.browser.find_element(By.ID, button_save_and_close_id)
+            button_save_and_close.click()
+            time.sleep(2) 
+
+            # depending on the case, it might have to click save and close twice
+            if already_assessed and self.browser.find_elements(By.ID, button_save_and_close_id) > 1:
+                button_save_and_close = self.browser.find_element(By.ID, button_save_and_close_id)
+                button_save_and_close.click()
+                time.sleep(2) 
+
+        except Exception as e:
+            print("Couldn't complete barrier assessment")
+            print(traceback.format_exc())
+            return False
+
+        # INTAKE - DOMESTIC VIOLENCE ASSESSMENT
+        button_default_assessment_id = 'B48899_Renderer'
+        field_assessment_date_id = '11807_Renderer'
+        button_save_id = "Renderer_SAVE"
+
+        self.__default_last_assessment(button_default_assessment_id)
+        self.__wait_until_page_fully_loaded("Domestic Violence Assessment")
+
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable((By.ID, field_assessment_date_id))
+            )
+
+            buttons_domestic_violence_xpath = '//span[@id="11888_Renderer"]//input[@type="radio"]'
+            buttons_domestic_violence = self.browser.find_elements(By.XPATH, buttons_domestic_violence_xpath)
+            is_empty = True
+            for button in buttons_domestic_violence:
+                if button.is_selected():
+                    is_empty = False
+            if is_empty:
+                buttons_domestic_violence[1].click() # 'No' option
+                time.sleep(1)
+
+            # Save
+            button_save = self.browser.find_element(By.ID, button_save_id)
+            button_save.click()
+            time.sleep(1)
+        except Exception as e:
+            print("Couldn't complete domestic violence assessment")
+            print(traceback.format_exc())
+            return False
+
+        # INTAKE - INCOME ASSESSMENT
+        field_assessment_date_id = '92172_Renderer'
+        dropdown_income_id = '92173_Renderer'
+        dropdown_non_cash_benefits_id = '92174_Renderer'
+        button_save_id = "Renderer_SAVE"
+        button_default_assessment_id = 'B92169_Renderer'
+
+        self.__default_last_assessment(button_default_assessment_id)
+        self.__wait_until_page_fully_loaded("Income Assessment")
+
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable((By.ID, field_assessment_date_id))
+            )
+            dropdown_income = self.browser.find_element(By.ID, dropdown_income_id)
+            if self.__dropdown_empty(dropdown_income):
+                self.__select_assessment_dropdown_option(dropdown_income, option_data_not_collected_id)
+
+            dropdown_cash_benefits = self.browser.find_element(By.ID, dropdown_non_cash_benefits_id)
+            if self.__dropdown_empty(dropdown_cash_benefits):
+                self.__select_assessment_dropdown_option(dropdown_cash_benefits, option_data_not_collected_id)
+
+            # Save
+            button_save = self.browser.find_element(By.ID, button_save_id)
+            button_save.click()
+            time.sleep(1)
+        except Exception as e:
+            print("Couldn't complete income assessment")
+            print(traceback.format_exc())
+            return False
+
+        # INTAKE - CURRENT LIVING SITUATION ASSESSMENT
+        self.__wait_until_page_fully_loaded("Current Living Situation Assessment")
+
+        dropdown_living_sit_id = '107051_Renderer'
+        button_save_id = "Renderer_SAVE"
+
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable((By.ID, dropdown_living_sit_id))
+            )
+            dropdown_living_sit = self.browser.find_element(By.ID, dropdown_living_sit_id)
+            self.__select_assessment_dropdown_option(dropdown_living_sit, option_place_not_meant_for_habitation_id)
+
+            # Save
+            button_save = self.browser.find_element(By.ID, button_save_id)
+            button_save.click()
+            time.sleep(1)
+        except Exception as e:
+            print("Couldn't complete current living situation assessment")
+            print(traceback.format_exc())
+            return False
+
+        # INTAKE - TRANSLATION ASSISTANCE ASSESSMENT
+        dropdown_translation_id = '107564_Renderer'
+        button_save_id = "Renderer_SAVE"
+        button_default_assessment_id = 'B107569_Renderer'
+
+        self.__default_last_assessment(button_default_assessment_id)
+        self.__wait_until_page_fully_loaded("Translation Assistance Assessment")
+
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable((By.ID, dropdown_translation_id))
+            )
+            dropdown_translation = self.browser.find_element(By.ID, dropdown_translation_id)
+            if self.__dropdown_empty(dropdown_translation):
+                self.__select_assessment_dropdown_option(dropdown_translation, option_no_id)
+
+            # Save
+            button_save = self.browser.find_element(By.ID, button_save_id)
+            button_save.click()
+            time.sleep(1)
+        except Exception as e:
+            print("Couldn't complete translation assistance assessment")
+            print(traceback.format_exc())
+            return False
+
+        # FINISH BUTTON
+        self.__wait_until_page_fully_loaded("Finish Page")
+        button_finish_id = 'FinishButton'
+
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable((By.ID, button_finish_id))
+            )
+            button_finish = self.browser.find_element(By.ID, button_finish_id)
+            button_finish.click()
+            time.sleep(1)
+        except Exception as e:
+            print("Couldn't click the finish enrollment button")
+            print(traceback.format_exc())
+            return False
+        
+        # SUCCESS
+        return True
 
     '''
     ------------------------ NAVIGATION ------------------------
