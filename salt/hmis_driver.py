@@ -387,7 +387,7 @@ class Driver:
     def enroll_client(self, service_date, location):
         button_new_enrollment_id = "Renderer_1000000424"
         dropdown_veteran_status_id = "1000006680_Renderer"
-        option_data_not_collected_value = "99"
+        option_no_value = "0"
         button_finish_id = "Renderer_SAVE"
         button_save_and_close_id = "Renderer_SAVEFINISH"
         dropdown_project_id = "1000004260_Renderer"
@@ -440,10 +440,9 @@ class Driver:
             selected_option = dropdown_veteran_status.first_selected_option
 
             if "SELECT" in selected_option.text:
-                option_data_not_collected_xpath = ('//select[@id="%s"]//option[@value="%s"]' 
-                                                   %(dropdown_veteran_status_id, option_data_not_collected_value))
-                option_data_not_collected = self.browser.find_element(By.XPATH, option_data_not_collected_xpath)
-                option_data_not_collected.click()
+                option_no_xpath = ('//select[@id="%s"]//option[@value="%s"]' %(dropdown_veteran_status_id, option_no_value))
+                option_no = self.browser.find_element(By.XPATH, option_no_xpath)
+                option_no.click()
             time.sleep(1)
         except Exception as e:
             print("Couldn't update Veteran Status, field not selected (sometimes doesn't exist)")
@@ -1342,11 +1341,11 @@ class Driver:
             )
             dropdown_income = self.browser.find_element(By.ID, dropdown_income_id)
             if self.__dropdown_empty(dropdown_income):
-                self.__select_assessment_dropdown_option(dropdown_income, option_data_not_collected_id)
+                self.__select_assessment_dropdown_option(dropdown_income, option_client_prefers_not_to_answer_id)
 
             dropdown_cash_benefits = self.browser.find_element(By.ID, dropdown_non_cash_benefits_id)
             if self.__dropdown_empty(dropdown_cash_benefits):
-                self.__select_assessment_dropdown_option(dropdown_cash_benefits, option_data_not_collected_id)
+                self.__select_assessment_dropdown_option(dropdown_cash_benefits, option_client_prefers_not_to_answer_id)
 
             # Save
             button_save = self.browser.find_element(By.ID, button_save_id)
