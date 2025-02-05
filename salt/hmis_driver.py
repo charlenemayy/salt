@@ -658,8 +658,8 @@ class Driver:
             return False
 
         # BARRIER ASSESSMENT
-        barrier_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA']
-        no_barrier_assessment_locations = ['BIT']
+        barrier_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT']
+        no_barrier_assessment_locations = []
 
         if location not in barrier_assessment_locations and location not in no_barrier_assessment_locations:
             print("DID NOT ADD NEW LOCATION TO BARRIER ASSESSMENT ENROLLMENT LIST, FIX AND RERUN")
@@ -708,8 +708,8 @@ class Driver:
                 return False
 
         # DOMESTIC VIOLENCE ASSESSMENT
-        domestic_violence_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA']
-        no_domestic_violence_assessment_locations = ['BIT']
+        domestic_violence_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT']
+        no_domestic_violence_assessment_locations = []
 
         if location not in domestic_violence_assessment_locations and location not in no_domestic_violence_assessment_locations:
             print("DID NOT ADD NEW LOCATION TO DOMESTIC VIOLENCE ENROLLMENT LIST, FIX AND RERUN")
@@ -748,8 +748,8 @@ class Driver:
                 return False
 
         # INCOME ASSESSMENT
-        income_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA']
-        no_income_assessment_locations = ['BIT']
+        income_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT']
+        no_income_assessment_locations = []
 
         if location not in income_assessment_locations and location not in no_income_assessment_locations:
             print("DID NOT ADD NEW LOCATION TO INCOME ENROLLMENT LIST, FIX AND RERUN")
@@ -821,8 +821,8 @@ class Driver:
 
 
         # CURRENT LIVING SITUATION ASSESSMENT
-        living_situation_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA']
-        no_living_situation_assessment_locations = ['BIT']
+        living_situation_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT']
+        no_living_situation_assessment_locations = []
 
         if location not in living_situation_assessment_locations and location not in no_living_situation_assessment_locations:
             print("DID NOT ADD NEW LOCATION TO LIVING SITUATION ENROLLMENT LIST, FIX AND RERUN")
@@ -887,8 +887,8 @@ class Driver:
 
 
         # TRANSLATION ASSISTANCE ASSESSMENT
-        translation_assistance_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA']
-        no_translation_assistance_assessment_locations = ['BIT']
+        translation_assistance_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT']
+        no_translation_assistance_assessment_locations = []
 
         if location not in translation_assistance_assessment_locations and location not in no_translation_assistance_assessment_locations:
             print("DID NOT ADD NEW LOCATION TO LIVING SITUATION ENROLLMENT LIST, FIX AND RERUN")
