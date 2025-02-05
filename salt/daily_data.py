@@ -28,7 +28,7 @@ class DailyData:
     # Sanford Item Keys
     service_item_codes_sem = ['shower', 'laundry']
     clothing_item_codes_sem = ['black bags', 'men\'s pant', 'men\'s top', 'shoes', 'socks', 'underwear', 
-                           'women\'s bottom', 'women\'s top', 'boxer']
+                           'women\'s bottom', 'women\'s top', 'boxer', 'clothing']
     grooming_item_codes_sem = ['feminine pads', 'hygiene bag', 'razors', 'soap bars', 'tampons', 'toothbrush',
                            'toothpaste', 'deodorant']
     food_item_codes_sem = ['snack', 'water']
@@ -219,10 +219,11 @@ class DailyData:
                 client_dict['Client ID'] = str(row['HMIS ID']) 
             elif len(row['HMIS ID']) > 9: # encrypted id
                 client_dict['Client ID'] = ''
-            elif row['HMIS ID'] == '0' or any(c.isalpha for c in row['HMIS ID']): #0 or 'no id' (why is this allowed???)
+            elif row['HMIS ID'] == '0' or row['HMIS ID'] == '000000' or any(c.isalpha() for c in row['HMIS ID']): #0 or 'no id' (why is this allowed???)
                 client_dict['Client ID'] = ''
             else:
                 client_dict['Client ID'] = row['HMIS ID']
+            
 
             if self.show_output:
                 print()

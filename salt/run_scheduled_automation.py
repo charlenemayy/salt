@@ -33,7 +33,7 @@ output_path = settings["output_path"]
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--date")
-parser.add_argument("-sfr", "--skipfirstrun", action="store_true")
+parser.add_argument("-sfr", "--skipfirstrun", action="store_true") # orlando 2.0
 parser.add_argument("-lu", "--leaveunlocked", action="store_true")
 parser.add_argument("-ssf", "--skipsanford", action="store_true")
 parser.add_argument("-sbl", "--skipbithlo", action="store_true")

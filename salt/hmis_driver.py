@@ -271,7 +271,8 @@ class Driver:
                                   'Healthcare': '367',
                                   'Home Based': '455',
                                   'Pet Goods': '574',
-                                  'Lounge Access': '741'}
+                                  'Lounge Access': '741',
+                                  'Electronics': '557'}
         
         field_units_id = "1000007095_Renderer"
         field_date_id = "1000007086_Renderer"
