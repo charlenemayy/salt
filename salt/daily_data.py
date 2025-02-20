@@ -445,7 +445,7 @@ class DailyData:
                 index = row_items.find(item)
                 if index >= 0:
                     # find num value attributed to item code
-                    string_list = row_items.split(item)
+                    string_list = row_items.split(item, 1) # maxsplit: 1
                     substring = string_list[1]
 
                     # get first ':' following item code
