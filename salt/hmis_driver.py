@@ -81,6 +81,13 @@ class Driver:
             print(traceback.format_exc())
             return False
 
+        # if name is not provided
+        print(first_name, last_name)
+        if not first_name and not last_name:
+            return True
+        if first_name == '' and last_name == '':
+            return True
+
         # check that name matches client data and id
         # should load directly to client dashboard
         self.__switch_to_iframe(self.iframe_id) # wait for new iframe to load
@@ -90,9 +97,6 @@ class Driver:
                 EC.presence_of_element_located((By.XPATH, label_client_name_xpath))
             )
 
-            # if name is not provided
-            if first_name == '' and last_name == '':
-                return True
                 
             dashboard_title = self.browser.find_element(By.XPATH, label_client_name_xpath).get_attribute("title")
             dashboard_name = dashboard_title.split("'s")[0]
@@ -396,7 +400,7 @@ class Driver:
         field_project_date_xpath = '//table[@id="RendererSF1ResultSet"]//tr/td/span[@class="DateField input-group"]/input'
         field_date_of_engagement_xpath = '//table[@id="RendererSF1ResultSet"]//tr/td/span[@class="DateField input-group"]/input'
         button_save_id = "Renderer_SAVE"
-        table_row_family_members_xpath = '//table[@id="RendererSF1ResultSet"]//tbody/tr'
+        table_row_family_members_xpath = '//table[@id="RendererResultSet"]//tbody/tr'
 
         # 1217 for downtown, 1157 for sanford
         if location == "ORL" or location == "ORL2.0":
@@ -460,7 +464,7 @@ class Driver:
 
         try:
             WebDriverWait(self.browser, self.wait_time).until(
-                EC.element_to_be_clickable((By.ID, button_save_and_close_id))
+                EC.element_to_be_clickable((By.XPATH, table_row_family_members_xpath))
             )
             button_save_and_close = self.browser.find_element(By.ID, button_save_and_close_id)
             button_save_and_close.click()
@@ -477,20 +481,22 @@ class Driver:
             WebDriverWait(self.browser, self.wait_time).until(
                 EC.element_to_be_clickable((By.ID, dropdown_project_id))
             )
+            time.sleep(2)
             dropdown_option_xpath = '//select[@id="%s"]//option[@value="%s"]' %(dropdown_project_id, option_salt_enrollment_value)
             option_salt_orl = self.browser.find_element(By.XPATH, dropdown_option_xpath)
             option_salt_orl.click()
-            time.sleep(1)
         except Exception as e:
             print("Couldn't find SALT ORL Enrollment in options")
             print(traceback.format_exc())
             return False
 
+
         # update household data for program enrollment and only enroll current client (not family members)
         try:
             WebDriverWait(self.browser, self.wait_time).until(
-                EC.presence_of_element_located((By.XPATH, dropdown_rel_to_head_of_household_xpath))
+                EC.element_to_be_clickable((By.XPATH, dropdown_rel_to_head_of_household_xpath))
             )
+            time.sleep(5)
             # if the household has multiple members, look for the current client to enroll
             rows_family_members = self.browser.find_elements(By.XPATH, table_row_family_members_xpath)
 
@@ -579,8 +585,9 @@ class Driver:
         # INITIAL ASSESSMENT
         try:
             WebDriverWait(self.browser, self.wait_time).until(
-                EC.visibility_of_any_elements_located((By.XPATH, date_fields_xpath))
+                EC.element_to_be_clickable((By.XPATH, date_fields_xpath))
             )
+            time.sleep(5)
 
             # Client Information
             field_assessment_date_id = '1000006788_Renderer'
@@ -1153,9 +1160,12 @@ class Driver:
     def fix_enrollment_entry_assessment(self, enrollment_id, viable_enrollment_list, entry_date):
         option_no_id = '0'
         option_orange_county_id = '1'
+        option_orange_coc_id = '77'
         option_place_not_meant_for_habitation_id = '16'
         option_client_prefers_not_to_answer_id = '9'
+        table_row_family_members_xpath = '//table[@id="RendererResultSet"]//tbody/tr'
 
+        self.navigate_to_client_dashboard()
         self.__switch_to_iframe(self.iframe_id)
         self.__wait_until_page_fully_loaded('Client Dashboard')
 
@@ -1184,9 +1194,10 @@ class Driver:
         button_save_and_close_id = 'Renderer_SAVEFINISH'
 
         try:
-            WebDriverWait(self.browser, self.wait_time).until(
-                EC.element_to_be_clickable((By.ID, button_save_and_close_id))
+            WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, table_row_family_members_xpath))
             )
+            time.sleep(3)
             button_save_and_close = self.browser.find_element(By.ID, button_save_and_close_id)
             button_save_and_close.click()
         except Exception as e:
@@ -1216,33 +1227,49 @@ class Driver:
         self.__wait_until_page_fully_loaded('Intake - Universal Data Assessment')
 
         try:
+            WebDriverWait(self.browser, 20).until(
+                EC.element_to_be_clickable((By.ID, 'Renderer_Page1_body'))
+            )
+
+            WebDriverWait(self.browser, 20).until(
+                EC.visibility_of_any_elements_located((By.XPATH, '//table[@class="FormPage"]//select[@class="form-control"]'))
+            )
+
             button_default_assessment_id = 'B1000006859_Renderer'
             button_save_id = 'Renderer_SAVE'
 
             self.__default_last_assessment(button_default_assessment_id)
+            
+            # have to use an array as the ids of each field always change
+            form_fields = self.browser.find_elements(By.XPATH, '//table[@class="FormPage"]//select[@class="form-control"]')
 
             # Data Error: 'Missing Enrollment CoC'
-            dropdown_county = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="1000000001"]')
+            # dropdown_county = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3216"]')
+            dropdown_county = form_fields[5]
             if self.__dropdown_empty(dropdown_county):
-                option_county_id = option_orange_county_id
+                option_county_id = option_orange_coc_id
                 self.__select_assessment_dropdown_option(dropdown_county, option_county_id)
 
             # Data Error: 'Missing Residence Prior'
-            dropdown_prior_living_sit = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3830"]')
+            # dropdown_prior_living_sit = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3614"]')
+            dropdown_prior_living_sit = form_fields[8]
             if self.__dropdown_empty(dropdown_prior_living_sit):
                 self.__select_assessment_dropdown_option(dropdown_prior_living_sit, option_place_not_meant_for_habitation_id)
 
             # Data Error: 'Missing Length of Stay'
-            dropdown_length_of_stay = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3838"]')
+            # dropdown_length_of_stay = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3368"]')
+            dropdown_length_of_stay = form_fields[12]
             if self.__dropdown_empty(dropdown_length_of_stay):
                 self.__select_assessment_dropdown_option(dropdown_length_of_stay, option_client_prefers_not_to_answer_id)
 
             # Data Error: 'Missing Months or Times Homeless'
-            dropdown_street_frequency = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3028"]')
+            # dropdown_street_frequency = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3028"]')
+            dropdown_street_frequency = form_fields[14]
             if self.__dropdown_empty(dropdown_street_frequency):
                 self.__select_assessment_dropdown_option(dropdown_street_frequency, option_client_prefers_not_to_answer_id)
 
-            dropdown_months_homeless = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3377"]')
+            # dropdown_months_homeless = self.browser.find_element(By.XPATH, '//select[@listitemtypeid="3377"]')
+            dropdown_months_homeless = form_fields[15]
             if self.__dropdown_empty(dropdown_months_homeless):
                 self.__select_assessment_dropdown_option(dropdown_months_homeless, option_client_prefers_not_to_answer_id)
 
@@ -1252,6 +1279,7 @@ class Driver:
             print("Couldn't save 'Universal Data Assessment' section of Intake")
             print(traceback.format_exc())
             return False
+
 
         # INTAKE - BARRIER ASSESSMENT
         button_default_assessment_id = 'B1000006792_Renderer'
@@ -1292,6 +1320,7 @@ class Driver:
         except Exception as e:
             print("Couldn't complete barrier assessment")
             print(traceback.format_exc())
+            self.__cancel_intake_workflow()
             return False
 
         # INTAKE - DOMESTIC VIOLENCE ASSESSMENT
@@ -1324,6 +1353,7 @@ class Driver:
         except Exception as e:
             print("Couldn't complete domestic violence assessment")
             print(traceback.format_exc())
+            self.__cancel_intake_workflow()
             return False
 
         # INTAKE - INCOME ASSESSMENT
@@ -1355,6 +1385,7 @@ class Driver:
         except Exception as e:
             print("Couldn't complete income assessment")
             print(traceback.format_exc())
+            self.__cancel_intake_workflow()
             return False
 
         # INTAKE - CURRENT LIVING SITUATION ASSESSMENT
@@ -1377,6 +1408,7 @@ class Driver:
         except Exception as e:
             print("Couldn't complete current living situation assessment")
             print(traceback.format_exc())
+            self.__cancel_intake_workflow()
             return False
 
         # INTAKE - TRANSLATION ASSISTANCE ASSESSMENT
@@ -1402,6 +1434,7 @@ class Driver:
         except Exception as e:
             print("Couldn't complete translation assistance assessment")
             print(traceback.format_exc())
+            self.__cancel_intake_workflow()
             return False
 
         # FINISH BUTTON
@@ -1418,6 +1451,7 @@ class Driver:
         except Exception as e:
             print("Couldn't click the finish enrollment button")
             print(traceback.format_exc())
+            self.__cancel_intake_workflow()
             return False
         
         # SUCCESS
@@ -1565,7 +1599,7 @@ class Driver:
 
         try:
             WebDriverWait(self.browser, self.wait_time).until(
-                EC.visibility_of_element_located((By.XPATH, label_enrollment_row_name_xpath))
+                EC.element_to_be_clickable((By.XPATH, label_enrollment_row_name_xpath))
             )
             rows_enrollment_xpath = '//table[@id="wp85039573formResultSet"]/tbody/tr'
             cont = True
@@ -1599,6 +1633,7 @@ class Driver:
                 menu_action = stored_row.find_element(By.CLASS_NAME, 'action-menu')
                 print(stored_row.find_element(By.XPATH, './td[7]').text)
                 self.browser.execute_script("arguments[0].scrollIntoView();", menu_action)
+                time.sleep(2)
             else:
                 return False
         except Exception as e:
@@ -1613,7 +1648,6 @@ class Driver:
             )
             # had to use javascript here as the element was constantly being intercepted
             self.browser.execute_script("arguments[0].click();", menu_action)
-            time.sleep(2)
         except Exception as e:
             print("Couldn't click Action Menu")
             print(traceback.format_exc())
@@ -1624,6 +1658,7 @@ class Driver:
             WebDriverWait(self.browser, self.wait_time).until(
                 EC.visibility_of_element_located((By.ID, menu_id))
             )
+            time.sleep(2)
         except Exception as e:
             print("Couldn't find Action Menu")
             print(traceback.format_exc())
@@ -1636,6 +1671,7 @@ class Driver:
             )
             link = self.browser.find_element(By.ID, link_id)
             link.click()
+            time.sleep(2)
         except Exception as e:
             print("Couldn't click link in Action Menu")
             print(traceback.format_exc())

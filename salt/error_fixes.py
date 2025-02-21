@@ -93,6 +93,7 @@ class ErrorFixes:
         if not success:
             print("Enrollment entry assessment could not be fixed")
             print(client_dict)
+            self.driver.navigate_to_client_dashboard()
             return
 
         # remove client from list of failed automated entries
@@ -107,4 +108,4 @@ class ErrorFixes:
         output_name = ("Failed_entries_" + os.path.basename(self.filename))
 
         # create sheet for remaining clients that need to be entered and could not be automated
-        self.failed_df.to_excel(self.output_path + output_name + ".xlsx", sheet_name = "Failed Entries Report - " + output_name)
+        self.failed_df.to_excel(self.output_path + output_name, sheet_name = "Failed Entries Report - " + output_name)
