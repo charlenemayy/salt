@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import difflib
 import time
 import traceback
+import datetime
 
 '''
 Responsible for all automation, all the data should be processed and cleaned before
@@ -597,20 +598,61 @@ class Driver:
             )
             time.sleep(5)
 
-            # Client Information
-            field_assessment_date_id = '1000006788_Renderer'
-            field_assessment_date = self.browser.find_element(By.ID, field_assessment_date_id)
-            field_assessment_date.click()
-            field_assessment_date.clear()
-            field_assessment_date.send_keys(service_date)
+            form_fields = self.browser.find_elements(By.XPATH, '//table[@class="FormPage"]//select[@class="form-control"]')
 
-            dropdown_disabling_condition_id = '1000006806_Renderer'
+            # depending on whether this is a master assessment, the field ids change
+            master_assessment_caption = self.browser.find_elements(By.ID, 'Label1000005693_Renderer')
+            if master_assessment_caption:
+                field_assessment_date_id = '1000005691_Renderer'
+                dropdown_disabling_condition_id = '1000005748_Renderer'
+                dropdown_coc_id = '1000005697_Renderer'
+                dropdown_county_id = '1000005780_Renderer'
+                dropdown_prior_living_sit_id = '1000005689_Renderer'
+                dropdown_length_of_stay_id = '1000005690_Renderer'
+                field_homeless_start_date_id = '1000005730_Renderer'
+                dropdown_street_frequency_id = '1000005698_Renderer'
+                dropdown_months_homeless_id = '1000005710_Renderer'
+                button_default_assessment_id = 'B1000005744_Renderer'
+                dropdown_covered_by_health_ins_id = '1000005699_Renderer'
+            else:
+                field_assessment_date_id = '1000006788_Renderer'
+                dropdown_disabling_condition_id = '1000006806_Renderer'
+                dropdown_coc_id = '1000006810_Renderer'
+                dropdown_county_id = '1000006849_Renderer'
+                dropdown_prior_living_sit_id = '1000006811_Renderer'
+                dropdown_length_of_stay_id = '1000006812_Renderer'
+                field_homeless_start_date_id = '1000006795_Renderer'
+                dropdown_street_frequency_id = '1000006807_Renderer'
+                dropdown_months_homeless_id = '1000006813_Renderer'
+                button_default_assessment_id = 'B1000006761_Renderer'
+                dropdown_covered_by_health_ins_id = '1000006802_Renderer'
+
+
+            # Client Information
+            field_assessment_date = self.browser.find_element(By.ID, field_assessment_date_id)
+            if service_date:
+                field_assessment_date.click()
+                field_assessment_date.clear()
+                field_assessment_date.send_keys(service_date)
+            else:
+                # if fixing a previous assessment (fix enrollment entry)
+                assess_date = field_assessment_date.get_attribute("value")
+                if not assess_date or assess_date == "": 
+                    assess_date = str(datetime.today().strftime('%m%d%Y'))
+                service_date = assess_date.replace("/", "")
+
             dropdown_disabling_condition = self.browser.find_element(By.ID, dropdown_disabling_condition_id)
             if self.__dropdown_empty(dropdown_disabling_condition):
                 self.__select_assessment_dropdown_option(dropdown_disabling_condition, option_no_id)
 
             # Enrollment CoC
-            dropdown_county_id = '1000006849_Renderer'
+            option_orange_coc_id = '77'
+            dropdown_coc = self.browser.find_element(By.ID, dropdown_coc_id)
+            if self.__dropdown_empty(dropdown_coc):
+                option_coc_id = option_orange_coc_id
+                self.__select_assessment_dropdown_option(dropdown_coc, option_coc_id)
+
+            # Enrollment County
             dropdown_county = self.browser.find_element(By.ID, dropdown_county_id)
             if self.__dropdown_empty(dropdown_county):
                 if location == 'ORL' or location == 'BIT' or location == 'YYA' or location == 'ORL2.0':
@@ -620,17 +662,14 @@ class Driver:
                 self.__select_assessment_dropdown_option(dropdown_county, option_county_id)
 
             # Living Situation
-            dropdown_prior_living_sit_id = '1000006811_Renderer'
             dropdown_prior_living_sit = self.browser.find_element(By.ID, dropdown_prior_living_sit_id)
             if self.__dropdown_empty(dropdown_prior_living_sit):
                 self.__select_assessment_dropdown_option(dropdown_prior_living_sit, option_place_not_meant_for_habitation_id)
 
-            dropdown_length_of_stay_id = '1000006812_Renderer'
             dropdown_length_of_stay = self.browser.find_element(By.ID, dropdown_length_of_stay_id)
             if self.__dropdown_empty(dropdown_length_of_stay):
                 self.__select_assessment_dropdown_option(dropdown_length_of_stay, option_client_prefers_not_to_answer_id)
 
-            field_homeless_start_date_id = '1000006795_Renderer'
             field_homeless_start_date = self.browser.find_element(By.ID,field_homeless_start_date_id)
             field_value = field_assessment_date.get_property("value")
             str = field_value.replace("/", "")
@@ -643,22 +682,18 @@ class Driver:
                 field_homeless_start_date.send_keys(service_date)
                 time.sleep(1)
             
-            dropdown_street_frequency_id = '1000006807_Renderer'
             dropdown_street_frequency = self.browser.find_element(By.ID, dropdown_street_frequency_id)
             if self.__dropdown_empty(dropdown_street_frequency):
                 self.__select_assessment_dropdown_option(dropdown_street_frequency, option_client_prefers_not_to_answer_id)
 
-            dropdown_months_homeless_id = '1000006813_Renderer'
             dropdown_months_homeless = self.browser.find_element(By.ID, dropdown_months_homeless_id)
             if self.__dropdown_empty(dropdown_months_homeless):
                 self.__select_assessment_dropdown_option(dropdown_months_homeless, option_client_prefers_not_to_answer_id)
 
             # Insurance Status
-            button_default_assessment_id = 'B1000006761_Renderer'
             self.__default_last_assessment(button_default_assessment_id)
             self.__wait_until_page_fully_loaded('Universal Data Assessment')
 
-            dropdown_covered_by_health_ins_id = '1000006802_Renderer'
             dropdown_covered_by_health_ins = self.browser.find_element(By.ID, dropdown_covered_by_health_ins_id)
             if self.__dropdown_empty(dropdown_covered_by_health_ins):
                 self.__select_assessment_dropdown_option(dropdown_covered_by_health_ins, option_no_id)
@@ -715,6 +750,7 @@ class Driver:
                 if already_assessed and self.browser.find_elements(By.ID, button_save_and_close_id) > 1:
                     button_save_and_close = self.browser.find_element(By.ID, button_save_and_close_id)
                     button_save_and_close.click()
+                    print("clicked again)")
                     time.sleep(2) 
 
             except Exception as e:
@@ -1230,6 +1266,8 @@ class Driver:
             print("Couldn't save 'Program Enrollment' section of Intake")
             print(traceback.format_exc())
             return False
+        
+        return self.__assess_client(None, 'ORL')
 
         # INTAKE - UNIVERSAL DATA ASSESSMENT
         self.__switch_to_iframe(self.iframe_id)
