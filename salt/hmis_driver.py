@@ -464,7 +464,8 @@ class Driver:
 
         try:
             WebDriverWait(self.browser, self.wait_time).until(
-                EC.element_to_be_clickable((By.XPATH, table_row_family_members_xpath))
+                # EC.element_to_be_clickable((By.XPATH, table_row_family_members_xpath))
+                EC.element_to_be_clickable((By.ID, 'RendererResultSet'))
             )
             button_save_and_close = self.browser.find_element(By.ID, button_save_and_close_id)
             button_save_and_close.click()
@@ -494,15 +495,20 @@ class Driver:
         # update household data for program enrollment and only enroll current client (not family members)
         try:
             WebDriverWait(self.browser, self.wait_time).until(
-                EC.element_to_be_clickable((By.XPATH, dropdown_rel_to_head_of_household_xpath))
+                EC.element_to_be_clickable((By.ID, 'RendererSF1ResultSet'))
             )
-            time.sleep(5)
             # if the household has multiple members, look for the current client to enroll
             rows_family_members = self.browser.find_elements(By.XPATH, table_row_family_members_xpath)
 
             if len(rows_family_members) < 2:
                 field_project_date = self.browser.find_elements(By.XPATH, field_project_date_xpath)[2]
                 field_date_of_engagement = self.browser.find_elements(By.XPATH, field_date_of_engagement_xpath)[4]
+
+                # select self option
+                option_self = self.browser.find_element(By.XPATH, '//select//option[@value="SL"]')
+                dropdown_rel_to_head_of_household = self.browser.find_element(By.XPATH, dropdown_rel_to_head_of_household_xpath)
+                self.browser.execute_script("arguments[0].scrollIntoView({block: 'end'});", dropdown_rel_to_head_of_household)
+                option_self.click()
             else:
                 self.browser.switch_to.default_content()
                 label_client_name_xpath = '//span[@aria-label="Name"]'
@@ -581,6 +587,8 @@ class Driver:
 
         self.__default_last_assessment(button_default_assessment_id)
         self.__wait_until_page_fully_loaded('Universal Data Assessment')
+
+        time.sleep(2)
 
         # INITIAL ASSESSMENT
         try:
@@ -842,6 +850,7 @@ class Driver:
             button_save_id = "Renderer_SAVE"
 
             try:
+                time.sleep(2)
                 WebDriverWait(self.browser, self.wait_time).until(
                     EC.element_to_be_clickable((By.ID, dropdown_living_sit_id))
                 )
@@ -934,9 +943,9 @@ class Driver:
             WebDriverWait(self.browser, self.wait_time).until(
                 EC.element_to_be_clickable((By.ID, button_finish_id))
             )
+            time.sleep(3)
             button_finish = self.browser.find_element(By.ID, button_finish_id)
             button_finish.click()
-            time.sleep(1)
         except Exception as e:
             print("Couldn't click the finish enrollment button")
             print(traceback.format_exc())
