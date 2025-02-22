@@ -1203,11 +1203,6 @@ class Driver:
     #   special case scenario - fix for error reports from HSN
     #       # @return: [bool] success / fail
     def fix_enrollment_entry_assessment(self, enrollment_id, viable_enrollment_list, entry_date):
-        option_no_id = '0'
-        option_orange_county_id = '1'
-        option_orange_coc_id = '77'
-        option_place_not_meant_for_habitation_id = '16'
-        option_client_prefers_not_to_answer_id = '9'
         table_row_family_members_xpath = '//table[@id="RendererResultSet"]//tbody/tr'
 
         self.navigate_to_client_dashboard()
