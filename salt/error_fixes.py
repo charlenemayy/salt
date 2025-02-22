@@ -93,7 +93,7 @@ class ErrorFixes:
         if not success:
             print("Enrollment entry assessment could not be fixed")
             print(client_dict)
-            self.driver.__cancel_intake_workflow()
+            self.driver.cancel_intake_workflow()
             self.driver.navigate_to_client_dashboard()
             self.driver.navigate_to_find_client()
             return

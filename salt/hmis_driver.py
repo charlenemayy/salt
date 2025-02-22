@@ -343,7 +343,7 @@ class Driver:
                     self.navigate_to_client_dashboard()
                     if not self.enroll_client(service_date, location):
                         print("Couldn't enroll client successfully -- Canceling")
-                        self.__cancel_intake_workflow()
+                        self.cancel_intake_workflow()
                         self.__wait_until_page_fully_loaded("Client Dashboard")
                         self.navigate_to_find_client()
                         return False
@@ -1487,7 +1487,7 @@ class Driver:
 
     # Cancels the workflow of an enrollment / intake process by clicking cancel and hitting yes on the popup
     # @return: [bool] success / fail 
-    def __cancel_intake_workflow(self):
+    def cancel_intake_workflow(self):
         button_cancel_workflow_xpath = '//div[@class="workflow-controls"]/button[@aria-label="Cancel the workflow"]'
         button_dialog_yes_id = 'YesButton'
 
