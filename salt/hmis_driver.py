@@ -1272,6 +1272,7 @@ class Driver:
     def navigate_to_client_dashboard(self):
         button_nav_clients_page_id = "ws_2_tab"
         button_nav_dashboard_page_id = "o1000000033"
+        table_client_info_xpath = "//table[@class='ZoneChrome ZoneTopRow_0']"
 
         # find 'Clients' button on left sidebar
         self.browser.switch_to.default_content()
@@ -1295,6 +1296,18 @@ class Driver:
             button_dashboard.click()
         except Exception as e:
             print("Couldn't navigate to 'Dashboard' page")
+            print(traceback.format_exc())
+            return False
+
+        # wait for page to fully load
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable((By.XPATH, table_client_info_xpath))
+            )
+            table_client_info = self.browser.find_element(By.XPATH, table_client_info_xpath)
+            table_client_info.click()
+        except Exception as e:
+            print("Client Dashboard didn't load")
             print(traceback.format_exc())
             return False
 
@@ -1327,12 +1340,13 @@ class Driver:
     # @return: [bool] success / fail
     def navigate_to_service_list(self):
         link_services_xpath = '//td[@class="Header ZoneMiddleRight_2"]//a'
+        table_services_id = 'wp931150529formResultSet'
 
         self.__wait_until_page_fully_loaded("Client Dashboard")
         self.__switch_to_iframe(self.iframe_id)
         try:
             WebDriverWait(self.browser, self.wait_time).until(
-                EC.element_to_be_clickable((By.XPATH, link_services_xpath))
+                EC.element_to_be_clickable((By.ID, table_services_id))
             )
             link_services = self.browser.find_element(By.XPATH, link_services_xpath)
             link_services.click()

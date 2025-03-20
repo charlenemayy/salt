@@ -72,6 +72,7 @@ class DailyData:
                                    'sharpies']
     petgoods_item_codes_orl_2 = ['cat food', 'dog food']
     loungeaccess_item_codes_orl_2 = []
+    information_item_codes_orl_2 = []
 
     # Youth
     service_item_codes_yya = []
@@ -382,6 +383,7 @@ class DailyData:
             homebased_item_codes = DailyData.homebased_item_codes_orl
             petgoods_item_codes = DailyData.petgoods_item_codes_orl
             loungeaccess_item_codes = DailyData.loungeaccess_item_codes_orl
+            information_item_codes = []
         elif self.location == 'SEM':
             clothing_item_codes = DailyData.clothing_item_codes_sem
             grooming_item_codes = DailyData.grooming_item_codes_sem
@@ -391,6 +393,7 @@ class DailyData:
             homebased_item_codes = DailyData.homebased_item_codes_sem
             petgoods_item_codes = DailyData.petgoods_item_codes_sem
             loungeaccess_item_codes = DailyData.loungeaccess_item_codes_sem
+            information_item_codes = []
         elif self.location == 'BIT':
             clothing_item_codes = DailyData.clothing_item_codes_bit
             grooming_item_codes = DailyData.grooming_item_codes_bit
@@ -400,6 +403,7 @@ class DailyData:
             homebased_item_codes = DailyData.homebased_item_codes_bit
             petgoods_item_codes = DailyData.petgoods_item_codes_bit
             loungeaccess_item_codes = DailyData.loungeaccess_item_codes_bit
+            information_item_codes = []
         if self.location == 'ORL2.0': # for new salt app
             clothing_item_codes = DailyData.clothing_item_codes_orl_2
             grooming_item_codes = DailyData.grooming_item_codes_orl_2
@@ -409,6 +413,7 @@ class DailyData:
             homebased_item_codes = DailyData.homebased_item_codes_orl_2
             petgoods_item_codes = DailyData.petgoods_item_codes_orl_2
             loungeaccess_item_codes = DailyData.loungeaccess_item_codes_orl_2
+            information_item_codes = DailyData.information_item_codes_orl_2
         elif self.location == 'YYA':
             clothing_item_codes = DailyData.clothing_item_codes_yya
             grooming_item_codes = DailyData.grooming_item_codes_yya
@@ -418,6 +423,7 @@ class DailyData:
             homebased_item_codes = DailyData.homebased_item_codes_yya
             petgoods_item_codes = DailyData.petgoods_item_codes_yya
             loungeaccess_item_codes = DailyData.loungeaccess_item_codes_yya
+            information_item_codes = []
 
         if self.show_output:
             print("Raw Excel Data:")
