@@ -277,7 +277,8 @@ class Driver:
                                   'Home Based': '455',
                                   'Pet Goods': '574',
                                   'Lounge Access': '741',
-                                  'Electronics': '557'}
+                                  'Electronics': '557',
+                                  'Information': '535'}
         
         field_units_id = "1000007095_Renderer"
         field_date_id = "1000007086_Renderer"
@@ -1299,17 +1300,20 @@ class Driver:
             print(traceback.format_exc())
             return False
 
+        '''
         # wait for page to fully load
+        time.sleep(1)
         try:
             WebDriverWait(self.browser, self.wait_time).until(
-                EC.element_to_be_clickable((By.XPATH, table_client_info_xpath))
+                EC.element_to_be_clickable((By.ID, 'wp220601446'))
             )
-            table_client_info = self.browser.find_element(By.XPATH, table_client_info_xpath)
+            table_client_info = self.browser.find_elements(By.ID, 'wp220601446')[0]
             table_client_info.click()
         except Exception as e:
             print("Client Dashboard didn't load")
             print(traceback.format_exc())
             return False
+        '''
 
     # This function can be accessed from any page in HMIS
     # @return: [bool] success / fail

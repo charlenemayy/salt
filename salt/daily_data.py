@@ -72,7 +72,7 @@ class DailyData:
                                    'sharpies']
     petgoods_item_codes_orl_2 = ['cat food', 'dog food']
     loungeaccess_item_codes_orl_2 = []
-    information_item_codes_orl_2 = []
+    information_item_codes_orl_2 = ['information']
 
     # Youth
     service_item_codes_yya = []
@@ -599,6 +599,21 @@ class DailyData:
                     items_dict['Lounge Access'] = loungeaccess_count
                 if self.show_output:
                     print("Lounge Access: " + str(loungeaccess_count))
+
+            information_count = 0
+            for item in information_item_codes:
+                index = row_items.find(item)
+                if index >= 0:
+                    string_list = row_items.split(item)
+                    substring = string_list[1]
+
+                    i = substring.index(':')
+                    information_count += int(substring[i+2])
+                if information_count > 0:
+                    items_string = (items_string + "Information: " + str(information_count) + "\n")
+                    items_dict['Information'] = information_count
+                if self.show_output:
+                    print("Information: " + str(information_count))
 
         # if there are no items in the item column but the service column is not empty
         elif (services_dict): 
