@@ -40,6 +40,9 @@ class Driver:
         else:
             self.browser.get('https://saltoutreachapp.com/')
 
+    def close_browser(self):
+        self.browser.close()
+
     def login_saltwebapp_google(self, username, password):
         try:
             WebDriverWait(self.browser, self.wait_time).until(

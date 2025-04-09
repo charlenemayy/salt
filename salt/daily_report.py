@@ -32,3 +32,4 @@ class DailyReport:
         if not self.driver.navigate_to_daily_data_by_client(date):
             return
         self.driver.download_daily_report_by_client(self.location)
+        self.driver.close_browser()

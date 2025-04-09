@@ -40,6 +40,9 @@ class Driver:
 
     def open_clienttrack(self):
         self.browser.get('https://clienttrack.eccovia.com/login/HSNCFL')
+    
+    def close_browser(self):
+        self.browser.close()
 
     def login_clienttrack(self, username, password):
         field_username = self.browser.find_element(By.ID, "UserName")
@@ -974,8 +977,9 @@ class Driver:
 
         # FINISH BUTTON
         self.__wait_until_page_fully_loaded("Finish Page")
-        button_finish_id = 'FinishButton'
 
+        button_finish_id = 'FinishButton'
+        time.sleep(5)
         try:
             WebDriverWait(self.browser, self.wait_time).until(
                 EC.element_to_be_clickable((By.ID, button_finish_id))

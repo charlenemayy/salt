@@ -236,6 +236,10 @@ class DailyData:
             if self.automate:
                 self.__automate_service_entry(client_dict, row_index)
         # For Loop End
+        
+        # Close the browser
+        if self.automate:
+            self.driver.close_browser()
 
         if self.list_items:
             print(self.unique_items)
