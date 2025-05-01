@@ -88,7 +88,7 @@ class DailyData:
     # Locations
     location_codes = ["BIT", "SEM", "ORL", "ORL2.0", "YYA"]
 
-    def __init__(self, filename, automate, manual, show_output, location, list_items):
+    def __init__(self, filename, automate, manual, show_output, location, list_items, skipfirstrow):
         self.automate = automate
         self.manual = manual
         self.show_output = show_output
@@ -100,7 +100,18 @@ class DailyData:
             print("Not a valid location code, please see README for details")
             quit()
 
-        if self.location == "ORL2.0":
+        if self.location == "ORL2.0" and skipfirstrow == True:
+            self.df = pd.read_excel(io=filename,
+                                 dtype={'': object,
+                                        'DoB': object,
+                                        'Client Name': object,
+                                        'HMIS ID': object,
+                                        'Services': object,
+                                        'ITEMS': object},
+                                        skiprows=[0])
+
+            self.df = self.df.rename(columns={'Services': 'Service', 'ITEMS' : 'Items'})
+        elif self.location == "ORL2.0" and skipfirstrow == False:
             self.df = pd.read_excel(io=filename,
                                  dtype={'': object,
                                         'DoB': object,

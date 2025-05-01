@@ -405,7 +405,7 @@ class Driver:
         field_project_date_xpath = '//table[@id="RendererSF1ResultSet"]//tr/td/span[@class="DateField input-group"]/input'
         field_date_of_engagement_xpath = '//table[@id="RendererSF1ResultSet"]//tr/td/span[@class="DateField input-group"]/input'
         button_save_id = "Renderer_SAVE"
-        table_row_family_members_xpath = '//table[@id="RendererResultSet"]//tbody/tr'
+        table_row_family_members_xpath = '//table[@id="RendererSF1ResultSet"]//tbody/tr'
 
         # 1217 for downtown, 1157 for sanford
         if location == "ORL" or location == "ORL2.0":
