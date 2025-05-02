@@ -48,9 +48,13 @@ class Driver:
         field_username = self.browser.find_element(By.ID, "UserName")
         field_password = self.browser.find_element(By.ID, "Password")
 
+        time.sleep(1)
         field_username.send_keys(username)
+        time.sleep(1)
         field_password.send_keys(password)
+        time.sleep(1)
         field_password.send_keys(Keys.RETURN)
+        time.sleep(1)
         return True
     
     '''
