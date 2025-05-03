@@ -179,7 +179,8 @@ class DailyData:
             # rearrange birthday and update row
             if not isinstance(row['DoB'], float):
                 if isinstance(row['DoB'], datetime):
-                    date = row['DoB'].strftime('%m-%d-%Y')
+                    dt = row['DoB'].date()
+                    date = dt.strftime('%m-%d-%Y')
                 else:
                     date = row['DoB']
 
