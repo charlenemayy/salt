@@ -158,16 +158,8 @@ if not args.skipbithlo:
 if not args.skipyouth:
     # check if report has already been downloaded
     files = os.listdir(output_path)
-    report_filename = "Report_by_client_" + date_str + ".xlsx"
-
-    # delete any existing reports
-    if report_filename in files:
-        subprocess.run(["rm {0}".format(report_filename)], shell=True)
-
-    # download yesterday's report
-    print("RUNNING: Downloading YOUTH report from the SALT Web App")
-    subprocess.run(["/usr/bin/python3 salt/run_daily_report.py -l \"YYA\" -d {0}".format(date_str)], shell=True)
-    time.sleep(5)
+    # report_filename = "Report_by_client_" + date_str + ".xlsx"
+    report_filename = "YYA-Export-" + date_str + ".xlsx"
 
     # double check that report has been downloaded / exists
     report_path = output_path + report_filename
@@ -180,8 +172,8 @@ if not args.skipyouth:
     subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l YYA -f {0} -m".format(report_path)], shell=True)
 
     # start first run of automation
-    print("RUNNING: Starting first run of automation for SANFORD")
-    subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l YYA -f {0} -a".format(report_path)], shell=True)
+    print("RUNNING: Starting first run of automation for YOUTH")
+    subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -sfr -l YYA -f {0} -a".format(report_path)], shell=True)
 
     # run the failed entries
     location = "YYA"
@@ -274,11 +266,7 @@ if not args.skipfirstrun:
     report_filename = "Export-" + date_str + ".xlsx"
     print(report_filename)
     '''
-    report_filename = "Export-" + date_str + ".xlsx"
-
-    # delete any existing reports
-    if report_filename in files:
-        subprocess.run(["rm {0}".format(report_filename)], shell=True)
+    report_filename = "ORL-Export-" + date_str + ".xlsx"
 
     # double check that report has been downloaded / exists
     report_path = output_path + report_filename

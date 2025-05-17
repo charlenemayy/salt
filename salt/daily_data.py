@@ -100,7 +100,7 @@ class DailyData:
             print("Not a valid location code, please see README for details")
             quit()
 
-        if self.location == "ORL2.0" and skipfirstrow == True:
+        if (self.location == "ORL2.0" or self.location == "YYA") and skipfirstrow == True:
             self.df = pd.read_excel(io=filename,
                                  dtype={'': object,
                                         'DoB': object,
@@ -111,7 +111,7 @@ class DailyData:
                                         skiprows=[0])
 
             self.df = self.df.rename(columns={'Services': 'Service', 'ITEMS' : 'Items'})
-        elif self.location == "ORL2.0" and skipfirstrow == False:
+        elif (self.location == "ORL2.0" or self.location == "YYA") and skipfirstrow == False:
             self.df = pd.read_excel(io=filename,
                                  dtype={'': object,
                                         'DoB': object,
@@ -184,7 +184,7 @@ class DailyData:
                 else:
                     date = row['DoB']
 
-                if self.location == "ORL2.0":
+                if self.location == "ORL2.0" or self.location == "YYA":
                     client_dict['DoB'] = date
                 else: # rearrange birthdate if not the new salt app
                     day = date[0:3]
@@ -213,7 +213,7 @@ class DailyData:
             stripped_name = no_special_char_name.strip()
             string_list = stripped_name.rsplit(' ', 1)
 
-            if self.location == 'ORL2.0':
+            if self.location == 'ORL2.0' or self.location == "YYA":
                 if len(string_list) > 1:
                     client_dict['Last Name'] = string_list[1]
                 else:
@@ -420,7 +420,7 @@ class DailyData:
             petgoods_item_codes = DailyData.petgoods_item_codes_bit
             loungeaccess_item_codes = DailyData.loungeaccess_item_codes_bit
             information_item_codes = []
-        if self.location == 'ORL2.0': # for new salt app
+        if self.location == 'ORL2.0' or self.location == 'YYA': # for new salt app
             clothing_item_codes = DailyData.clothing_item_codes_orl_2
             grooming_item_codes = DailyData.grooming_item_codes_orl_2
             food_item_codes = DailyData.food_item_codes_orl_2
@@ -430,6 +430,7 @@ class DailyData:
             petgoods_item_codes = DailyData.petgoods_item_codes_orl_2
             loungeaccess_item_codes = DailyData.loungeaccess_item_codes_orl_2
             information_item_codes = DailyData.information_item_codes_orl_2
+        '''
         elif self.location == 'YYA':
             clothing_item_codes = DailyData.clothing_item_codes_yya
             grooming_item_codes = DailyData.grooming_item_codes_yya
@@ -440,6 +441,8 @@ class DailyData:
             petgoods_item_codes = DailyData.petgoods_item_codes_yya
             loungeaccess_item_codes = DailyData.loungeaccess_item_codes_yya
             information_item_codes = []
+        '''
+        # TODO: CHANGE YYA ITEMS
 
         if self.show_output:
             print("Raw Excel Data:")
