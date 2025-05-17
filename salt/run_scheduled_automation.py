@@ -33,11 +33,11 @@ output_path = settings["output_path"]
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--date")
-parser.add_argument("-sfr", "--skipfirstrun", action="store_true") # orlando 2.0
 parser.add_argument("-lu", "--leaveunlocked", action="store_true")
+
+parser.add_argument("-sor", "--skiporlando", action="store_true")
 parser.add_argument("-ssf", "--skipsanford", action="store_true")
 parser.add_argument("-sbl", "--skipbithlo", action="store_true")
-parser.add_argument("-soa", "--skipoldapp", action="store_true")
 parser.add_argument("-syo", "--skipyouth", action="store_true")
 
 args = parser.parse_args()
@@ -48,6 +48,72 @@ else:
     # get yesterday's date
     yesterday = date.today() - timedelta(days=1)
     date_str = datetime.fromordinal(yesterday.toordinal()).strftime("%m-%d-%Y")
+
+
+# locations to automate on this run
+locations = [
+    {
+        'key': "ORL",
+        'name': "ORLANDO",
+        'skip': args.skiporlando,
+        'version': 'newapp'
+    },
+    {
+        'key': "SEM",
+        'name': "SANFORD",
+        'skip': args.skipsanford,
+        'version': 'oldapp'
+    },
+    {
+        'key': "BIT",
+        'name': "BITHLO",
+        'skip': args.skipbithlo,
+        'version': 'oldapp'
+    },
+    {
+        'key': "YYA",
+        'name': "YOUTH",
+        'skip': args.skipyouth,
+        'version': 'newapp'
+    }
+]
+
+for location in locations:
+    print(location)
+    if not location['skip']:
+        run_daily_data(location['key'], location['name'], location['version'])
+
+def run_daily_data(location_key, location_name, location_version):
+    # for the old web app, we can automate the download of the day's report from the website
+    if location_version == 'oldapp':
+        files = os.listdir(output_path)
+        report_filename = "Report_by_client_" + date_str + ".xlsx"
+
+        # delete any existing reports
+        if report_filename in files:
+            subprocess.run(["rm {0}".format(report_filename)], shell=True)
+
+        # download yesterday's report
+        print(f"RUNNING: Downloading {location_name} report from the SALT Web App", )
+        subprocess.run(["/usr/bin/python3 salt/run_daily_report.py -l \"{}\" -d {}".format(location_key, date_str)], shell=True)
+        time.sleep(5)
+
+        # double check that report has been downloaded / exists
+        report_path = output_path + report_filename
+        if not os.path.exists(report_path):
+            print("ERROR: Downloaded report from SALT cannot be found")
+            return
+    # for the new web app, we have to manually download the exports locally before we can run our scheduled automation (for now)
+    elif location_version == 'newapp':
+        report_filename = location_key + "-Export-" + date_str + ".xlsx"
+
+        # double check that report has been downloaded / exists
+        report_path = output_path + report_filename
+        if not os.path.exists(report_path):
+            print("ERROR: Downloaded report for " + location_name + " cannot be found")
+            return
+
+
 
 ####### SANFORD DAILY DATA
 if not args.skipsanford:
