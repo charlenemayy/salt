@@ -42,6 +42,9 @@ def run_daily_data(location_key, location_name, location_version):
     elif location_version == 'newapp':
         report_filename = location_key + "-Export-" + date_str + ".xlsx"
 
+        if location_key == "ORL2.0":
+            report_filename = "ORL" + "-Export-" + date_str + ".xlsx"
+
         # double check that report has been downloaded / exists
         report_path = output_path + report_filename
         if not os.path.exists(report_path):
@@ -58,14 +61,14 @@ def run_daily_data(location_key, location_name, location_version):
     if location_version == 'oldapp':
         subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l {0} -f {1} -a".format(location_key, report_path)], shell=True)
     elif location_version == 'newapp':
-        subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l {0} -f {1} -a --skipfirstrow".format(location_key, report_path)], shell=True)
+        subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -sfr -l {0} -f {1} -a".format(location_key, report_path)], shell=True)
 
     # run the failed entries
     failed_report_filename = location_key + "_Failed_entries_" + date_str + ".xlsx"
     failed_report_path = output_path + failed_report_filename
 
     if not os.path.exists(failed_report_path):
-        print(f"Failed entry report for {location_name} from SALT cannot be found, continuing data entry")
+        print(f"Failed entry report for {location_name} from SALT cannot be found")
     else:
         print(f"\nRUNNING: Automating failed {location_name} entries")
         subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l {0} -f {1} -a".format(location_key, failed_report_path)], shell=True)
@@ -78,8 +81,9 @@ def run_daily_data(location_key, location_name, location_version):
         gfile.SetContentFile(failed_report_path)
         gfile.Upload()
 
-    # delete report file from sanford location
-    subprocess.run(["rm {0}".format(report_path)], shell=True)
+    # delete report file 
+    if location_version == 'oldapp':
+        subprocess.run(["rm {0}".format(report_path)], shell=True)
 
     print(f"SUCCESS: Finished running {location_name} entries!\n")
     return
@@ -122,7 +126,7 @@ else:
 # locations to automate on this run
 locations = [
     {
-        'key': "ORL",
+        'key': "ORL2.0",
         'name': "ORLANDO",
         'skip': args.skiporlando,
         'version': 'newapp'
