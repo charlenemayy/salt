@@ -137,8 +137,6 @@ class DailyData:
             print("No data to enter into HMIS today, closing now")
             quit()
 
-        self.failed_df = self.df.copy()
-
         try:
             filename = "./salt/settings.json"
             f = open(filename)
@@ -151,6 +149,9 @@ class DailyData:
         self.username = settings["hmis_username"]
         self.password = settings["hmis_password"]
         self.output_path = settings["output_path"]
+
+        self.failed_df = self.df.copy()
+        self.__export_failed_automation_data()
 
     # Parse each row and process client data
     def read_and_process_data(self):
