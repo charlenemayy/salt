@@ -65,7 +65,7 @@ class DailyData:
                                  'nail polish', 'nail trimmer', 'narcan', 'pad', 'perfume', 'pullups', 'q-tip', 'razor',
                                  'shaving cream', 'shower cap', 'sunscreen', 'tampon', 'tissue', 'toothbrush', 'toothpaste',
                                  'underpads', 'underwear', 'hygiene item']
-    food_item_codes_orl_2 = ['snack bag']
+    food_item_codes_orl_2 = ['snack bag', 'coffee']
     bedding_item_codes_orl_2 = ['blankets', 'ear plugs']
     electronics_item_codes_orl_2 = ['power bank', 'batteries', 'earphones']
     homebased_item_codes_orl_2 = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
@@ -78,7 +78,7 @@ class DailyData:
     service_item_codes_yya = []
     clothing_item_codes_yya = ['clothing', 'socks', 'underwear']
     grooming_item_codes_yya = ['hygiene bag']
-    food_item_codes_yya = ['snack bags']
+    food_item_codes_yya = ['snack bags', 'coffee']
     bedding_item_codes_yya = []
     electronics_item_codes_yya = []
     homebased_item_codes_yya = []
