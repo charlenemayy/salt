@@ -10,3 +10,4 @@ package.json
 saltoutreachdata/
 successful_exits/Example Files/
 *.csv
+exitids.xlsx
