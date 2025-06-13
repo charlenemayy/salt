@@ -38,6 +38,11 @@ def run_daily_data(location_key, location_name, location_version):
         if not os.path.exists(report_path):
             print("ERROR: Downloaded report from SALT cannot be found")
             return
+
+        # download pretty xlsx file to upload to drive
+        print("RUNNING: Processing simplified report file")
+        subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l {0} -f {1} -m".format(location_key, report_path)], shell=True)
+
     # for the new web app, we have to manually download the exports locally before we can run our scheduled automation (for now)
     elif location_version == 'newapp':
         report_filename = location_key + "-Export-" + date_str + ".xlsx"
@@ -51,9 +56,9 @@ def run_daily_data(location_key, location_name, location_version):
             print("ERROR: Downloaded report for " + location_name + " cannot be found")
             return
     
-    # download pretty xlsx file to upload to drive
-    print("RUNNING: Processing simplified report file")
-    subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l {0} -f {1} -m".format(location_key, report_path)], shell=True)
+        # download pretty xlsx file to upload to drive (and skip the first row)
+        print("RUNNING: Processing simplified report file")
+        subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -sfr -l {0} -f {1} -m".format(location_key, report_path)], shell=True)
 
     # start first run of automation -- if its the newer app, skip the first row as 
     # this usually contains the date and messes with the export intake
