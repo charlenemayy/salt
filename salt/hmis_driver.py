@@ -420,6 +420,8 @@ class Driver:
             option_salt_enrollment_value = "1275"
         elif location == "YYA":
             option_salt_enrollment_value = "1226"
+        elif location == "APO":
+            option_salt_enrollment_value = "2329"
         else:
             print("IMPORTANT!!! ENROLLMENT CODE FOR NEW LOCATION HAS NOT BEEN ADDED TO THE CODE. PLEASE UPDATE")
             print("Quitting now...")
@@ -663,7 +665,7 @@ class Driver:
             # Enrollment County
             dropdown_county = self.browser.find_element(By.ID, dropdown_county_id)
             if self.__dropdown_empty(dropdown_county):
-                if location == 'ORL' or location == 'BIT' or location == 'YYA' or location == 'ORL2.0':
+                if location == 'ORL' or location == 'BIT' or location == 'YYA' or location == 'ORL2.0' or location == 'APO':
                     option_county_id = option_orange_county_id
                 else:
                     option_county_id = option_sem_county_id
@@ -716,7 +718,7 @@ class Driver:
             return False
 
         # BARRIER ASSESSMENT
-        barrier_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT']
+        barrier_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
         no_barrier_assessment_locations = []
 
         if location not in barrier_assessment_locations and location not in no_barrier_assessment_locations:
@@ -767,7 +769,7 @@ class Driver:
                 return False
 
         # DOMESTIC VIOLENCE ASSESSMENT
-        domestic_violence_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT']
+        domestic_violence_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
         no_domestic_violence_assessment_locations = []
 
         if location not in domestic_violence_assessment_locations and location not in no_domestic_violence_assessment_locations:
@@ -807,7 +809,7 @@ class Driver:
                 return False
 
         # INCOME ASSESSMENT
-        income_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT']
+        income_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
         no_income_assessment_locations = []
 
         if location not in income_assessment_locations and location not in no_income_assessment_locations:
@@ -847,7 +849,7 @@ class Driver:
 
         # RHY ASSESSMENT
         rhy_assessment_locations = ['YYA']
-        no_rhy_assessment_locations = ['BIT', 'SEM', 'ORL', 'ORL2.0']
+        no_rhy_assessment_locations = ['BIT', 'SEM', 'ORL', 'ORL2.0', 'APO']
 
         if location not in rhy_assessment_locations and location not in no_rhy_assessment_locations:
             print("DID NOT ADD NEW LOCATION TO RHY ENROLLMENT LIST, FIX AND RERUN")
@@ -880,7 +882,7 @@ class Driver:
 
 
         # CURRENT LIVING SITUATION ASSESSMENT
-        living_situation_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT']
+        living_situation_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
         no_living_situation_assessment_locations = []
 
         if location not in living_situation_assessment_locations and location not in no_living_situation_assessment_locations:
@@ -912,7 +914,7 @@ class Driver:
 
         # YOUTH EDUCATION ASSESSMENT
         youth_education_assessment_locations = ['YYA']
-        no_youth_education_assessment_locations = ['BIT', 'SEM', 'ORL', 'ORL2.0']
+        no_youth_education_assessment_locations = ['BIT', 'SEM', 'ORL', 'ORL2.0', 'APO']
 
         if location not in youth_education_assessment_locations and location not in no_youth_education_assessment_locations:
             print("DID NOT ADD NEW LOCATION TO youth_education ENROLLMENT LIST, FIX AND RERUN")
@@ -947,7 +949,7 @@ class Driver:
 
 
         # TRANSLATION ASSISTANCE ASSESSMENT
-        translation_assistance_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT']
+        translation_assistance_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
         no_translation_assistance_assessment_locations = []
 
         if location not in translation_assistance_assessment_locations and location not in no_translation_assistance_assessment_locations:

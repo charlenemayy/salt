@@ -74,7 +74,7 @@ class DailyData:
     loungeaccess_item_codes_orl_2 = []
     information_item_codes_orl_2 = ['information']
 
-    # Youth
+    # Youth (Currently equal to ORL_2.0 item codes above)
     service_item_codes_yya = []
     clothing_item_codes_yya = ['clothing', 'socks', 'underwear']
     grooming_item_codes_yya = ['hygiene bag']
@@ -85,8 +85,20 @@ class DailyData:
     petgoods_item_codes_yya = []
     loungeaccess_item_codes_yya = ['respite room']
 
+    # Apopka (Currently equal to ORL_2.0 item codes above)
+    service_item_codes_apo = []
+    clothing_item_codes_apo = []
+    grooming_item_codes_apo = []
+    food_item_codes_apo = []
+    bedding_item_codes_apo = []
+    electronics_item_codes_apo = []
+    homebased_item_codes_apo = []
+    petgoods_item_codes_apo = []
+    loungeaccess_item_codes_apo = []
+    information_item_codes_apo = []
+
     # Locations
-    location_codes = ["BIT", "SEM", "ORL", "ORL2.0", "YYA"]
+    location_codes = ["BIT", "SEM", "ORL", "ORL2.0", "YYA", "APO"]
 
     def __init__(self, filename, automate, manual, show_output, location, list_items, skipfirstrow):
         self.automate = automate
@@ -95,12 +107,14 @@ class DailyData:
         self.list_items = list_items
         self.unique_items = set()
         self.filename = filename
-        self.location = location if location else "ORL"
+        self.location = location
+        self.location_version = "newapp" if location in ["ORL2.0", "YYA", "APO"] else "oldapp"
+        print(self.location_version)
         if self.location not in self.location_codes:
             print("Not a valid location code, please see README for details")
             quit()
 
-        if (self.location == "ORL2.0" or self.location == "YYA") and skipfirstrow == True:
+        if self.location_version == "newapp" and skipfirstrow == True:
             self.df = pd.read_excel(io=filename,
                                  dtype={'': object,
                                         'DoB': object,
@@ -111,7 +125,7 @@ class DailyData:
                                         skiprows=[0])
 
             self.df = self.df.rename(columns={'Services': 'Service', 'ITEMS' : 'Items'})
-        elif (self.location == "ORL2.0" or self.location == "YYA") and skipfirstrow == False:
+        elif self.location_version == "newapp" and skipfirstrow == False:
             self.df = pd.read_excel(io=filename,
                                  dtype={'': object,
                                         'DoB': object,
@@ -185,7 +199,7 @@ class DailyData:
                 else:
                     date = row['DoB']
 
-                if self.location == "ORL2.0" or self.location == "YYA":
+                if self.location_version == "newapp":
                     client_dict['DoB'] = date
                 else: # rearrange birthdate if not the new salt app
                     day = date[0:3]
@@ -214,7 +228,7 @@ class DailyData:
             stripped_name = no_special_char_name.strip()
             string_list = stripped_name.rsplit(' ', 1)
 
-            if self.location == 'ORL2.0' or self.location == "YYA":
+            if self.location_version == "newapp":
                 if len(string_list) > 1:
                     client_dict['Last Name'] = string_list[1]
                 else:
@@ -295,6 +309,8 @@ class DailyData:
             salt_enrollment_names = ["SALT Outreach-Bithlo Street Outreach"] 
         elif self.location == "YYA":
             salt_enrollment_names = ["SALT Outreach-YHDP Drop In Center"]
+        elif self.location == "APO":
+            salt_enrollment_names = ["SALT Outreach-Apopka Street Outreach"]
         else:
             salt_enrollment_names = ["SALT Outreach-ORL ESG Street Outreach", 
                                      "SALT Outreach-ORN ESG-CV Street Outreach",
@@ -421,7 +437,7 @@ class DailyData:
             petgoods_item_codes = DailyData.petgoods_item_codes_bit
             loungeaccess_item_codes = DailyData.loungeaccess_item_codes_bit
             information_item_codes = []
-        if self.location == 'ORL2.0' or self.location == 'YYA': # for new salt app
+        if self.location == 'ORL2.0' or self.location == 'YYA' or self.location == 'APO': # for new salt app
             clothing_item_codes = DailyData.clothing_item_codes_orl_2
             grooming_item_codes = DailyData.grooming_item_codes_orl_2
             food_item_codes = DailyData.food_item_codes_orl_2
@@ -431,19 +447,6 @@ class DailyData:
             petgoods_item_codes = DailyData.petgoods_item_codes_orl_2
             loungeaccess_item_codes = DailyData.loungeaccess_item_codes_orl_2
             information_item_codes = DailyData.information_item_codes_orl_2
-        '''
-        elif self.location == 'YYA':
-            clothing_item_codes = DailyData.clothing_item_codes_yya
-            grooming_item_codes = DailyData.grooming_item_codes_yya
-            food_item_codes = DailyData.food_item_codes_yya
-            bedding_item_codes = DailyData.bedding_item_codes_yya
-            electronics_item_codes = DailyData.electronics_item_codes_yya
-            homebased_item_codes = DailyData.homebased_item_codes_yya
-            petgoods_item_codes = DailyData.petgoods_item_codes_yya
-            loungeaccess_item_codes = DailyData.loungeaccess_item_codes_yya
-            information_item_codes = []
-        '''
-        # TODO: CHANGE YYA ITEMS
 
         if self.show_output:
             print("Raw Excel Data:")
