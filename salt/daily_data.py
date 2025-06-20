@@ -11,7 +11,7 @@ This will likely be very subject to change as the report style changes with
 SALT 2.0. 
 '''
 class DailyData:
-    # Orlando Item Keys
+    # Old Orlando Item Keys
     service_item_codes_orl = ['Shower', 'Laundry']
     clothing_item_codes_orl = ['top', 'btm', 'und', 'sks', 'sho', 'bxr', 'diabetic socks', 'backpacks', 'belts']
     grooming_item_codes_orl = ['ddr', 'tbr', 'tps', 'razors', 'adult depends', 'band aid', 'tampons', 'bar soap', 
@@ -25,77 +25,32 @@ class DailyData:
     petgoods_item_codes_orl = ['cat food', 'dog food']
     loungeaccess_item_codes_orl = []
 
-    # Sanford Item Keys
-    service_item_codes_sem = ['shower', 'laundry']
-    clothing_item_codes_sem = ['black bags', 'men\'s pant', 'men\'s top', 'shoes', 'socks', 'underwear', 
-                           'women\'s bottom', 'women\'s top', 'boxer', 'clothing']
-    grooming_item_codes_sem = ['feminine pads', 'hygiene bag', 'razors', 'soap bars', 'tampons', 'toothbrush',
-                           'toothpaste', 'deodorant']
-    food_item_codes_sem = ['snack', 'water']
-    bedding_item_codes_sem = ['tent', 'blankets']
-    electronic_item_codes_sem = ['power bank', 'batteries', 'earphones']
-    homebased_item_codes_sem = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
-                                   'sharpies']
-    petgoods_item_codes_sem = ['cat food', 'dog food']
-    loungeaccess_item_codes_sem = []
-
-    # Bithlo Item Keys 
-    service_item_codes_bit = ['shower', 'laundry']
-    clothing_item_codes_bit = ['black bags', 'men\'s pant', 'men\'s top', 'shoes', 'socks', 'underwear', 
-                           'women\'s bottom', 'women\'s top', 'boxer', 'clothing item']
-    grooming_item_codes_bit = ['feminine pads', 'hygiene bag', 'razors', 'soap bars', 'tampons', 'toothbrush',
-                           'toothpaste', 'deodorant', 'hygiene item']
-    food_item_codes_bit = ['snack', 'water']
-    bedding_item_codes_bit = ['tent', 'blankets']
-    electronic_item_codes_bit = ['power bank', 'batteries', 'earphones']
-    homebased_item_codes_bit = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
-                                   'sharpies']
-    petgoods_item_codes_bit = ['cat food', 'dog food']
-    loungeaccess_item_codes_bit = []
-
-    # Orlando 2.0 Item Keys
-    service_item_codes_orl_2 = ['shower', 'laundry', 'inside shower', 'charging']
-    clothing_item_codes_orl_2 = ['belt', 'bra', 'boxer', 'backpack', 'hat', 'jewelry', 'pants', 'purse', 'shirt', 'shoes', 
+    # Global Item Keys
+    shower_item_codes = ['shower']
+    laundry_item_codes = ['laundry']
+    case_management_item_codes = ['case management']
+    charging_item_codes = ['charging', 'charge']
+    clothing_item_codes = ['belt', 'bra', 'boxer', 'backpack', 'hat', 'jewelry', 'pants', 'purse', 'shirt', 'shoes', 
                                  'socks', 'sunglasses', 'ties', 'underwear', 'gloves', 'hand warmer', 'phone case', 'glasses',
-                                 'scarf', 'suitcase', 'clothing item']
-    grooming_item_codes_orl_2 = ['diapers', 'alcohol pad', 'aloe gel', 'band aid', 'soap', 'body lotion', 'body wash', 'wipes', 
-                                 'chapstick', 'conditioner', 'condom', 'cotton ball', 'cotton gauze', 'deodorant', 
+                                 'scarf', 'suitcase', 'clothing', 'bottom', 'top', 'black bags']
+    grooming_item_codes = ['diapers', 'alcohol pad', 'aloe gel', 'band aid', 'soap', 'body wash', 'wipes', 
+                                 'chapstick', 'conditioner', 'condom', 'cotton ball', 'cotton gauze', 'deodorant', 'lotion', 'pads'
                                  'face mask', 'first aid', 'floss', 'brush', 'comb', 'hair gel', 'sanitizer', 'hygiene', 
                                  'ice packs', 'makeup', 'male guard', 'mini iphone fan', 'mirror', 'mouth wash', 'nail file', 
-                                 'nail polish', 'nail trimmer', 'narcan', 'pad', 'perfume', 'pullups', 'q-tip', 'razor',
+                                 'nail polish', 'nail trimmer', 'nail care', 'narcan', 'pad', 'perfume', 'pullups', 'q-tip', 'razor', 'wipes'
                                  'shaving cream', 'shower cap', 'sunscreen', 'tampon', 'tissue', 'toothbrush', 'toothpaste',
-                                 'underpads', 'underwear', 'hygiene item']
-    food_item_codes_orl_2 = ['snack bag', 'coffee']
-    bedding_item_codes_orl_2 = ['blankets', 'ear plugs']
-    electronics_item_codes_orl_2 = ['power bank', 'batteries', 'earphones']
-    homebased_item_codes_orl_2 = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
+                                 'underpads', 'underwear']
+    food_item_codes = ['snack bag', 'coffee', 'meal', 'water']
+    bedding_item_codes = ['blankets', 'ear plugs', 'tent']
+    electronics_item_codes = ['power bank', 'batteries', 'earphones']
+    homebased_item_codes = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
                                    'sharpies']
-    petgoods_item_codes_orl_2 = ['cat food', 'dog food']
-    loungeaccess_item_codes_orl_2 = []
-    information_item_codes_orl_2 = ['information']
-
-    # Youth (Currently equal to ORL_2.0 item codes above)
-    service_item_codes_yya = []
-    clothing_item_codes_yya = ['clothing', 'socks', 'underwear']
-    grooming_item_codes_yya = ['hygiene bag']
-    food_item_codes_yya = ['snack bags', 'coffee']
-    bedding_item_codes_yya = []
-    electronics_item_codes_yya = []
-    homebased_item_codes_yya = []
-    petgoods_item_codes_yya = []
-    loungeaccess_item_codes_yya = ['respite room']
-
-    # Apopka (Currently equal to ORL_2.0 item codes above)
-    service_item_codes_apo = []
-    clothing_item_codes_apo = []
-    grooming_item_codes_apo = []
-    food_item_codes_apo = []
-    bedding_item_codes_apo = []
-    electronics_item_codes_apo = []
-    homebased_item_codes_apo = []
-    petgoods_item_codes_apo = []
-    loungeaccess_item_codes_apo = []
-    information_item_codes_apo = []
+    petgoods_item_codes = ['cat food', 'dog food']
+    lounge_access_item_codes = ['lounge access']
+    information_item_codes = ['information']
+    device_charging_item_codes = ['device charging']
+    transportation_item_codes = ['transportation']
+    healthcare_item_codes = ['hope and help']
 
     # Locations
     location_codes = ["BIT", "SEM", "ORL", "ORL2.0", "YYA", "APO"]
@@ -109,7 +64,6 @@ class DailyData:
         self.filename = filename
         self.location = location
         self.location_version = "newapp" if location in ["ORL2.0", "YYA", "APO"] else "oldapp"
-        print(self.location_version)
         if self.location not in self.location_codes:
             print("Not a valid location code, please see README for details")
             quit()
@@ -210,9 +164,8 @@ class DailyData:
                 self.df.at[row_index, 'DoB'] = client_dict['DoB']
 
             # get total number of services and items
-            services_dict = self.__get_service_totals(row)
-            items_dict = self.__count_item_totals(row, services_dict)
-            client_dict['Services'] = {**services_dict, **items_dict}
+            client_dict['Services'] = self.__count_service_and_item_totals(row)
+
             # update sheet for readability
             self.df.at[row_index, 'Services'] = self.__clean_dictionary_string(str(client_dict['Services']))
 
@@ -336,117 +289,25 @@ class DailyData:
         reorder = reorder_columns
         self.df = self.df.reindex(columns=reorder)
 
-    # Convert row values to proper data types and return a dictionary
-    def __get_service_totals(self, row):
-        services_dict = {}
-
-        if isinstance(row['Service'], float):
-            return services_dict
-        else:
-            index = row['Service'].lower().find('shower')
-            if index >= 0:
-                # find num value attributed to shower
-                string_list = row['Service'].lower().split('shower')
-                substring = string_list[1]
-
-                # get first ':' following 'Shower'
-                i = substring.index(':')
-                services_dict['Shower'] = int(substring[i+2])
-
-            index = row['Service'].lower().find('laundry')
-            if index >= 0:
-                # find num value attributed to laundry
-                string_list = row['Service'].lower().split('laundry')
-                substring = string_list[1]
-
-                # get first ':' following 'Laundry' ()
-                # multiply laundry x2 (one wash, one dry)
-                i = substring.index(':')
-                services_dict['Laundry'] = int(substring[i+2]) * 2
-
-            index = row['Service'].lower().find('charging')
-            if index >= 0:
-                string_list = row['Service'].lower().split('charging')
-                substring = string_list[1]
-
-                i = substring.index(':')
-                services_dict['Device Charging'] = int(substring[i+2])
-
-            index = row['Service'].lower().find('case management')
-            if index >= 0:
-                string_list = row['Service'].lower().split('case management')
-                substring = string_list[1]
-
-                i = substring.index(':')
-                services_dict['Case Management'] = int(substring[i+2])
-            else: # sometimes case management is just 'case' (why ??????)
-                index = row['Service'].lower().find('case')
-                if index >= 0:
-                    string_list = row['Service'].lower().split('case')
-                    substring = string_list[1]
-
-                    i = substring.index(':')
-                    services_dict['Case Management'] = int(substring[i+2])
-
-
-            index = row['Service'].lower().find('hope and help')
-            if index >= 0:
-                # find num value attributed to laundry
-                string_list = row['Service'].lower().split('hope and help')
-                substring = string_list[1]
-
-
-                i = substring.index(':')
-                services_dict['Healthcare'] = int(substring[i+2])
-
-        return services_dict
-
-    # Collect total number of items under each category for each client
+    # Collect total number of services and items under each category for each client
     # and store all items into a dictionary
-    def __count_item_totals(self, row, services_dict):
-        items_dict = {}
-        row_items = row['Items']
+    def __count_service_and_item_totals(self, row):
 
-        if self.location == 'ORL':
-            clothing_item_codes = DailyData.clothing_item_codes_orl
-            grooming_item_codes = DailyData.grooming_item_codes_orl
-            food_item_codes = DailyData.food_item_codes_orl
-            bedding_item_codes = DailyData.bedding_item_codes_orl
-            electronics_item_codes = DailyData.electronic_item_codes_orl
-            homebased_item_codes = DailyData.homebased_item_codes_orl
-            petgoods_item_codes = DailyData.petgoods_item_codes_orl
-            loungeaccess_item_codes = DailyData.loungeaccess_item_codes_orl
-            information_item_codes = []
-        elif self.location == 'SEM':
-            clothing_item_codes = DailyData.clothing_item_codes_sem
-            grooming_item_codes = DailyData.grooming_item_codes_sem
-            food_item_codes = DailyData.food_item_codes_sem
-            bedding_item_codes = DailyData.bedding_item_codes_sem
-            electronics_item_codes = DailyData.electronic_item_codes_sem
-            homebased_item_codes = DailyData.homebased_item_codes_sem
-            petgoods_item_codes = DailyData.petgoods_item_codes_sem
-            loungeaccess_item_codes = DailyData.loungeaccess_item_codes_sem
-            information_item_codes = []
-        elif self.location == 'BIT':
-            clothing_item_codes = DailyData.clothing_item_codes_bit
-            grooming_item_codes = DailyData.grooming_item_codes_bit
-            food_item_codes = DailyData.food_item_codes_bit
-            bedding_item_codes = DailyData.bedding_item_codes_bit
-            electronics_item_codes = DailyData.electronic_item_codes_bit
-            homebased_item_codes = DailyData.homebased_item_codes_bit
-            petgoods_item_codes = DailyData.petgoods_item_codes_bit
-            loungeaccess_item_codes = DailyData.loungeaccess_item_codes_bit
-            information_item_codes = []
-        if self.location == 'ORL2.0' or self.location == 'YYA' or self.location == 'APO': # for new salt app
-            clothing_item_codes = DailyData.clothing_item_codes_orl_2
-            grooming_item_codes = DailyData.grooming_item_codes_orl_2
-            food_item_codes = DailyData.food_item_codes_orl_2
-            bedding_item_codes = DailyData.bedding_item_codes_orl_2
-            electronics_item_codes = DailyData.electronics_item_codes_orl_2
-            homebased_item_codes = DailyData.homebased_item_codes_orl_2
-            petgoods_item_codes = DailyData.petgoods_item_codes_orl_2
-            loungeaccess_item_codes = DailyData.loungeaccess_item_codes_orl_2
-            information_item_codes = DailyData.information_item_codes_orl_2
+        shower_item_codes = DailyData.shower_item_codes
+        laundry_item_codes = DailyData.laundry_item_codes
+        case_management_item_codes = DailyData.case_management_item_codes
+        clothing_item_codes = DailyData.clothing_item_codes
+        grooming_item_codes = DailyData.grooming_item_codes
+        food_item_codes = DailyData.food_item_codes
+        bedding_item_codes = DailyData.bedding_item_codes
+        electronics_item_codes = DailyData.electronics_item_codes
+        homebased_item_codes = DailyData.homebased_item_codes
+        petgoods_item_codes = DailyData.petgoods_item_codes
+        lounge_access_item_codes = DailyData.lounge_access_item_codes
+        information_item_codes = DailyData.information_item_codes
+        device_charging_item_codes = DailyData.device_charging_item_codes
+        transportation_item_codes = DailyData.transportation_item_codes
+        healthcare_item_codes = DailyData.healthcare_item_codes
 
         if self.show_output:
             print("Raw Excel Data:")
@@ -457,207 +318,298 @@ class DailyData:
             print()
             print("Processed Item Counts:")
 
-        if not isinstance(row_items, float):
-            # OPTIONAL: collect all unique keys for items i.e. SHO, TOP, etc.
-            if self.list_items:
-                li = list(row_items.split(" "))
-                for item in li:
-                    if item.isalpha():
-                        self.unique_items.add(item)
+        items_dict = {}
 
-            row_items = row_items.lower()
-            items_string = ""
+        if isinstance(row['Service'], float) and isinstance(row['Items'], float):
+            return items_dict
 
-            # Clothing 
-            clothing_count = 0
-            for item in clothing_item_codes:
-                index = row_items.find(item)
-                if index >= 0:
-                    # find num value attributed to item code
-                    string_list = row_items.split(item, 1) # maxsplit: 1
-                    substring = string_list[1]
+        # if only one of the columns (Service or Items) is empty
+        services_string = row['Service'] if isinstance(row['Service'], str) else ''
+        items_string = row['Items'] if isinstance(row['Items'], str) else ''
+        row_items = services_string + ' ' + items_string
 
-                    # get first ':' following item code
-                    i = substring.index(':')
-                    clothing_count += int(substring[i+2])
-            if clothing_count > 0:
-                items_string = (items_string + "Clothing: " + str(clothing_count) + "\n")
-                items_dict['Clothing'] = clothing_count
+        row_items = row_items.lower()
+        items_string = ""
+
+        # OPTIONAL: collect all unique keys for items i.e. SHO, TOP, etc.
+        if self.list_items:
+            li = list(row_items.split(" "))
+            for item in li:
+                if item.isalpha():
+                    self.unique_items.add(item)
+
+        # Shower
+        shower_count = 0
+        for item in shower_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                # find num value attributed to item code
+                string_list = row_items.split(item, 1) # maxsplit: 1
+                substring = string_list[1]
+
+                # get first ':' following item code
+                i = substring.index(':')
+                shower_count += int(substring[i+2])
+        if shower_count > 0:
+            items_string = (items_string + "Shower: " + str(shower_count) + "\n")
+            items_dict['Shower'] = shower_count
+        if self.show_output:
+            print("Shower: " + str(shower_count))
+
+        # Laundry
+        laundry_count = 0
+        for item in laundry_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                # find num value attributed to laundry
+                string_list = row_items.lower().split(item, 1)
+                substring = string_list[1]
+
+                # get first ':' following 'Laundry' ()
+                # multiply laundry x2 (one wash, one dry)
+                i = substring.index(':')
+                laundry_count += int(substring[i+2]) * 2
+            if laundry_count > 0:
+                items_string = (items_string + "Laundry: " + str(laundry_count) + "\n")
+                items_dict['Laundry'] = laundry_count
             if self.show_output:
-                print("Clothing: " + str(clothing_count))
+                print("Laundry: " + str(laundry_count))
+        
+        # Case Management
+        case_management_count = 0
+        for item in case_management_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                string_list = row_items.split(item, 1)
+                substring = string_list[1]
 
-            # Grooming/Hygiene
-            grooming_count = 0
-            for item in grooming_item_codes:
-                index = row_items.find(item)
-                if index >= 0:
-                    # find num value attributed to item code
-                    string_list = row_items.split(item)
-                    substring = string_list[1]
-
-                    # get first ':' following item code
-                    i = substring.index(':')
-                    grooming_count += int(substring[i+2])
-            # add body wash + shampoo for each shower
-            if 'Shower' in services_dict:
-                grooming_count += (services_dict['Shower'] * 2)
-            if grooming_count > 0:
-                items_string = (items_string + "Grooming: " + str(grooming_count) + "\n")
-                items_dict['Grooming'] = grooming_count
+                i = substring.index(':')
+                case_management_count += int(substring[i+2])
+            if case_management_count > 0:
+                items_string = (items_string + "Case Management: " + str(case_management_count) + "\n")
+                items_dict['Case Management'] = case_management_count
             if self.show_output:
-                print("Grooming: " + str(grooming_count))
+                print("Case Management: " + str(clothing_count))
 
-            # Laundry Products
-            laundry_product_count = 0
-            if 'Laundry' in services_dict:
-                # add detergent for each laundry run (wash + dry)
-                laundry_product_count += int(services_dict['Laundry'] / 2)
-            if laundry_product_count > 0:
-                items_string = (items_string + "Laundry Products: " + str(laundry_product_count) + "\n")
-                items_dict['Laundry Products'] = laundry_product_count
-            if self.show_output:
-                print("Laundry Products: " + str(grooming_count))
+        # Clothing 
+        clothing_count = 0
+        for item in clothing_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                # find num value attributed to item code
+                string_list = row_items.split(item, 1) # maxsplit: 1
+                substring = string_list[1]
 
-            # Food 
-            food_count = 0
-            for item in food_item_codes:
-                index = row_items.find(item)
-                if index >= 0:
-                    # find num value attributed to item code
-                    string_list = row_items.split(item)
-                    substring = string_list[1]
+                # get first ':' following item code
+                i = substring.index(':')
+                clothing_count += int(substring[i+2])
+        if clothing_count > 0:
+            items_string = (items_string + "Clothing: " + str(clothing_count) + "\n")
+            items_dict['Clothing'] = clothing_count
+        if self.show_output:
+            print("Clothing: " + str(clothing_count))
 
-                    # get first ':' following item code
-                    i = substring.index(':')
-                    food_count += int(substring[i+2])
-            if food_count > 0:
-                items_string = (items_string + "Food: " + str(food_count) + "\n")
-                items_dict['Food'] = food_count
-            if self.show_output: 
-                print("Food: " + str(food_count))
+        # Grooming/Hygiene
+        grooming_count = 0
+        for item in grooming_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                # find num value attributed to item code
+                string_list = row_items.split(item)
+                substring = string_list[1]
 
-            # Bedding 
-            bedding_count = 0
-            for item in bedding_item_codes:
-                index = row_items.find(item)
-                if index >= 0:
-                    # find num value attributed to item code
-                    string_list = row_items.split(item)
-                    substring = string_list[1]
+                # get first ':' following item code
+                i = substring.index(':')
+                grooming_count += int(substring[i+2])
+        # add body wash + shampoo for each shower
+        if shower_count > 0:
+            grooming_count += (shower_count * 2)
+        if grooming_count > 0:
+            items_string = (items_string + "Grooming: " + str(grooming_count) + "\n")
+            items_dict['Grooming'] = grooming_count
+        if self.show_output:
+            print("Grooming: " + str(grooming_count))
 
-                    # get first ':' following item code
-                    i = substring.index(':')
-                    bedding_count += int(substring[i+2])
-            if bedding_count > 0:
-                items_string = (items_string + "Bedding: " + str(bedding_count) + "\n")
-                items_dict['Bedding'] = bedding_count
-            if self.show_output: 
-                print("Bedding: " + str(bedding_count))
-
-            # Electronics 
-            electronics_count = 0
-            for item in electronics_item_codes:
-                index = row_items.find(item)
-                if index >= 0:
-                    # find num value attributed to item code
-                    string_list = row_items.split(item)
-                    substring = string_list[1]
-
-                    # get first ':' following item code
-                    i = substring.index(':')
-                    electronics_count += int(substring[i+2])
-            if electronics_count > 0:
-                items_string = (items_string + "Electronics: " + str(electronics_count) + "\n")
-                items_dict['Electronics'] = electronics_count
-            if self.show_output: 
-                print("Electronics: " + str(electronics_count))
-
-            # Home Based 
-            homebased_count = 0
-            for item in homebased_item_codes:
-                index = row_items.find(item)
-                if index >= 0:
-                    # find num value attributed to item code
-                    string_list = row_items.split(item)
-                    substring = string_list[1]
-
-                    # get first ':' following item code
-                    i = substring.index(':')
-                    homebased_count += int(substring[i+2])
-            if homebased_count > 0:
-                items_string = (items_string + "Home Based: " + str(homebased_count) + "\n")
-                items_dict['Home Based'] = homebased_count
-            if self.show_output: 
-                print("Home Based: " + str(homebased_count))
-
-            # Pet Goods 
-            petgoods_count = 0
-            for item in petgoods_item_codes:
-                index = row_items.find(item)
-                if index >= 0:
-                    # find num value attributed to item code
-                    string_list = row_items.split(item)
-                    substring = string_list[1]
-
-                    # get first ':' following item code
-                    i = substring.index(':')
-                    petgoods_count += int(substring[i+2])
-            if petgoods_count > 0:
-                items_string = (items_string + "Pet Goods: " + str(petgoods_count) + "\n")
-                items_dict['Pet Goods'] = petgoods_count
-            if self.show_output: 
-                print("Pet Goods: " + str(petgoods_count))
-
-            loungeaccess_count = 0
-            for item in loungeaccess_item_codes:
-                index = row_items.find(item)
-                if index >= 0:
-                    string_list = row_items.split(item)
-                    substring = string_list[1]
-
-                    i = substring.index(':')
-                    loungeaccess_count += int(substring[i+2])
-                if loungeaccess_count > 0:
-                    items_string = (items_string + "Lounge Access: " + str(loungeaccess_count) + "\n")
-                    items_dict['Lounge Access'] = loungeaccess_count
-                if self.show_output:
-                    print("Lounge Access: " + str(loungeaccess_count))
-
-            information_count = 0
-            for item in information_item_codes:
-                index = row_items.find(item)
-                if index >= 0:
-                    string_list = row_items.split(item)
-                    substring = string_list[1]
-
-                    i = substring.index(':')
-                    information_count += int(substring[i+2])
-                if information_count > 0:
-                    items_string = (items_string + "Information: " + str(information_count) + "\n")
-                    items_dict['Information'] = information_count
-                if self.show_output:
-                    print("Information: " + str(information_count))
-
-        # if there are no items in the item column but the service column is not empty
-        elif (services_dict): 
-            items_string = ""
-            grooming_count = 0
-            laundry_product_count = 0
-            if 'Shower' in services_dict:
-                grooming_count += (services_dict['Shower'] * 2)
-            if grooming_count > 0:
-                items_string = (items_string + "Grooming: " + str(grooming_count) + "\n")
-                items_dict['Grooming'] = grooming_count
-                if self.show_output:
-                    print("Grooming: " + str(grooming_count))
+        # Laundry Products
+        laundry_product_count = 0
+        if laundry_count > 0:
             # add detergent for each laundry run (wash + dry)
-            if 'Laundry' in services_dict:
-                laundry_product_count += int(services_dict['Laundry'] / 2)
-            if laundry_product_count > 0:
-                items_string = (items_string + "Laundry Products: " + str(laundry_product_count) + "\n")
-                items_dict['Laundry Products'] = laundry_product_count
-                if self.show_output:
-                    print("Laundry Products: " + str(laundry_product_count))
+            laundry_product_count += int(laundry_count / 2)
+        if laundry_product_count > 0:
+            items_string = (items_string + "Laundry Products: " + str(laundry_product_count) + "\n")
+            items_dict['Laundry Products'] = laundry_product_count
+        if self.show_output:
+            print("Laundry Products: " + str(grooming_count))
+
+        # Food 
+        food_count = 0
+        for item in food_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                # find num value attributed to item code
+                string_list = row_items.split(item)
+                substring = string_list[1]
+
+                # get first ':' following item code
+                i = substring.index(':')
+                food_count += int(substring[i+2])
+        if food_count > 0:
+            items_string = (items_string + "Food: " + str(food_count) + "\n")
+            items_dict['Food'] = food_count
+        if self.show_output: 
+            print("Food: " + str(food_count))
+
+        # Bedding 
+        bedding_count = 0
+        for item in bedding_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                # find num value attributed to item code
+                string_list = row_items.split(item)
+                substring = string_list[1]
+
+                # get first ':' following item code
+                i = substring.index(':')
+                bedding_count += int(substring[i+2])
+        if bedding_count > 0:
+            items_string = (items_string + "Bedding: " + str(bedding_count) + "\n")
+            items_dict['Bedding'] = bedding_count
+        if self.show_output: 
+            print("Bedding: " + str(bedding_count))
+
+        # Electronics 
+        electronics_count = 0
+        for item in electronics_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                # find num value attributed to item code
+                string_list = row_items.split(item)
+                substring = string_list[1]
+
+                # get first ':' following item code
+                i = substring.index(':')
+                electronics_count += int(substring[i+2])
+        if electronics_count > 0:
+            items_string = (items_string + "Electronics: " + str(electronics_count) + "\n")
+            items_dict['Electronics'] = electronics_count
+        if self.show_output: 
+            print("Electronics: " + str(electronics_count))
+
+        # Home Based 
+        homebased_count = 0
+        for item in homebased_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                # find num value attributed to item code
+                string_list = row_items.split(item)
+                substring = string_list[1]
+
+                # get first ':' following item code
+                i = substring.index(':')
+                homebased_count += int(substring[i+2])
+        if homebased_count > 0:
+            items_string = (items_string + "Home Based: " + str(homebased_count) + "\n")
+            items_dict['Home Based'] = homebased_count
+        if self.show_output: 
+            print("Home Based: " + str(homebased_count))
+
+        # Pet Goods 
+        petgoods_count = 0
+        for item in petgoods_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                # find num value attributed to item code
+                string_list = row_items.split(item)
+                substring = string_list[1]
+
+                # get first ':' following item code
+                i = substring.index(':')
+                petgoods_count += int(substring[i+2])
+        if petgoods_count > 0:
+            items_string = (items_string + "Pet Goods: " + str(petgoods_count) + "\n")
+            items_dict['Pet Goods'] = petgoods_count
+        if self.show_output: 
+            print("Pet Goods: " + str(petgoods_count))
+
+        # Lounge Access
+        lounge_access_count = 0
+        for item in lounge_access_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                string_list = row_items.split(item)
+                substring = string_list[1]
+
+                i = substring.index(':')
+                lounge_access_count += int(substring[i+2])
+            if lounge_access_count > 0:
+                items_string = (items_string + "Lounge Access: " + str(lounge_access_count) + "\n")
+                items_dict['Lounge Access'] = lounge_access_count
+            if self.show_output:
+                print("Lounge Access: " + str(lounge_access_count))
+
+        # Information
+        information_count = 0
+        for item in information_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                string_list = row_items.split(item)
+                substring = string_list[1]
+
+                i = substring.index(':')
+                information_count += int(substring[i+2])
+            if information_count > 0:
+                items_string = (items_string + "Information: " + str(information_count) + "\n")
+                items_dict['Information'] = information_count
+            if self.show_output:
+                print("Information: " + str(information_count))
+        
+        # Device Charging
+        device_charging_count = 0
+        for item in device_charging_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                string_list = row_items.split(item)
+                substring = string_list[1]
+
+                i = substring.index(':')
+                device_charging_count += int(substring[i+2])
+            if device_charging_count > 0:
+                items_string = (items_string + "Device Charging: " + str(device_charging_count) + "\n")
+                items_dict['Device Charging'] = device_charging_count
+            if self.show_output:
+                print("Device Charging: " + str(device_charging_count))
+
+        # Transportation
+        transportation_count = 0
+        for item in transportation_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                string_list = row_items.split(item)
+                substring = string_list[1]
+
+                i = substring.index(':')
+                transportation_count += int(substring[i+2])
+            if transportation_count > 0:
+                items_string = (items_string + "Transportation: " + str(transportation_count) + "\n")
+                items_dict['Transportation'] = transportation_count
+            if self.show_output:
+                print("Transportation: " + str(transportation_count))
+        
+        # Healthcare
+        healthcare_count = 0
+        for item in healthcare_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                string_list = row_items.split(item)
+                substring = string_list[1]
+
+                i = substring.index(':')
+                healthcare_count += int(substring[i+2])
+            if healthcare_count > 0:
+                items_string = (items_string + "Healthcare Count: " + str(healthcare_count) + "\n")
+                items_dict['Healthcare'] = healthcare_count
+            if self.show_output:
+                print("Healthcare: " + str(healthcare_count))
 
         return items_dict
     
