@@ -68,6 +68,12 @@ class DailyData:
             print("Not a valid location code, please see README for details")
             quit()
 
+        # TODO: TEMPORARY SOLUTION, DON'T KNOW IF THE FIRST ROW WILL CHANGE LATER ON
+        if self.location_version == "newapp":
+            skipfirstrow = True
+        if 'Failed_entries' in self.filename:
+            skipfirstrow = False
+
         if self.location_version == "newapp" and skipfirstrow == True:
             self.df = pd.read_excel(io=filename,
                                  dtype={'': object,

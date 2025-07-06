@@ -481,6 +481,7 @@ class Driver:
             )
             button_save_and_close = self.browser.find_element(By.ID, button_save_and_close_id)
             button_save_and_close.click()
+            time.sleep(1)
         except Exception as e:
             print("Couldn't Save 'Family Members' section of Intake")
             print(traceback.format_exc())
