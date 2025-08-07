@@ -40,7 +40,7 @@ class DailyData:
                                  'nail polish', 'nail trimmer', 'nail care', 'narcan', 'pad', 'perfume', 'pullups', 'q-tip', 'razor', 'wipes'
                                  'shaving cream', 'shower cap', 'sunscreen', 'tampon', 'tissue', 'toothbrush', 'toothpaste',
                                  'underpads', 'underwear']
-    food_item_codes = ['snack bag', 'coffee', 'meal', 'water']
+    food_item_codes = ['snack bag', 'coffee', 'meal', 'water', 'lunch plate']
     bedding_item_codes = ['blankets', 'ear plugs', 'tent']
     electronics_item_codes = ['power bank', 'batteries', 'earphones']
     homebased_item_codes = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
@@ -51,6 +51,7 @@ class DailyData:
     device_charging_item_codes = ['device charging']
     transportation_item_codes = ['transportation']
     healthcare_item_codes = ['hope and help']
+    street_outreach_item_codes = ['general service']
 
     # Locations
     location_codes = ["BIT", "SEM", "ORL", "ORL2.0", "YYA", "APO"]
@@ -63,7 +64,7 @@ class DailyData:
         self.unique_items = set()
         self.filename = filename
         self.location = location
-        self.location_version = "newapp" if location in ["ORL2.0", "YYA", "APO"] else "oldapp"
+        self.location_version = "newapp" if location in ["ORL2.0", "YYA", "APO"] else "corsalisapp" #TODO: delete "oldapp"
         if self.location not in self.location_codes:
             print("Not a valid location code, please see README for details")
             quit()
@@ -95,6 +96,24 @@ class DailyData:
                                         'ITEMS': object})
 
             self.df = self.df.rename(columns={'Services': 'Service', 'ITEMS' : 'Items'})
+        elif self.location_version == "corsalisapp": # TODO: NEWEST APP, ALL LOCATIONS WILL EVENTUALLY TRANSITION TO THIS VERSION
+            if 'Failed_entries' in self.filename:
+                self.df = pd.read_excel(io=filename,
+                     dtype={'': object,
+                            'DoB': object,
+                            'Client Name': object,
+                            'HMIS ID': object,
+                            'Services': object,
+                            'ITEMS': object})
+            else:
+                self.df = pd.read_csv(filename,
+                                     dtype={'': object,
+                                            'DoB': object,
+                                            'Client Name': object,
+                                            'HMIS ID': object,
+                                            'Services': object,
+                                            'ITEMS': object},
+                                            skiprows=3)
         else:
             self.df = pd.read_excel(io=filename,
                                  dtype={'': object,
@@ -135,9 +154,15 @@ class DailyData:
             if not self.driver.login_clienttrack(self.username, self.password):
                 print("Could not login successfully")
                 return
-
-        self.__clean_dataframe(['Race', 'Ethnicity', 'Verification of homeless', 'Gross monthly income'], 
-                               ['', 'HMIS ID', 'Client Name', 'Service', 'Items', 'DoB'])
+        
+        if self.location_version == "corsalisapp": #TODO: have finalized column formats so I don't have to translate three times ... ;a;
+            self.__clean_dataframe(['Race', 'Ethnicity', 'Verification of homeless', 'Gross monthly income'], 
+                                    ['', 'HMIS ID', 'Client Name', 'Services', 'ITEMS', 'DoB'])
+            self.df.rename(columns={'Services':'Service', 'ITEMS': 'Items'}, inplace=True)
+            
+        else: 
+            self.__clean_dataframe(['Race', 'Ethnicity', 'Verification of homeless', 'Gross monthly income'], 
+                                    ['', 'HMIS ID', 'Client Name', 'Service', 'Items', 'DoB'])
 
         # add new column combining items and services columns
         self.df['Services'] = ""
@@ -159,7 +184,7 @@ class DailyData:
                 else:
                     date = row['DoB']
 
-                if self.location_version == "newapp":
+                if self.location_version == "newapp" or self.location_version == "corsalisapp":
                     client_dict['DoB'] = date
                 else: # rearrange birthdate if not the new salt app
                     day = date[0:3]
@@ -168,7 +193,7 @@ class DailyData:
 
                 # # update sheet for readability
                 self.df.at[row_index, 'DoB'] = client_dict['DoB']
-
+            
             # get total number of services and items
             client_dict['Services'] = self.__count_service_and_item_totals(row)
 
@@ -187,7 +212,7 @@ class DailyData:
             stripped_name = no_special_char_name.strip()
             string_list = stripped_name.rsplit(' ', 1)
 
-            if self.location_version == "newapp":
+            if self.location_version == "newapp" or self.location_version == "corsalisapp":
                 if len(string_list) > 1:
                     client_dict['Last Name'] = string_list[1]
                 else:
@@ -314,7 +339,8 @@ class DailyData:
         device_charging_item_codes = DailyData.device_charging_item_codes
         transportation_item_codes = DailyData.transportation_item_codes
         healthcare_item_codes = DailyData.healthcare_item_codes
-
+        street_outreach_item_codes = DailyData.street_outreach_item_codes
+        
         if self.show_output:
             print("Raw Excel Data:")
             print("SERVICES")
@@ -355,7 +381,8 @@ class DailyData:
 
                 # get first ':' following item code
                 i = substring.index(':')
-                shower_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    shower_count += int(substring[i+2])
         if shower_count > 0:
             items_string = (items_string + "Shower: " + str(shower_count) + "\n")
             items_dict['Shower'] = shower_count
@@ -374,7 +401,8 @@ class DailyData:
                 # get first ':' following 'Laundry' ()
                 # multiply laundry x2 (one wash, one dry)
                 i = substring.index(':')
-                laundry_count += int(substring[i+2]) * 2
+                if substring[i+2].isdigit():
+                    laundry_count += int(substring[i+2]) * 2
             if laundry_count > 0:
                 items_string = (items_string + "Laundry: " + str(laundry_count) + "\n")
                 items_dict['Laundry'] = laundry_count
@@ -390,7 +418,8 @@ class DailyData:
                 substring = string_list[1]
 
                 i = substring.index(':')
-                case_management_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    case_management_count += int(substring[i+2])
             if case_management_count > 0:
                 items_string = (items_string + "Case Management: " + str(case_management_count) + "\n")
                 items_dict['Case Management'] = case_management_count
@@ -408,7 +437,8 @@ class DailyData:
 
                 # get first ':' following item code
                 i = substring.index(':')
-                clothing_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    clothing_count += int(substring[i+2])
         if clothing_count > 0:
             items_string = (items_string + "Clothing: " + str(clothing_count) + "\n")
             items_dict['Clothing'] = clothing_count
@@ -426,7 +456,8 @@ class DailyData:
 
                 # get first ':' following item code
                 i = substring.index(':')
-                grooming_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    grooming_count += int(substring[i+2])
         # add body wash + shampoo for each shower
         if shower_count > 0:
             grooming_count += (shower_count * 2)
@@ -458,7 +489,8 @@ class DailyData:
 
                 # get first ':' following item code
                 i = substring.index(':')
-                food_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    food_count += int(substring[i+2])
         if food_count > 0:
             items_string = (items_string + "Food: " + str(food_count) + "\n")
             items_dict['Food'] = food_count
@@ -476,7 +508,8 @@ class DailyData:
 
                 # get first ':' following item code
                 i = substring.index(':')
-                bedding_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    bedding_count += int(substring[i+2])
         if bedding_count > 0:
             items_string = (items_string + "Bedding: " + str(bedding_count) + "\n")
             items_dict['Bedding'] = bedding_count
@@ -494,7 +527,8 @@ class DailyData:
 
                 # get first ':' following item code
                 i = substring.index(':')
-                electronics_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    electronics_count += int(substring[i+2])
         if electronics_count > 0:
             items_string = (items_string + "Electronics: " + str(electronics_count) + "\n")
             items_dict['Electronics'] = electronics_count
@@ -512,7 +546,8 @@ class DailyData:
 
                 # get first ':' following item code
                 i = substring.index(':')
-                homebased_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    homebased_count += int(substring[i+2])
         if homebased_count > 0:
             items_string = (items_string + "Home Based: " + str(homebased_count) + "\n")
             items_dict['Home Based'] = homebased_count
@@ -530,7 +565,8 @@ class DailyData:
 
                 # get first ':' following item code
                 i = substring.index(':')
-                petgoods_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    petgoods_count += int(substring[i+2])
         if petgoods_count > 0:
             items_string = (items_string + "Pet Goods: " + str(petgoods_count) + "\n")
             items_dict['Pet Goods'] = petgoods_count
@@ -546,7 +582,8 @@ class DailyData:
                 substring = string_list[1]
 
                 i = substring.index(':')
-                lounge_access_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    lounge_access_count += int(substring[i+2])
             if lounge_access_count > 0:
                 items_string = (items_string + "Lounge Access: " + str(lounge_access_count) + "\n")
                 items_dict['Lounge Access'] = lounge_access_count
@@ -562,7 +599,8 @@ class DailyData:
                 substring = string_list[1]
 
                 i = substring.index(':')
-                information_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    information_count += int(substring[i+2])
             if information_count > 0:
                 items_string = (items_string + "Information: " + str(information_count) + "\n")
                 items_dict['Information'] = information_count
@@ -578,7 +616,8 @@ class DailyData:
                 substring = string_list[1]
 
                 i = substring.index(':')
-                device_charging_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    device_charging_count += int(substring[i+2])
             if device_charging_count > 0:
                 items_string = (items_string + "Device Charging: " + str(device_charging_count) + "\n")
                 items_dict['Device Charging'] = device_charging_count
@@ -594,7 +633,8 @@ class DailyData:
                 substring = string_list[1]
 
                 i = substring.index(':')
-                transportation_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    transportation_count += int(substring[i+2])
             if transportation_count > 0:
                 items_string = (items_string + "Transportation: " + str(transportation_count) + "\n")
                 items_dict['Transportation'] = transportation_count
@@ -610,12 +650,30 @@ class DailyData:
                 substring = string_list[1]
 
                 i = substring.index(':')
-                healthcare_count += int(substring[i+2])
+                if substring[i+2].isdigit():
+                    healthcare_count += int(substring[i+2])
             if healthcare_count > 0:
                 items_string = (items_string + "Healthcare Count: " + str(healthcare_count) + "\n")
                 items_dict['Healthcare'] = healthcare_count
             if self.show_output:
                 print("Healthcare: " + str(healthcare_count))
+
+        # Street Outreach
+        street_outreach_count = 0
+        for item in street_outreach_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                string_list = row_items.split(item)
+                substring = string_list[1]
+
+                i = substring.index(':')
+                if substring[i+2].isdigit():
+                    street_outreach_count += int(substring[i+2])
+            if street_outreach_count > 0:
+                items_string = (items_string + "Street Outreach Count: " + str(street_outreach_count) + "\n")
+                items_dict['Street Outreach'] = street_outreach_count
+            if self.show_output:
+                print("Street Outreach: " + str(street_outreach_count))
 
         return items_dict
     
@@ -627,9 +685,15 @@ class DailyData:
         return pattern.sub(lambda m: rep[re.escape(m.group(0))], string)
     
     # Expects to find substring in format MM-DD-YEAR; returns in format MM-DD-YEAR
-    def __get_date_from_filename(self, filename):
-        date_string = re.search("([0-9]{2}\-[0-9]{2}\-[0-9]{4})", filename)
-        date = datetime.strptime(date_string[0], '%m-%d-%Y')
+    def __get_date_from_filename(self, filename): #TODO: subject to change
+        if self.location_version == "corsalisapp" and "Failed_entries" not in filename:
+            date_string = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", filename)
+            og_date = datetime.strptime(date_string[0], '%Y-%m-%d')
+            reformat_date = og_date.strftime('%m-%d-%Y')
+            date = datetime.strptime(reformat_date, '%m-%d-%Y')
+        else:
+            date_string = re.search("([0-9]{2}\-[0-9]{2}\-[0-9]{4})", filename)
+            date = datetime.strptime(date_string[0], '%m-%d-%Y')
         '''
         if self.location == "ORL2.0":
             date_string = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", filename)

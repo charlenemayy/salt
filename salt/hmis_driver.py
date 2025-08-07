@@ -286,7 +286,8 @@ class Driver:
                                   'Lounge Access': '741',
                                   'Electronics': '557',
                                   'Information': '535',
-                                  'Transportation': '363'}
+                                  'Transportation': '363',
+                                  'Street Outreach': '352'}
         
         field_units_id = "1000007095_Renderer"
         field_date_id = "1000007086_Renderer"

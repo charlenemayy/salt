@@ -19,9 +19,23 @@ This was developed based on my personal environment in MacOS and will not work i
 '''
 
 def run_daily_data(location_key, location_name, location_version):
+    if location_version == 'corsalisapp':
+        files = os.listdir(output_path)
+        
+        filename_date = date_str[6:10] + "-" + date_str[0:5]
+        report_filename = "client_summary_log_" + location_name + "_" + filename_date + "_to_" + filename_date + ".csv"
+
+        report_path = output_path + report_filename
+        if not os.path.exists(report_path):
+            print("ERROR: Downloaded report for " + location_name + " cannot be found")
+            return
+
+        # download pretty xlsx file to upload to drive
+        print("RUNNING: Processing simplified report file")
+        subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l {0} -f {1} -m".format(location_key, report_path)], shell=True)
+
     # for the old web app, we can automate the download of the day's report from the website
-    if location_version == 'oldapp':
-        ''' DEPRECATED UNTIL CORSALIS IS FULLY LAUNCHED
+    elif location_version == 'oldapp':
         files = os.listdir(output_path)
         report_filename = "Report_by_client_" + date_str + ".xlsx"
 
@@ -43,21 +57,6 @@ def run_daily_data(location_key, location_name, location_version):
         # download pretty xlsx file to upload to drive
         print("RUNNING: Processing simplified report file")
         subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l {0} -f {1} -m".format(location_key, report_path)], shell=True)
-        '''
-        report_filename = location_key + "-Export-" + date_str + ".xlsx" # TODO: MODIFY DEPENDING ON REPORT FILENAME FROM CORSALIS
-
-        if location_key == "ORL2.0":
-            report_filename = "ORL" + "-Export-" + date_str + ".xlsx"
-
-        # double check that report has been downloaded / exists
-        report_path = output_path + report_filename
-        if not os.path.exists(report_path):
-            print("ERROR: Downloaded report for " + location_name + " cannot be found")
-            return
-    
-        # download pretty xlsx file to upload to drive (and skip the first row)
-        print("RUNNING: Processing simplified report file")
-        subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -sfr -l {0} -f {1} -m".format(location_key, report_path)], shell=True)
 
     # for the new web app, we have to manually download the exports locally before we can run our scheduled automation (for now)
     elif location_version == 'newapp':
@@ -83,6 +82,8 @@ def run_daily_data(location_key, location_name, location_version):
         subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l {0} -f {1} -a".format(location_key, report_path)], shell=True)
     elif location_version == 'newapp':
         subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -sfr -l {0} -f {1} -a".format(location_key, report_path)], shell=True)
+    elif location_version == 'corsalisapp':
+        subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -l {0} -f {1} -a".format(location_key, report_path)], shell=True)
 
     # run the failed entries
     failed_report_filename = location_key + "_Failed_entries_" + date_str + ".xlsx"
@@ -155,15 +156,15 @@ locations = [
     },
     {
         'key': "SEM",
-        'name': "SANFORD",
+        'name': "Sanford-ROM",
         'skip': args.skipsanford,
-        'version': 'oldapp'
+        'version': 'corsalisapp'
     },
     {
         'key': "BIT",
-        'name': "BITHLO",
+        'name': "Bithlo",
         'skip': args.skipbithlo,
-        'version': 'oldapp'
+        'version': 'corsalisapp'
     },
     {
         'key': "YYA",
