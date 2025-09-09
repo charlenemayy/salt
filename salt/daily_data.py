@@ -35,7 +35,7 @@ class DailyData:
                                  'scarf', 'suitcase', 'clothing', 'bottom', 'top', 'black bags']
     grooming_item_codes = ['diapers', 'alcohol pad', 'aloe gel', 'band aid', 'soap', 'body wash', 'wipes', 
                                  'chapstick', 'conditioner', 'condom', 'cotton ball', 'cotton gauze', 'deodorant', 'lotion', 'pads'
-                                 'face mask', 'first aid', 'floss', 'brush', 'comb', 'hair gel', 'sanitizer', 'hygiene', 
+                                 'face mask', 'first aid', 'floss', 'brush', 'comb', 'hair gel', 'sanitizer', 'hygiene item', 'hygiene bag' 
                                  'ice packs', 'makeup', 'male guard', 'mini iphone fan', 'mirror', 'mouth wash', 'nail file', 
                                  'nail polish', 'nail trimmer', 'nail care', 'narcan', 'pad', 'perfume', 'pullups', 'q-tip', 'razor', 'wipes'
                                  'shaving cream', 'shower cap', 'sunscreen', 'tampon', 'tissue', 'toothbrush', 'toothpaste',
@@ -51,6 +51,7 @@ class DailyData:
     device_charging_item_codes = ['device charging']
     transportation_item_codes = ['transportation']
     healthcare_item_codes = ['hope and help']
+    storage_item_codes = ['storage']
     street_outreach_item_codes = ['general service']
 
     # Locations
@@ -339,6 +340,7 @@ class DailyData:
         device_charging_item_codes = DailyData.device_charging_item_codes
         transportation_item_codes = DailyData.transportation_item_codes
         healthcare_item_codes = DailyData.healthcare_item_codes
+        storage_item_codes = DailyData.storage_item_codes
         street_outreach_item_codes = DailyData.street_outreach_item_codes
         
         if self.show_output:
@@ -457,7 +459,10 @@ class DailyData:
                 # get first ':' following item code
                 i = substring.index(':')
                 if substring[i+2].isdigit():
-                    grooming_count += int(substring[i+2])
+                    if item == "hygiene bag":
+                        grooming_count += int(substring[i+2])*10
+                    else:
+                        grooming_count += int(substring[i+2])
         # add body wash + shampoo for each shower
         if shower_count > 0:
             grooming_count += (shower_count * 2)
@@ -490,7 +495,10 @@ class DailyData:
                 # get first ':' following item code
                 i = substring.index(':')
                 if substring[i+2].isdigit():
-                    food_count += int(substring[i+2])
+                    if item == "snack bag":
+                        food_count += int(substring[i+2])*4
+                    else:
+                        food_count += int(substring[i+2])
         if food_count > 0:
             items_string = (items_string + "Food: " + str(food_count) + "\n")
             items_dict['Food'] = food_count
@@ -658,8 +666,27 @@ class DailyData:
             if self.show_output:
                 print("Healthcare: " + str(healthcare_count))
 
+        # Storage
+        storage_count = 0
+        for item in storage_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                string_list = row_items.split(item)
+                substring = string_list[1]
+                i = substring.index(':')
+                if substring[i+2].isdigit():
+                    storage_count += int(substring[i+2])
+            if storage_count > 0:
+                items_string = (items_string + "Storage Count: " + str(storage_count) + "\n")
+                items_dict['Storage'] = storage_count
+            if self.show_output:
+                print("Storage: " + str(storage_count))
+
         # Street Outreach
-        street_outreach_count = 0
+        if self.location in ["BIT", "SEM", "ORL", "ORL2.0", "APO"]:
+            street_outreach_count = 1 # every interaction counts for one street outreach
+        else:
+            street_outreach_count = 0
         for item in street_outreach_item_codes:
             index = row_items.find(item)
             if index >= 0:

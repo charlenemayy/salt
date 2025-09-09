@@ -281,6 +281,7 @@ class Driver:
                                   'Case Management': '372',
                                   'Device Charging': '724',
                                   'Healthcare': '367',
+                                  'Storage': '602',
                                   'Home Based': '455',
                                   'Pet Goods': '574',
                                   'Lounge Access': '741',
