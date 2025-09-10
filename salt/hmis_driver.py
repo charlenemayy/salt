@@ -263,7 +263,7 @@ class Driver:
     #         [str] service_date: date of service
     #         [dict] services_dict: dictionary of services to be entered
     # @return: [bool] success / fail
-    def enter_client_services(self, viable_enrollment_list, service_date, services_dict, location):
+    def enter_client_services(self, viable_enrollment_list, service_date, services_dict, project, location):
         button_add_new_service_id = "Renderer_1000000216"
         dropdown_enrollment_id = "1000007089_Renderer"
         dropdown_service_id = "1000007094_Renderer"
@@ -346,13 +346,9 @@ class Driver:
                                 break
                 # enroll the client and try again, enrollment should be found in recursive call
                 if not enrollment_found:
-                    '''
-                    print("Client is not enrolled")
-                    return False
-                    '''
                     print("Client is not enrolled -- Enrolling client")
                     self.navigate_to_client_dashboard()
-                    if not self.enroll_client(service_date, location):
+                    if not self.enroll_client(service_date, project, location):
                         print("Couldn't enroll client successfully -- Canceling")
                         self.cancel_intake_workflow()
                         self.__wait_until_page_fully_loaded("Client Dashboard")
@@ -360,7 +356,7 @@ class Driver:
                         return False
 
                     print("Successfully enrolled client -- Entering services")
-                    return self.enter_client_services(viable_enrollment_list, service_date, services_dict, location)
+                    return self.enter_client_services(viable_enrollment_list, service_date, services_dict, project, location)
             except Exception as e:
                 print("Error finding enrollment")
                 print(traceback.format_exc())
@@ -401,7 +397,7 @@ class Driver:
     # Enrolls the client into the latest SALT program
     # @param: [str] service_date: date of service
     # @return: [bool] success / fail
-    def enroll_client(self, service_date, location):
+    def enroll_client(self, service_date, project, location):
         button_new_enrollment_id = "Renderer_1000000424"
         dropdown_veteran_status_id = "1000006680_Renderer"
         option_no_value = "0"
@@ -414,17 +410,18 @@ class Driver:
         button_save_id = "Renderer_SAVE"
         table_row_family_members_xpath = '//table[@id="RendererSF1ResultSet"]//tbody/tr'
 
-        # 1217 for downtown, 1157 for sanford
-        if location == "ORL" or location == "ORL2.0":
+        if project == "ORL" or project == "ORL2.0":
             option_salt_enrollment_value = "1217"
-        elif location == "SEM":
+        elif project == "SEM":
             option_salt_enrollment_value = "1157"
-        elif location == "BIT":
+        elif project == "BIT":
             option_salt_enrollment_value = "1275"
-        elif location == "YYA":
+        elif project == "YYA":
             option_salt_enrollment_value = "1226"
-        elif location == "APO":
+        elif project == "APO":
             option_salt_enrollment_value = "2329"
+        elif project == "HURRICANE":
+            option_salt_enrollment_value = "2334"
         else:
             print("IMPORTANT!!! ENROLLMENT CODE FOR NEW LOCATION HAS NOT BEEN ADDED TO THE CODE. PLEASE UPDATE")
             print("Quitting now...")
@@ -585,9 +582,9 @@ class Driver:
             return False
 
         # Assess Client
-        return self.__assess_client(service_date, location)
+        return self.__assess_client(service_date, project, location)
         
-    def __assess_client(self, service_date, location):
+    def __assess_client(self, service_date, project, location):
         dropdowns_xpath = '//table[@class="FormPage"]//td[@class="FieldStyle"]/select'
         date_fields_xpath = '//table[@class="FormPage"]//td[@class="FieldStyle"]/span[@class="DateField input-group"]/input'
         option_data_not_collected_id = '99'
@@ -722,14 +719,14 @@ class Driver:
             return False
 
         # BARRIER ASSESSMENT
-        barrier_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
-        no_barrier_assessment_locations = []
+        barrier_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
+        no_barrier_assessment_projects = []
 
-        if location not in barrier_assessment_locations and location not in no_barrier_assessment_locations:
-            print("DID NOT ADD NEW LOCATION TO BARRIER ASSESSMENT ENROLLMENT LIST, FIX AND RERUN")
+        if project not in barrier_assessment_projects and project not in no_barrier_assessment_projects:
+            print("DID NOT ADD NEW PROJECT TO BARRIER ASSESSMENT ENROLLMENT LIST, FIX AND RERUN")
             print("Quitting now...")
             quit()
-        elif location in barrier_assessment_locations:
+        elif project in barrier_assessment_projects:
             button_default_assessment_id = 'B1000006792_Renderer'
             field_identified_date_id = '90688_Renderer'
             button_save_and_close_id = 'Renderer_SAVEFINISH'
@@ -773,14 +770,14 @@ class Driver:
                 return False
 
         # DOMESTIC VIOLENCE ASSESSMENT
-        domestic_violence_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
-        no_domestic_violence_assessment_locations = []
+        domestic_violence_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
+        no_domestic_violence_assessment_projects = []
 
-        if location not in domestic_violence_assessment_locations and location not in no_domestic_violence_assessment_locations:
-            print("DID NOT ADD NEW LOCATION TO DOMESTIC VIOLENCE ENROLLMENT LIST, FIX AND RERUN")
+        if project not in domestic_violence_assessment_projects and project not in no_domestic_violence_assessment_projects:
+            print("DID NOT ADD NEW PROJECT TO DOMESTIC VIOLENCE ENROLLMENT LIST, FIX AND RERUN")
             print("Quitting now...")
             quit()
-        elif location in domestic_violence_assessment_locations:
+        elif project in domestic_violence_assessment_projects:
             button_default_assessment_id = 'B48899_Renderer'
             field_assessment_date_id = '11807_Renderer'
             button_save_id = "Renderer_SAVE"
@@ -813,14 +810,14 @@ class Driver:
                 return False
 
         # INCOME ASSESSMENT
-        income_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
-        no_income_assessment_locations = []
+        income_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
+        no_income_assessment_projects = []
 
-        if location not in income_assessment_locations and location not in no_income_assessment_locations:
-            print("DID NOT ADD NEW LOCATION TO INCOME ENROLLMENT LIST, FIX AND RERUN")
+        if project not in income_assessment_projects and project not in no_income_assessment_projects:
+            print("DID NOT ADD NEW PROJECT TO INCOME ENROLLMENT LIST, FIX AND RERUN")
             print("Quitting now...")
             quit()
-        elif location in income_assessment_locations:
+        elif project in income_assessment_projects:
             field_assessment_date_id = '92172_Renderer'
             dropdown_income_id = '92173_Renderer'
             dropdown_non_cash_benefits_id = '92174_Renderer'
@@ -852,14 +849,14 @@ class Driver:
                 return False
 
         # RHY ASSESSMENT
-        rhy_assessment_locations = ['YYA']
-        no_rhy_assessment_locations = ['BIT', 'SEM', 'ORL', 'ORL2.0', 'APO']
+        rhy_assessment_projects = ['YYA']
+        no_rhy_assessment_projects = ['BIT', 'SEM', 'ORL', 'ORL2.0', 'APO', 'HURRICANE']
 
-        if location not in rhy_assessment_locations and location not in no_rhy_assessment_locations:
-            print("DID NOT ADD NEW LOCATION TO RHY ENROLLMENT LIST, FIX AND RERUN")
+        if project not in rhy_assessment_projects and project not in no_rhy_assessment_projects:
+            print("DID NOT ADD NEW PROJECT TO RHY ENROLLMENT LIST, FIX AND RERUN")
             print("Quitting now...")
             quit()
-        elif location in rhy_assessment_locations:
+        elif project in rhy_assessment_projects:
             field_assessment_date_id = '107266_Renderer'
             dropdown_sexual_orientation_id = '107275_Renderer'
             button_save_id = "Renderer_SAVE"
@@ -886,14 +883,14 @@ class Driver:
 
 
         # CURRENT LIVING SITUATION ASSESSMENT
-        living_situation_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
-        no_living_situation_assessment_locations = []
+        living_situation_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
+        no_living_situation_assessment_projects = []
 
-        if location not in living_situation_assessment_locations and location not in no_living_situation_assessment_locations:
-            print("DID NOT ADD NEW LOCATION TO LIVING SITUATION ENROLLMENT LIST, FIX AND RERUN")
+        if project not in living_situation_assessment_projects and project not in no_living_situation_assessment_projects:
+            print("DID NOT ADD NEW PROJECT TO LIVING SITUATION ENROLLMENT LIST, FIX AND RERUN")
             print("Quitting now...")
             quit()
-        elif location in living_situation_assessment_locations:
+        elif project in living_situation_assessment_projects:
             self.__wait_until_page_fully_loaded("Current Living Situation Assessment")
 
             dropdown_living_sit_id = '107051_Renderer'
@@ -917,14 +914,14 @@ class Driver:
                 return False
 
         # YOUTH EDUCATION ASSESSMENT
-        youth_education_assessment_locations = ['YYA']
-        no_youth_education_assessment_locations = ['BIT', 'SEM', 'ORL', 'ORL2.0', 'APO']
+        youth_education_assessment_projects = ['YYA']
+        no_youth_education_assessment_projects = ['BIT', 'SEM', 'ORL', 'ORL2.0', 'APO', 'HURRICANE']
 
-        if location not in youth_education_assessment_locations and location not in no_youth_education_assessment_locations:
-            print("DID NOT ADD NEW LOCATION TO youth_education ENROLLMENT LIST, FIX AND RERUN")
+        if project not in youth_education_assessment_projects and project not in no_youth_education_assessment_projects:
+            print("DID NOT ADD NEW PROJECT TO YOUTH EDUCATION ENROLLMENT LIST, FIX AND RERUN")
             print("Quitting now...")
             quit()
-        elif location in youth_education_assessment_locations:
+        elif project in youth_education_assessment_projects:
             field_assessment_date_id = '102833_Renderer'
             dropdown_current_school_id = '102834_Renderer'
             button_save_id = "Renderer_SAVE"
@@ -953,14 +950,14 @@ class Driver:
 
 
         # TRANSLATION ASSISTANCE ASSESSMENT
-        translation_assistance_assessment_locations = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
-        no_translation_assistance_assessment_locations = []
+        translation_assistance_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
+        no_translation_assistance_assessment_projects = []
 
-        if location not in translation_assistance_assessment_locations and location not in no_translation_assistance_assessment_locations:
-            print("DID NOT ADD NEW LOCATION TO LIVING SITUATION ENROLLMENT LIST, FIX AND RERUN")
+        if project not in translation_assistance_assessment_projects and project not in no_translation_assistance_assessment_projects:
+            print("DID NOT ADD NEW PROJECT TO LIVING SITUATION ENROLLMENT LIST, FIX AND RERUN")
             print("Quitting now...")
             quit()
-        elif location in translation_assistance_assessment_locations:
+        elif project in translation_assistance_assessment_projects:
             dropdown_translation_id = '107564_Renderer'
             button_save_id = "Renderer_SAVE"
             button_default_assessment_id = 'B107569_Renderer'

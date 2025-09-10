@@ -57,13 +57,15 @@ class DailyData:
     # Locations
     location_codes = ["BIT", "SEM", "ORL", "ORL2.0", "YYA", "APO"]
 
-    def __init__(self, filename, automate, manual, show_output, location, list_items, skipfirstrow):
+    # TODO: HURRICANE - DELETE TAGS ARGUMENT
+    def __init__(self, filename, automate, manual, show_output, location, list_items, skipfirstrow, tags):
         self.automate = automate
         self.manual = manual
         self.show_output = show_output
         self.list_items = list_items
         self.unique_items = set()
         self.filename = filename
+        self.tags = tags
         self.location = location
         self.location_version = "newapp" if location in ["ORL2.0", "YYA", "APO"] else "corsalisapp" #TODO: delete "oldapp"
         if self.location not in self.location_codes:
@@ -237,6 +239,9 @@ class DailyData:
             else:
                 client_dict['Client ID'] = row['HMIS ID']
             
+            #TODO: HURRICANE
+            # client_dict['Tags'] = row['Tags']
+            client_dict['Tags'] = self.tags #hurricane
 
             if self.show_output:
                 print()
@@ -288,7 +293,15 @@ class DailyData:
         
         # STEP TWO: ENTER SERVICES FOR CLIENT
         # order matters - from most desirable option to last
-        if self.location == "SEM":
+
+        # set project to enroll client in
+        # in most cases, PROJECT = LOCATION
+        project = self.location
+
+        if "hurricane" in self.tags.lower():
+            salt_enrollment_names = ["SALT Outreach-Helene/Milton OC RUSH Street Outreach"]
+            project = "HURRICANE"
+        elif self.location == "SEM":
             salt_enrollment_names = ["SALT Outreach-SEM Street Outreach"]
         elif self.location == "BIT":
             salt_enrollment_names = ["SALT Outreach-Bithlo Street Outreach"] 
@@ -305,7 +318,7 @@ class DailyData:
         service_date = str(date.strftime('%m%d%Y'))
 
         # enter client services for client - expects date with no non-numeric values (no dashes, etc.)``
-        success = self.driver.enter_client_services(salt_enrollment_names, service_date, client_dict['Services'], self.location)
+        success = self.driver.enter_client_services(salt_enrollment_names, service_date, client_dict['Services'], project, self.location)
         if not success:
             print("Client services could not be entered into the system:")
             print(client_dict)
