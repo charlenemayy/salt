@@ -21,7 +21,7 @@ This was developed based on my personal environment in MacOS and will not work i
 def run_daily_data(location_key, location_name, location_version):
     if location_version == 'corsalisapp':
         files = os.listdir(output_path)
-        
+
         filename_date = date_str[6:10] + "-" + date_str[0:5]
         report_filename = "client_summary_log_" + location_name + "_" + filename_date + "_to_" + filename_date + ".csv"
 
@@ -150,9 +150,9 @@ else:
 locations = [
     {
         'key': "ORL2.0",
-        'name': "ORLANDO",
+        'name': "Powerhouse",
         'skip': args.skiporlando,
-        'version': 'newapp'
+        'version': 'corsalisapp'
     },
     {
         'key': "SEM",
@@ -176,7 +176,7 @@ locations = [
         'key': "APO",
         'name': "APOPKA",
         'skip': args.skipapopka,
-        'version': 'newapp'
+        'version': 'corsalisapp'
     }
 ]
 

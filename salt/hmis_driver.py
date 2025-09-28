@@ -770,8 +770,8 @@ class Driver:
                 return False
 
         # DOMESTIC VIOLENCE ASSESSMENT
-        domestic_violence_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
-        no_domestic_violence_assessment_projects = []
+        domestic_violence_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
+        no_domestic_violence_assessment_projects = ['HURRICANE']
 
         if project not in domestic_violence_assessment_projects and project not in no_domestic_violence_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO DOMESTIC VIOLENCE ENROLLMENT LIST, FIX AND RERUN")
@@ -950,8 +950,8 @@ class Driver:
 
 
         # TRANSLATION ASSISTANCE ASSESSMENT
-        translation_assistance_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
-        no_translation_assistance_assessment_projects = []
+        translation_assistance_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
+        no_translation_assistance_assessment_projects = ['HURRICANE']
 
         if project not in translation_assistance_assessment_projects and project not in no_translation_assistance_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO LIVING SITUATION ENROLLMENT LIST, FIX AND RERUN")

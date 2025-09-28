@@ -65,9 +65,9 @@ class DailyData:
         self.list_items = list_items
         self.unique_items = set()
         self.filename = filename
-        self.tags = tags
+        self.tags = tags if tags else ""
         self.location = location
-        self.location_version = "newapp" if location in ["ORL2.0", "YYA", "APO"] else "corsalisapp" #TODO: delete "oldapp"
+        self.location_version = "newapp" if location in ["YYA"] else "corsalisapp" #TODO: delete "oldapp"
         if self.location not in self.location_codes:
             print("Not a valid location code, please see README for details")
             quit()
@@ -299,7 +299,7 @@ class DailyData:
         project = self.location
 
         if "hurricane" in self.tags.lower():
-            salt_enrollment_names = ["SALT Outreach-Helene/Milton OC RUSH Street Outreach"]
+            salt_enrollment_names = ["SALT Outreach-Helene/Milton"]
             project = "HURRICANE"
         elif self.location == "SEM":
             salt_enrollment_names = ["SALT Outreach-SEM Street Outreach"]
@@ -750,7 +750,8 @@ class DailyData:
     def __export_manual_entry_data(self):
         # get date from original file and output into new excel sheet
         date = self.__get_date_from_filename(self.filename)
-        output_name = str(date.strftime('%d')) + ' ' + str(date.strftime('%b')) + ' ' + str(date.strftime('%Y') + " - " + self.location)
+        # output_name = str(date.strftime('%d')) + ' ' + str(date.strftime('%b')) + ' ' + str(date.strftime('%Y') + " - " + self.location)
+        output_name = self.location + " - " + str(date.strftime('%d')) + ' ' + str(date.strftime('%b')) + ' ' + str(date.strftime('%Y'))
 
         # format: '01 Jan 2024.xlsx'
         self.df.to_excel(self.output_path + output_name + ".xlsx", sheet_name=output_name)
