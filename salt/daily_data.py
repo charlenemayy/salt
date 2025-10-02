@@ -67,7 +67,7 @@ class DailyData:
         self.filename = filename
         self.tags = tags if tags else ""
         self.location = location
-        self.location_version = "newapp" if location in ["YYA"] else "corsalisapp" #TODO: delete "oldapp"
+        self.location_version = "newapp" if location in [] else "corsalisapp" #TODO: delete "oldapp"
         if self.location not in self.location_codes:
             print("Not a valid location code, please see README for details")
             quit()

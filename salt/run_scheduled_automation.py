@@ -170,7 +170,7 @@ locations = [
         'key': "YYA",
         'name': "YOUTH",
         'skip': args.skipyouth,
-        'version': 'newapp'
+        'version': 'corsalisapp'
     },
     {
         'key': "APO",

@@ -401,6 +401,8 @@ class Driver:
         button_new_enrollment_id = "Renderer_1000000424"
         dropdown_veteran_status_id = "1000006680_Renderer"
         option_no_value = "0"
+        dropdown_sex_at_birth_id = "1000008906_Renderer"
+        option_cpnta_value = "9"
         button_finish_id = "Renderer_SAVE"
         button_save_and_close_id = "Renderer_SAVEFINISH"
         dropdown_project_id = "1000004260_Renderer"
@@ -464,6 +466,23 @@ class Driver:
             print("Couldn't update Veteran Status, field not selected (sometimes doesn't exist)")
             # print(traceback.format_exc())
             # Don't return an error and quit, sometimes this field doesn't exist
+
+        # as of 2025, sex at birth is a new required field and will need to be updated in enrollment
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable((By.ID, dropdown_sex_at_birth_id))
+            )
+            dropdown_sex_at_birth_status = Select(self.browser.find_element(By.ID, dropdown_sex_at_birth_id))
+            selected_option = dropdown_sex_at_birth_status.first_selected_option
+
+            if "SELECT" in selected_option.text:
+                option_prefers_not_to_answer_xpath = ('//select[@id="%s"]//option[@value="%s"]' %(dropdown_sex_at_birth_id, option_cpnta_value))
+                option_prefers_not_to_answer = self.browser.find_element(By.XPATH, option_prefers_not_to_answer_xpath)
+                option_prefers_not_to_answer.click()
+            time.sleep(1)
+        except Exception as e:
+            print("Couldn't update Sex at Birth field, field not selected")
+            print(traceback.format_exc())
 
         button_finish = self.browser.find_element(By.ID, button_finish_id)
         button_finish.click()
