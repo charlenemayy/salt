@@ -65,39 +65,17 @@ class DailyData:
         self.unique_items = set()
         self.filename = filename
         self.location = location
-        self.location_version = "newapp" if location in [] else "corsalisapp" #TODO: delete "oldapp"
+        self.location_version = "corsalisapp" #TODO: every version is on corsalis now until future notice
         if self.location not in self.location_codes:
             print("Not a valid location code, please see README for details")
             quit()
 
-        # TODO: TEMPORARY SOLUTION, DON'T KNOW IF THE FIRST ROW WILL CHANGE LATER ON
-        if self.location_version == "newapp":
-            skipfirstrow = True
+        '''
         if 'Failed_entries' in self.filename:
             skipfirstrow = False
+        '''
 
-        if self.location_version == "newapp" and skipfirstrow == True:
-            self.df = pd.read_excel(io=filename,
-                                 dtype={'': object,
-                                        'DoB': object,
-                                        'Client Name': object,
-                                        'HMIS ID': object,
-                                        'Services': object,
-                                        'ITEMS': object},
-                                        skiprows=[0])
-
-            self.df = self.df.rename(columns={'Services': 'Service', 'ITEMS' : 'Items'})
-        elif self.location_version == "newapp" and skipfirstrow == False:
-            self.df = pd.read_excel(io=filename,
-                                 dtype={'': object,
-                                        'DoB': object,
-                                        'Client Name': object,
-                                        'HMIS ID': object,
-                                        'Services': object,
-                                        'ITEMS': object})
-
-            self.df = self.df.rename(columns={'Services': 'Service', 'ITEMS' : 'Items'})
-        elif self.location_version == "corsalisapp": # TODO: NEWEST APP, ALL LOCATIONS WILL EVENTUALLY TRANSITION TO THIS VERSION
+        if self.location_version == "corsalisapp":
             if 'Failed_entries' in self.filename:
                 self.df = pd.read_excel(io=filename,
                      dtype={'': object,
@@ -115,18 +93,7 @@ class DailyData:
                                             'Services': object,
                                             'ITEMS': object},
                                             skiprows=3)
-        else:
-            self.df = pd.read_excel(io=filename,
-                                 dtype={'': object,
-                                        'DoB': object,
-                                        'Client Name': object,
-                                        'HMIS ID': object,
-                                        'Race': object,
-                                        'Ethnicity': object,
-                                        'Verification of homeless': object,
-                                        'Gross monthly income': object,
-                                        'Service': object,
-                                        'Items': object})
+
         if self.df.empty:
             print("No data to enter into HMIS today, closing now")
             quit()
