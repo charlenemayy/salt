@@ -83,7 +83,9 @@ class DailyData:
                             'Client Name': object,
                             'HMIS ID': object,
                             'Services': object,
-                            'ITEMS': object})
+                            'ITEMS': object,
+                            'Tags': object,
+                            'Locations Visited': object})
             else:
                 self.df = pd.read_csv(filename,
                                      dtype={'': object,
@@ -91,8 +93,10 @@ class DailyData:
                                             'Client Name': object,
                                             'HMIS ID': object,
                                             'Services': object,
-                                            'ITEMS': object},
-                                            skiprows=3)
+                                            'ITEMS': object,
+                                            'Tags': object,
+                                            'Locations Visited': object},
+                                            skiprows=4)
 
         if self.df.empty:
             print("No data to enter into HMIS today, closing now")
@@ -123,16 +127,13 @@ class DailyData:
                 print("Could not login successfully")
                 return
         
+        print(self.df)
         if self.location_version == "corsalisapp":
-            self.__clean_dataframe(['Race', 'Ethnicity', 'Verification of homeless', 'Gross monthly income'], 
-                                    ['', 'HMIS ID', 'Client Name', 'Services', 'ITEMS', 'DoB', 'Tags'])
+            self.__clean_dataframe([], ['HMIS ID', 'Client Name', 'Services', 'ITEMS', 'DoB', 'Tags', 'Locations Visited'])
             self.df.rename(columns={'Services':'Service', 'ITEMS': 'Items'}, inplace=True)
-            
-        else: 
-            self.__clean_dataframe(['Race', 'Ethnicity', 'Verification of homeless', 'Gross monthly income'], 
-                                    ['', 'HMIS ID', 'Client Name', 'Service', 'Items', 'DoB'])
 
         # add new column combining items and services columns
+        print(self.df)
         self.df['Services'] = ""
         for row_index in range(0, len(self.df)):
             # build dictionary datatype for client to pass into automation
