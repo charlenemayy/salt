@@ -12,7 +12,6 @@ parser.add_argument("-m", "--manual", action='store_true') # Outputs a readable 
 parser.add_argument("-l", "--location", help="For specifying a location other than Downtown Orlando")
 parser.add_argument("-li", "--listitems", action='store_true', help="List Unique Items")
 parser.add_argument("-sfr", "--skipfirstrow", action='store_true', help="Skip Header Row in XLSX File")
-parser.add_argument("-t", "--tags", help="temp fix for hurricane and veteran projects")
 
 args = parser.parse_args()
 if not args.filename:
@@ -21,7 +20,7 @@ if not args.filename:
 
 start_time = datetime.datetime.now()
 
-dd = daily_data.DailyData(args.filename, args.automate, args.manual, args.output, args.location, args.listitems, args.skipfirstrow, args.tags)
+dd = daily_data.DailyData(args.filename, args.automate, args.manual, args.output, args.location, args.listitems, args.skipfirstrow)
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     dd.read_and_process_data()

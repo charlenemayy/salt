@@ -57,15 +57,13 @@ class DailyData:
     # Locations
     location_codes = ["BIT", "SEM", "ORL", "ORL2.0", "YYA", "APO"]
 
-    # TODO: HURRICANE - DELETE TAGS ARGUMENT
-    def __init__(self, filename, automate, manual, show_output, location, list_items, skipfirstrow, tags):
+    def __init__(self, filename, automate, manual, show_output, location, list_items, skipfirstrow):
         self.automate = automate
         self.manual = manual
         self.show_output = show_output
         self.list_items = list_items
         self.unique_items = set()
         self.filename = filename
-        self.tags = tags if tags else ""
         self.location = location
         self.location_version = "newapp" if location in [] else "corsalisapp" #TODO: delete "oldapp"
         if self.location not in self.location_codes:
@@ -158,9 +156,9 @@ class DailyData:
                 print("Could not login successfully")
                 return
         
-        if self.location_version == "corsalisapp": #TODO: have finalized column formats so I don't have to translate three times ... ;a;
+        if self.location_version == "corsalisapp":
             self.__clean_dataframe(['Race', 'Ethnicity', 'Verification of homeless', 'Gross monthly income'], 
-                                    ['', 'HMIS ID', 'Client Name', 'Services', 'ITEMS', 'DoB'])
+                                    ['', 'HMIS ID', 'Client Name', 'Services', 'ITEMS', 'DoB', 'Tags'])
             self.df.rename(columns={'Services':'Service', 'ITEMS': 'Items'}, inplace=True)
             
         else: 
@@ -238,10 +236,9 @@ class DailyData:
                 client_dict['Client ID'] = ''
             else:
                 client_dict['Client ID'] = row['HMIS ID']
-            
-            #TODO: HURRICANE
-            # client_dict['Tags'] = row['Tags']
-            client_dict['Tags'] = self.tags #hurricane
+
+            # add 'tags' column to the data to look for clients effected by hurricane, etc.
+            client_dict['Tags'] = row['Tags'] if isinstance(row['Tags'], str) else ""
 
             if self.show_output:
                 print()
@@ -298,7 +295,7 @@ class DailyData:
         # in most cases, PROJECT = LOCATION
         project = self.location
 
-        if "hurricane" in self.tags.lower():
+        if "hurricane" in client_dict["Tags"].lower():
             salt_enrollment_names = ["SALT Outreach-Helene/Milton"]
             project = "HURRICANE"
         elif self.location == "SEM":
