@@ -57,7 +57,7 @@ class DailyData:
     # Locations
     location_codes = ["BIT", "SEM", "ORL", "YYA", "APO"]
 
-    def __init__(self, filename, automate, manual, show_output, location, list_items, skipfirstrow):
+    def __init__(self, filename, automate, manual, show_output, list_items):
         self.automate = automate
         self.manual = manual
         self.show_output = show_output
@@ -65,14 +65,6 @@ class DailyData:
         self.unique_items = set()
         self.filename = filename
         self.export_version = "corsalisapp" #TODO: every version is on corsalis now until future notice
-        if self.location not in self.location_codes:
-            print("Not a valid location code, please see README for details")
-            quit()
-
-        '''
-        if 'Failed_entries' in self.filename:
-            skipfirstrow = False
-        '''
 
         if self.export_version == "corsalisapp":
             if 'Failed_entries' in self.filename:
@@ -126,25 +118,36 @@ class DailyData:
                 print("Could not login successfully")
                 return
         
-        print(self.df)
         if self.export_version == "corsalisapp":
             self.__clean_dataframe([], ['HMIS ID', 'Client Name', 'Services', 'ITEMS', 'DoB', 'Tags', 'Locations Visited'])
             self.df.rename(columns={'Services':'Service', 'ITEMS': 'Items'}, inplace=True)
 
         # add new column combining items and services columns
-        print(self.df)
         self.df['Services'] = ""
+
+        # START ROW PROCESSING
         for row_index in range(0, len(self.df)):
-            # build dictionary datatype for client to pass into automation
             client_dict = {}
             row = self.df.iloc[row_index]
 
-            # IF EMPTY ROW
+            # EMPTY ROW
             if isinstance(row['Client Name'], float):
                 self.failed_df = self.failed_df.drop([row_index])
                 continue
 
-            # rearrange birthday and update row
+            # HMIS ID
+            if isinstance(row['HMIS ID'], float):
+                client_dict['Client ID'] = ''
+            elif isinstance(row['HMIS ID'], int):
+                client_dict['Client ID'] = str(row['HMIS ID']) 
+            elif len(row['HMIS ID']) > 9: # encrypted id
+                client_dict['Client ID'] = ''
+            elif row['HMIS ID'] == '0' or row['HMIS ID'] == '000000' or any(c.isalpha() for c in row['HMIS ID']): #0 or 'no id' (why is this allowed???)
+                client_dict['Client ID'] = ''
+            else:
+                client_dict['Client ID'] = row['HMIS ID']
+
+            # BIRTHDAY - rearrange birthday and update row
             if not isinstance(row['DoB'], float):
                 if isinstance(row['DoB'], datetime):
                     dt = row['DoB'].date()
@@ -159,15 +162,9 @@ class DailyData:
                     month = date[3:6]
                     client_dict['DoB'] = month + day + date[6:(len(date))]
 
-                # # update sheet for readability
                 self.df.at[row_index, 'DoB'] = client_dict['DoB']
-            
-            # get total number of services and items
-            client_dict['Services'] = self.__count_service_and_item_totals(row)
 
-            # update sheet for readability
-            self.df.at[row_index, 'Services'] = self.__clean_dictionary_string(str(client_dict['Services']))
-
+            # CLIENT NAME
             # split name into first and last and strip any trailing whitespaces and nicknames in quotes
             # an entry like "Edward Powell James" -> "Edward Powell, James" (Last, First)
             # no_quotes_name = re.sub('(".*")', "", row['Client Name'])
@@ -193,27 +190,42 @@ class DailyData:
                     client_dict['First Name'] = ''
                 client_dict['Last Name'] = string_list[0]
 
-            if isinstance(row['HMIS ID'], float):
-                client_dict['Client ID'] = ''
-            elif isinstance(row['HMIS ID'], int):
-                client_dict['Client ID'] = str(row['HMIS ID']) 
-            elif len(row['HMIS ID']) > 9: # encrypted id
-                client_dict['Client ID'] = ''
-            elif row['HMIS ID'] == '0' or row['HMIS ID'] == '000000' or any(c.isalpha() for c in row['HMIS ID']): #0 or 'no id' (why is this allowed???)
-                client_dict['Client ID'] = ''
-            else:
-                client_dict['Client ID'] = row['HMIS ID']
-
-            # add 'tags' column to the data to look for clients effected by hurricane, etc.
+            # TAGS - look for clients effected by hurricane, etc.
             client_dict['Tags'] = row['Tags'] if isinstance(row['Tags'], str) else ""
 
+            # LOCATION 
+            # check if multiple locations were visited (not likely) and if so, pick the first one
+            locations_visited = str(row['Locations Visited']).to_lower()
+            if ';' in locations_visited: 
+                location = (locations_visited.split(';')[0])
+            else:
+                location = row['Locations Visited']
+            
+            # check that location is valid
+            valid_locations = {'powerhouse': 'ORL',
+                               'apopka': 'APO',
+                               'bithlo': 'BIT',
+                               'youth and young adult': 'YYA',
+                               'sanford rom': 'SEM'}
+            if location in valid_locations:
+                client_dict['Location'] = valid_locations[location]
+                print(client_dict['Location'])
+            else:
+                self.failed_df = self.failed_df.drop([row_index])
+                continue
+
+            # SERVICES AND ITEMS 
+            client_dict['Services'] = self.__count_service_and_item_totals(row, client_dict['Location'])
+            self.df.at[row_index, 'Services'] = self.__clean_dictionary_string(str(client_dict['Services']))
+
+            # OUTPUT
             if self.show_output:
                 print()
                 print("Final Dictionary Output:")
                 print(client_dict)
                 print("-----------------------------")
 
-            # automate data entry for current client (as represented by the current row)
+            # AUTOMATE ROW
             if self.automate:
                 self.__automate_service_entry(client_dict, row_index)
         # For Loop End
@@ -231,7 +243,7 @@ class DailyData:
             self.__export_manual_entry_data()
 
     def __automate_service_entry(self, client_dict, row_index):
-        print("\nEntering Client:" + client_dict['First Name'], client_dict['Last Name'])
+        print("\nEntering Client:" + client_dict['First Name'], client_dict['Last Name'], "in location ", client_dict['Location'])
         success = False
         # STEP ONE: SEARCH FOR CLIENT
         # Search by ID
@@ -260,18 +272,18 @@ class DailyData:
 
         # set project to enroll client in
         # in most cases, PROJECT = LOCATION
-        project = self.location
+        project = client_dict['Location']
 
         if "hurricane" in client_dict["Tags"].lower():
             salt_enrollment_names = ["SALT Outreach-Helene/Milton"]
             project = "HURRICANE"
-        elif self.location == "SEM":
+        elif client_dict['Location'] == "SEM":
             salt_enrollment_names = ["SALT Outreach-SEM Street Outreach"]
-        elif self.location == "BIT":
+        elif client_dict['Location'] == "BIT":
             salt_enrollment_names = ["SALT Outreach-Bithlo Street Outreach"] 
-        elif self.location == "YYA":
+        elif client_dict['Location'] == "YYA":
             salt_enrollment_names = ["SALT Outreach-YHDP Drop In Center"]
-        elif self.location == "APO":
+        elif client_dict['Location'] == "APO":
             salt_enrollment_names = ["SALT Outreach-Apopka Street Outreach"]
         else:
             salt_enrollment_names = ["SALT Outreach-ORL ESG Street Outreach", 
@@ -282,7 +294,7 @@ class DailyData:
         service_date = str(date.strftime('%m%d%Y'))
 
         # enter client services for client - expects date with no non-numeric values (no dashes, etc.)``
-        success = self.driver.enter_client_services(salt_enrollment_names, service_date, client_dict['Services'], project, self.location)
+        success = self.driver.enter_client_services(salt_enrollment_names, service_date, client_dict['Services'], project, client_dict['Location'])
         if not success:
             print("Client services could not be entered into the system:")
             print(client_dict)
@@ -300,7 +312,7 @@ class DailyData:
 
     # Collect total number of services and items under each category for each client
     # and store all items into a dictionary
-    def __count_service_and_item_totals(self, row):
+    def __count_service_and_item_totals(self, row, location):
 
         shower_item_codes = DailyData.shower_item_codes
         laundry_item_codes = DailyData.laundry_item_codes
@@ -660,7 +672,7 @@ class DailyData:
                 print("Storage: " + str(storage_count))
 
         # Street Outreach
-        if self.location in ["BIT", "SEM", "ORL", "APO"]:
+        if location in ["BIT", "SEM", "ORL", "APO"]:
             street_outreach_count = 1 # every interaction counts for one street outreach
         else:
             street_outreach_count = 0
@@ -704,8 +716,7 @@ class DailyData:
     def __export_manual_entry_data(self):
         # get date from original file and output into new excel sheet
         date = self.__get_date_from_filename(self.filename)
-        # output_name = str(date.strftime('%d')) + ' ' + str(date.strftime('%b')) + ' ' + str(date.strftime('%Y') + " - " + self.location)
-        output_name = self.location + " - " + str(date.strftime('%d')) + ' ' + str(date.strftime('%b')) + ' ' + str(date.strftime('%Y'))
+        output_name = "ALLSALT" + " - " + str(date.strftime('%d')) + ' ' + str(date.strftime('%b')) + ' ' + str(date.strftime('%Y'))
 
         # format: '01 Jan 2024.xlsx'
         self.df.to_excel(self.output_path + output_name + ".xlsx", sheet_name=output_name)
@@ -715,7 +726,7 @@ class DailyData:
     def __export_failed_automation_data(self):
         # get date from original file and output into new excel sheet
         date = self.__get_date_from_filename(self.filename)
-        output_name = (self.location + "_Failed_entries_" 
+        output_name = ("ALLSALT" + "_Failed_entries_" 
                        + str(date.strftime('%m')) + '-' 
                        + str(date.strftime('%d')) + '-' 
                        + str(date.strftime('%Y')))

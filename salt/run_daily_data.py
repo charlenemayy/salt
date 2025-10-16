@@ -6,12 +6,10 @@ import warnings
 # Command Line Arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--filename", help="Filename")
-parser.add_argument("-o", "--output", action='store_true')
 parser.add_argument("-a", "--automate", action='store_true') # Outputs a spreadsheet of unprocessed / dirty entries that can not be entered automatically
 parser.add_argument("-m", "--manual", action='store_true') # Outputs a readable spreadsheet for data to be entered manually
-parser.add_argument("-l", "--location", help="For specifying a location other than Downtown Orlando")
+parser.add_argument("-o", "--output", action='store_true')
 parser.add_argument("-li", "--listitems", action='store_true', help="List Unique Items")
-parser.add_argument("-sfr", "--skipfirstrow", action='store_true', help="Skip Header Row in XLSX File")
 
 args = parser.parse_args()
 if not args.filename:
@@ -20,7 +18,7 @@ if not args.filename:
 
 start_time = datetime.datetime.now()
 
-dd = daily_data.DailyData(args.filename, args.automate, args.manual, args.output, args.location, args.listitems, args.skipfirstrow)
+dd = daily_data.DailyData(args.filename, args.automate, args.manual, args.output, args.listitems)
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     dd.read_and_process_data()
