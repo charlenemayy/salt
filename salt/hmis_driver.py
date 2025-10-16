@@ -412,7 +412,7 @@ class Driver:
         button_save_id = "Renderer_SAVE"
         table_row_family_members_xpath = '//table[@id="RendererSF1ResultSet"]//tbody/tr'
 
-        if project == "ORL" or project == "ORL2.0":
+        if project == "ORL":
             option_salt_enrollment_value = "1217"
         elif project == "SEM":
             option_salt_enrollment_value = "1157"
@@ -685,7 +685,7 @@ class Driver:
             # Enrollment County
             dropdown_county = self.browser.find_element(By.ID, dropdown_county_id)
             if self.__dropdown_empty(dropdown_county):
-                if location == 'ORL' or location == 'BIT' or location == 'YYA' or location == 'ORL2.0' or location == 'APO':
+                if location == 'ORL' or location == 'BIT' or location == 'YYA' or location == 'ORL' or location == 'APO':
                     option_county_id = option_orange_county_id
                 else:
                     option_county_id = option_sem_county_id
@@ -738,7 +738,7 @@ class Driver:
             return False
 
         # BARRIER ASSESSMENT
-        barrier_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
+        barrier_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
         no_barrier_assessment_projects = []
 
         if project not in barrier_assessment_projects and project not in no_barrier_assessment_projects:
@@ -789,7 +789,7 @@ class Driver:
                 return False
 
         # DOMESTIC VIOLENCE ASSESSMENT
-        domestic_violence_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
+        domestic_violence_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO']
         no_domestic_violence_assessment_projects = ['HURRICANE']
 
         if project not in domestic_violence_assessment_projects and project not in no_domestic_violence_assessment_projects:
@@ -829,7 +829,7 @@ class Driver:
                 return False
 
         # INCOME ASSESSMENT
-        income_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
+        income_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
         no_income_assessment_projects = []
 
         if project not in income_assessment_projects and project not in no_income_assessment_projects:
@@ -869,7 +869,7 @@ class Driver:
 
         # RHY ASSESSMENT
         rhy_assessment_projects = ['YYA']
-        no_rhy_assessment_projects = ['BIT', 'SEM', 'ORL', 'ORL2.0', 'APO', 'HURRICANE']
+        no_rhy_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'HURRICANE']
 
         if project not in rhy_assessment_projects and project not in no_rhy_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO RHY ENROLLMENT LIST, FIX AND RERUN")
@@ -902,7 +902,7 @@ class Driver:
 
 
         # CURRENT LIVING SITUATION ASSESSMENT
-        living_situation_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
+        living_situation_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
         no_living_situation_assessment_projects = []
 
         if project not in living_situation_assessment_projects and project not in no_living_situation_assessment_projects:
@@ -934,7 +934,7 @@ class Driver:
 
         # YOUTH EDUCATION ASSESSMENT
         youth_education_assessment_projects = ['YYA']
-        no_youth_education_assessment_projects = ['BIT', 'SEM', 'ORL', 'ORL2.0', 'APO', 'HURRICANE']
+        no_youth_education_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'HURRICANE']
 
         if project not in youth_education_assessment_projects and project not in no_youth_education_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO YOUTH EDUCATION ENROLLMENT LIST, FIX AND RERUN")
@@ -969,7 +969,7 @@ class Driver:
 
 
         # TRANSLATION ASSISTANCE ASSESSMENT
-        translation_assistance_assessment_projects = ['ORL', 'ORL2.0', 'SEM', 'YYA', 'BIT', 'APO']
+        translation_assistance_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO']
         no_translation_assistance_assessment_projects = ['HURRICANE']
 
         if project not in translation_assistance_assessment_projects and project not in no_translation_assistance_assessment_projects:

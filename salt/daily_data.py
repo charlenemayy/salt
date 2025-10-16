@@ -55,7 +55,7 @@ class DailyData:
     street_outreach_item_codes = ['general service']
 
     # Locations
-    location_codes = ["BIT", "SEM", "ORL", "ORL2.0", "YYA", "APO"]
+    location_codes = ["BIT", "SEM", "ORL", "YYA", "APO"]
 
     def __init__(self, filename, automate, manual, show_output, location, list_items, skipfirstrow):
         self.automate = automate
@@ -64,8 +64,7 @@ class DailyData:
         self.list_items = list_items
         self.unique_items = set()
         self.filename = filename
-        self.location = location
-        self.location_version = "corsalisapp" #TODO: every version is on corsalis now until future notice
+        self.export_version = "corsalisapp" #TODO: every version is on corsalis now until future notice
         if self.location not in self.location_codes:
             print("Not a valid location code, please see README for details")
             quit()
@@ -75,7 +74,7 @@ class DailyData:
             skipfirstrow = False
         '''
 
-        if self.location_version == "corsalisapp":
+        if self.export_version == "corsalisapp":
             if 'Failed_entries' in self.filename:
                 self.df = pd.read_excel(io=filename,
                      dtype={'': object,
@@ -128,7 +127,7 @@ class DailyData:
                 return
         
         print(self.df)
-        if self.location_version == "corsalisapp":
+        if self.export_version == "corsalisapp":
             self.__clean_dataframe([], ['HMIS ID', 'Client Name', 'Services', 'ITEMS', 'DoB', 'Tags', 'Locations Visited'])
             self.df.rename(columns={'Services':'Service', 'ITEMS': 'Items'}, inplace=True)
 
@@ -153,7 +152,7 @@ class DailyData:
                 else:
                     date = row['DoB']
 
-                if self.location_version == "newapp" or self.location_version == "corsalisapp":
+                if self.export_version == "corsalisapp":
                     client_dict['DoB'] = date
                 else: # rearrange birthdate if not the new salt app
                     day = date[0:3]
@@ -181,7 +180,7 @@ class DailyData:
             stripped_name = no_special_char_name.strip()
             string_list = stripped_name.rsplit(' ', 1)
 
-            if self.location_version == "newapp" or self.location_version == "corsalisapp":
+            if self.export_version == "corsalisapp":
                 if len(string_list) > 1:
                     client_dict['Last Name'] = string_list[1]
                 else:
@@ -661,7 +660,7 @@ class DailyData:
                 print("Storage: " + str(storage_count))
 
         # Street Outreach
-        if self.location in ["BIT", "SEM", "ORL", "ORL2.0", "APO"]:
+        if self.location in ["BIT", "SEM", "ORL", "APO"]:
             street_outreach_count = 1 # every interaction counts for one street outreach
         else:
             street_outreach_count = 0
@@ -691,7 +690,7 @@ class DailyData:
     
     # Expects to find substring in format MM-DD-YEAR; returns in format MM-DD-YEAR
     def __get_date_from_filename(self, filename): #TODO: subject to change
-        if self.location_version == "corsalisapp" and "Failed_entries" not in filename:
+        if self.export_version == "corsalisapp" and "Failed_entries" not in filename:
             date_string = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", filename)
             og_date = datetime.strptime(date_string[0], '%Y-%m-%d')
             reformat_date = og_date.strftime('%m-%d-%Y')
@@ -699,16 +698,6 @@ class DailyData:
         else:
             date_string = re.search("([0-9]{2}\-[0-9]{2}\-[0-9]{4})", filename)
             date = datetime.strptime(date_string[0], '%m-%d-%Y')
-        '''
-        if self.location == "ORL2.0":
-            date_string = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", filename)
-            original_date = datetime.strptime(date_string[0], '%Y-%m-%d')
-            str_date = original_date.strftime('%m-%d-%Y')
-            date = datetime.strptime(str_date, '%m-%d-%Y')
-        else:
-            date_string = re.search("([0-9]{2}\-[0-9]{2}\-[0-9]{4})", filename)
-            date = datetime.strptime(date_string[0], '%m-%d-%Y')
-        '''
         return date
 
     # Export cleaned and readable spreadsheet for data to be entered manually
