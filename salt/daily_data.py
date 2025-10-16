@@ -41,7 +41,7 @@ class DailyData:
                                  'shaving cream', 'shower cap', 'sunscreen', 'tampon', 'tissue', 'toothbrush', 'toothpaste',
                                  'underpads', 'underwear']
     food_item_codes = ['snack bag', 'coffee', 'meal', 'water', 'lunch plate']
-    bedding_item_codes = ['blankets', 'ear plugs', 'tent']
+    bedding_item_codes = ['blanket', 'ear plugs', 'tent']
     electronics_item_codes = ['power bank', 'batteries', 'earphones']
     homebased_item_codes = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
                                    'sharpies']
@@ -126,13 +126,17 @@ class DailyData:
         self.df['Services'] = ""
 
         # START ROW PROCESSING
-        for row_index in range(0, len(self.df)):
+        row_index = 0
+        while row_index < len(self.df):
             client_dict = {}
             row = self.df.iloc[row_index]
 
             # EMPTY ROW
             if isinstance(row['Client Name'], float):
+                print("Skipping empty row...")
                 self.failed_df = self.failed_df.drop([row_index])
+                self.__export_failed_automation_data()
+                row_index += 1
                 continue
 
             # HMIS ID
@@ -194,12 +198,34 @@ class DailyData:
             client_dict['Tags'] = row['Tags'] if isinstance(row['Tags'], str) else ""
 
             # LOCATION 
-            # check if multiple locations were visited (not likely) and if so, pick the first one
-            locations_visited = str(row['Locations Visited']).to_lower()
+            locations_visited = str(row['Locations Visited']).lower()
+
+            # check if multiple locations were visited
             if ';' in locations_visited: 
-                location = (locations_visited.split(';')[0])
+                print(locations_visited)
+                locations = locations_visited.split(';')
+                for cur_location in locations:
+                    no_special_char_name = re.sub(r'[^a-zA-Z0-9\s]', '', cur_location)
+                    location = no_special_char_name.strip()
+
+                    # add new row in dataframe for each location
+                    new_row_data = {'':'', 'DoB':row['DoB'], 'Client Name': row['Client Name'], 'HMIS ID':row['HMIS ID'], 'Service':row['Service'], 'Items':row['Items'], 'Tags':row['Tags'], 'Locations Visited':location}
+                    new_row = pd.DataFrame([new_row_data])
+
+                    insert_at_index = row_index + 1
+
+                    df_part1 = self.df.iloc[:insert_at_index]
+                    df_part2 = self.df.iloc[insert_at_index:]
+
+                    self.df = pd.concat([df_part1, new_row, df_part2]).reset_index(drop=True)
+                    self.failed_df = self.df.copy()
+                print("Successfully split client's multiple locations into new rows, continuing automation")
+                self.failed_df = self.failed_df.drop([row_index])
+                self.__export_failed_automation_data()
+                row_index += 1
+                continue
             else:
-                location = row['Locations Visited']
+                location = locations_visited
             
             # check that location is valid
             valid_locations = {'powerhouse': 'ORL',
@@ -209,9 +235,11 @@ class DailyData:
                                'sanford rom': 'SEM'}
             if location in valid_locations:
                 client_dict['Location'] = valid_locations[location]
-                print(client_dict['Location'])
             else:
+                print("Skipping invalid location", location)
                 self.failed_df = self.failed_df.drop([row_index])
+                self.__export_failed_automation_data()
+                row_index += 1
                 continue
 
             # SERVICES AND ITEMS 
@@ -228,7 +256,8 @@ class DailyData:
             # AUTOMATE ROW
             if self.automate:
                 self.__automate_service_entry(client_dict, row_index)
-        # For Loop End
+            row_index += 1
+        # While Loop End
         
         # Close the browser
         if self.automate:
@@ -243,7 +272,7 @@ class DailyData:
             self.__export_manual_entry_data()
 
     def __automate_service_entry(self, client_dict, row_index):
-        print("\nEntering Client:" + client_dict['First Name'], client_dict['Last Name'], "in location ", client_dict['Location'])
+        print("\nEntering Client: " + client_dict['First Name'], client_dict['Last Name'], "for", client_dict['Location'], "location")
         success = False
         # STEP ONE: SEARCH FOR CLIENT
         # Search by ID
@@ -337,7 +366,7 @@ class DailyData:
             print("SERVICES")
             print(row['Service'])
             print("ITEMS")
-            print(row_items)
+            print(row['Items'])
             print()
             print("Processed Item Counts:")
 
@@ -731,5 +760,5 @@ class DailyData:
                        + str(date.strftime('%d')) + '-' 
                        + str(date.strftime('%Y')))
 
-        # create sheet for remaining clients that need to be entered and could not be automated
         self.failed_df.to_excel(self.output_path + output_name + ".xlsx", sheet_name = "Failed Entries Report - " + output_name)
+        print("Successfully updated failed entry report")
