@@ -232,7 +232,8 @@ class DailyData:
                                'apopka': 'APO',
                                'bithlo': 'BIT',
                                'youth and young adult': 'YYA',
-                               'sanford rom': 'SEM'}
+                               'sanford rom': 'SEM',
+                               'sanford fumc': 'SEM'}
             if location in valid_locations:
                 client_dict['Location'] = valid_locations[location]
             else:
@@ -268,7 +269,7 @@ class DailyData:
 
         # Make data more readable for manual data entry
         if self.manual:
-            self.__clean_dataframe(['Service', 'Items'], ['', 'HMIS ID', 'Client Name', 'Services', 'DoB'])
+            self.__clean_dataframe(['Service', 'Items'], ['', 'HMIS ID', 'Client Name', 'Services', 'DoB', 'Locations Visited'])
             self.__export_manual_entry_data()
 
     def __automate_service_entry(self, client_dict, row_index):
