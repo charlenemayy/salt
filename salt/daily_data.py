@@ -6,7 +6,7 @@ import json
 
 '''
 Processes the data from the SALT Web App and preps it for Selenium automation 
-in hmis_driver.py. Uses pandas to clean excel data retrieved from SALT 1.0.
+in hmis_driver.py. Uses pandas to clean csv data retrieved from SALT 1.0.
 This will likely be very subject to change as the report style changes with 
 SALT 2.0. 
 '''
@@ -363,7 +363,7 @@ class DailyData:
         street_outreach_item_codes = DailyData.street_outreach_item_codes
         
         if self.show_output:
-            print("Raw Excel Data:")
+            print("Raw CSV Data:")
             print("SERVICES")
             print(row['Service'])
             print("ITEMS")
@@ -748,13 +748,12 @@ class DailyData:
         date = self.__get_date_from_filename(self.filename)
         output_name = "ALLSALT" + " - " + str(date.strftime('%d')) + ' ' + str(date.strftime('%b')) + ' ' + str(date.strftime('%Y'))
 
-        # format: '01 Jan 2024.xlsx'
         self.df.to_excel(self.output_path + output_name + ".xlsx", sheet_name=output_name)
 
     # Export a sheet of the failed automated entries in their original format
     # This way we can keep looping the failed entries and try again
     def __export_failed_automation_data(self):
-        # get date from original file and output into new excel sheet
+        # get date from original file and output into new xlsx sheet
         date = self.__get_date_from_filename(self.filename)
         output_name = ("ALLSALT" + "_Failed_entries_" 
                        + str(date.strftime('%m')) + '-' 

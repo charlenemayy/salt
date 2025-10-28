@@ -46,16 +46,16 @@ def run_daily_data():
         if not os.path.exists(failed_report_path):
             print(f"Failed entry report for {location_name} from SALT cannot be found")
         else:
-            print(f"\nRUNNING: Automating failed {location_name} entries -- Run #{0}".format(i+1))
+            print(f"\nRUNNING: Automating failed {location_name} entries -- Run #{i+1}")
             subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -f {0} -a".format(failed_report_path)], shell=True)
 
             # upload final instance of the failed entry report to drive
             gauth = GoogleAuth() 
             drive = GoogleDrive(gauth)
 
-            gfile = drive.CreateFile({'parents': [{'id': '15sT6EeVyeUsMd_vinRYgSpncosPW7B2s'}], 'title': failed_report_filename}) 
-            gfile.SetContentFile(failed_report_path)
-            gfile.Upload()
+    gfile = drive.CreateFile({'parents': [{'id': '15sT6EeVyeUsMd_vinRYgSpncosPW7B2s'}], 'title': failed_report_filename}) 
+    gfile.SetContentFile(failed_report_path)
+    gfile.Upload()
 
     print(f"SUCCESS: Finished running {location_name} entries!\n")
     return
