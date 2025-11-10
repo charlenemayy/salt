@@ -81,7 +81,7 @@ def run_daily_data():
     gfile.Upload()
 
     print(f"SUCCESS: Finished running {location_name} entries!\n")
-    with open(log_report_path, 'w') as f:
+    with open(log_report_path, 'a') as f:
         f.write(f"SUCCESS: Finished running {location_name} entries!\n")
     return
 
