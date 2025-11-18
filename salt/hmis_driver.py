@@ -105,7 +105,6 @@ class Driver:
                 EC.presence_of_element_located((By.XPATH, label_client_name_xpath))
             )
 
-                
             dashboard_title = self.browser.find_element(By.XPATH, label_client_name_xpath).get_attribute("title")
             dashboard_name = dashboard_title.split("'s")[0]
             dashboard_first_name = dashboard_name.split(" ", 1)[0]
@@ -209,7 +208,8 @@ class Driver:
             # if there still isn't a decent match, check middle name field and different combinations
             print("Checking Middle Name")
             last_names = last_name.split(" ", 1) 
-            names = last_names + [first_name]
+            first_names = first_name.split(" ", 1)
+            names = last_names + first_names
 
             for result in table_search_results:
                 result_first_name = result.find_element(By.XPATH, "td[2]").text
@@ -970,8 +970,8 @@ class Driver:
 
 
         # TRANSLATION ASSISTANCE ASSESSMENT
-        translation_assistance_assessment_projects = ['ORL', 'SEM', 'YYA']
-        no_translation_assistance_assessment_projects = ['HURRICANE', 'APO', 'BIT']
+        translation_assistance_assessment_projects = []
+        no_translation_assistance_assessment_projects = ['HURRICANE', 'APO', 'BIT', 'ORL', 'YYA', 'SEM']
 
         if project not in translation_assistance_assessment_projects and project not in no_translation_assistance_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO LIVING SITUATION ENROLLMENT LIST, FIX AND RERUN")
