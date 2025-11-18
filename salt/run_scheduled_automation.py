@@ -25,7 +25,7 @@ def run_daily_data():
     log_filename = location_key + "_RUNLOG_" + date_str + ".txt"
     log_report_path = output_path + log_filename
 
-    with open(log_report_path, 'w') as f:
+    with open(log_report_path, 'a') as f:
         f.write("RUN LOGS OF CONSOLE OUTPUT FOR " + date_str)
         f.write("\n********************************************************************\n\n")
 
@@ -36,20 +36,20 @@ def run_daily_data():
 
         if not os.path.exists(report_path):
             print("ERROR: Downloaded report for " + location_name + " cannot be found")
-            with open(log_report_path, 'w') as f:
+            with open(log_report_path, 'a') as f:
                 f.write("ERROR: Downloaded report for " + location_name + " cannot be found")
             return
 
         # download pretty xlsx file to upload to drive
         print("RUNNING: Processing simplified report file")
-        with open(log_report_path, 'w') as f:
+        with open(log_report_path, 'a') as f:
             f.write("RUNNING: Processing simplified report file")
             f.write("\n********************************************************************\n\n")
         subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -f {0} -m >> {1}".format(report_path, log_report_path)], shell=True)
 
         # start first run of automation
         print(f"RUNNING: Starting first run of automation for {location_name}")
-        with open(log_report_path, 'w') as f:
+        with open(log_report_path, 'a') as f:
             f.write(f"RUNNING: Starting first run of automation for {location_name}")
             f.write("\n********************************************************************\n\n")
         subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -f {0} -a >> {1}".format(report_path, log_report_path)], shell=True)
@@ -61,11 +61,11 @@ def run_daily_data():
     for i in range(run_count):
         if not os.path.exists(failed_report_path):
             print(f"ERROR: Failed entry report for {location_name} from SALT cannot be found")
-            with open(log_report_path, 'w') as f:
+            with open(log_report_path, 'a') as f:
                 f.write(f"ERROR: Failed entry report for {location_name} from SALT cannot be found")
         else:
             print(f"\nRUNNING: Automating failed {location_name} entries -- Run #{i+1}")
-            with open(log_report_path, 'w') as f:
+            with open(log_report_path, 'a') as f:
                 f.write(f"\nRUNNING: Automating failed {location_name} entries -- Run #{i+1}")
                 f.write("\n********************************************************************\n\n")
 

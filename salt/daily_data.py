@@ -49,7 +49,7 @@ class DailyData:
     lounge_access_item_codes = ['lounge access']
     information_item_codes = ['information']
     device_charging_item_codes = ['device charging']
-    transportation_item_codes = ['transportation']
+    transportation_item_codes = ['transportation', 'bike repair']
     healthcare_item_codes = ['hope and help']
     storage_item_codes = ['storage']
     street_outreach_item_codes = ['general service']

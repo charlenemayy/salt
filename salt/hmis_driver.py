@@ -265,8 +265,9 @@ class Driver:
     # @return: [bool] success / fail
     def enter_client_services(self, viable_enrollment_list, service_date, services_dict, project, location):
         button_add_new_service_id = "Renderer_1000000216"
-        dropdown_enrollment_id = "1000007089_Renderer"
-        dropdown_service_id = "1000007094_Renderer"
+        # dropdown_enrollment_id = "1000007089_Renderer"
+        dropdown_enrollment_id = "82933_Renderer" #TODO: delete deprecated enrollment id
+        dropdown_service_id = "82938_Renderer"
 
         # the corresponding values that serve as different service codes
         # these keys should line up with the ones in service_dict
@@ -290,8 +291,8 @@ class Driver:
                                   'Transportation': '363',
                                   'Street Outreach': '352'}
         
-        field_units_id = "1000007095_Renderer"
-        field_date_id = "1000007086_Renderer"
+        field_units_id = "82939_Renderer"
+        field_date_id = "82930_Renderer"
         button_save_id = "Renderer_SAVE"
 
         # update date of engagement and enroll client if not already enrolled
@@ -619,14 +620,14 @@ class Driver:
         self.__default_last_assessment(button_default_assessment_id)
         self.__wait_until_page_fully_loaded('Universal Data Assessment')
 
-        time.sleep(2)
+        time.sleep(1)
 
         # INITIAL ASSESSMENT
         try:
             WebDriverWait(self.browser, self.wait_time).until(
                 EC.element_to_be_clickable((By.XPATH, date_fields_xpath))
             )
-            time.sleep(5)
+            time.sleep(1)
 
             form_fields = self.browser.find_elements(By.XPATH, '//table[@class="FormPage"]//select[@class="form-control"]')
 
@@ -761,7 +762,7 @@ class Driver:
                 if len(button_default_assessment) > 1:
                     already_assessed = True
                     button_default_assessment[0].click()
-                    time.sleep(3)
+                    time.sleep(1)
 
                 dropdowns_xpath = '//table[@id="RendererResultSet"]//tr/td/select[@class="form-control"]'
                 dropdowns = self.browser.find_elements(By.XPATH, dropdowns_xpath)
@@ -774,14 +775,14 @@ class Driver:
                 # Save
                 button_save_and_close = self.browser.find_element(By.ID, button_save_and_close_id)
                 button_save_and_close.click()
-                time.sleep(2) 
+                time.sleep(1) 
 
                 # depending on the case, it might have to click save and close twice
                 if already_assessed and self.browser.find_elements(By.ID, button_save_and_close_id) > 1:
                     button_save_and_close = self.browser.find_element(By.ID, button_save_and_close_id)
                     button_save_and_close.click()
                     print("clicked again)")
-                    time.sleep(2) 
+                    time.sleep(1) 
 
             except Exception as e:
                 print("Couldn't complete barrier assessment")
@@ -916,7 +917,7 @@ class Driver:
             button_save_id = "Renderer_SAVE"
 
             try:
-                time.sleep(2)
+                time.sleep(1)
                 WebDriverWait(self.browser, self.wait_time).until(
                     EC.element_to_be_clickable((By.ID, dropdown_living_sit_id))
                 )
@@ -969,8 +970,8 @@ class Driver:
 
 
         # TRANSLATION ASSISTANCE ASSESSMENT
-        translation_assistance_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO']
-        no_translation_assistance_assessment_projects = ['HURRICANE']
+        translation_assistance_assessment_projects = ['ORL', 'SEM', 'YYA']
+        no_translation_assistance_assessment_projects = ['HURRICANE', 'APO', 'BIT']
 
         if project not in translation_assistance_assessment_projects and project not in no_translation_assistance_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO LIVING SITUATION ENROLLMENT LIST, FIX AND RERUN")
@@ -1005,12 +1006,12 @@ class Driver:
         self.__wait_until_page_fully_loaded("Finish Page")
 
         button_finish_id = 'FinishButton'
-        time.sleep(5)
+        time.sleep(1)
         try:
             WebDriverWait(self.browser, self.wait_time).until(
                 EC.element_to_be_clickable((By.ID, button_finish_id))
             )
-            time.sleep(3)
+            time.sleep(1)
             button_finish = self.browser.find_element(By.ID, button_finish_id)
             button_finish.click()
         except Exception as e:
