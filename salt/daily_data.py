@@ -202,7 +202,6 @@ class DailyData:
 
             # check if multiple locations were visited
             if ';' in locations_visited: 
-                print(locations_visited)
                 locations = locations_visited.split(';')
                 for cur_location in locations:
                     no_special_char_name = re.sub(r'[^a-zA-Z0-9\s]', '', cur_location)
