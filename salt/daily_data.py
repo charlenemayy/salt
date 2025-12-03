@@ -218,9 +218,8 @@ class DailyData:
                     df_part2 = self.df.iloc[insert_at_index:]
 
                     self.df = pd.concat([df_part1, new_row, df_part2]).reset_index(drop=True)
-                    print(self.df)
                     # self.failed_df = self.df.copy()
-                print("Successfully split client's multiple locations into new rows, continuing automation")
+                print("Successfully split multiple locations into new rows for client:", row['Client Name'], "continuing automation")
                 self.failed_df = self.failed_df.drop([row_index])
                 self.__export_failed_automation_data()
                 row_index += 1
