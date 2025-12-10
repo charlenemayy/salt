@@ -7,6 +7,7 @@ import json
 import argparse
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
+import time
 
 '''
 Automates the entire daily data process, from downloading the report in the SALT Web app to 
@@ -34,10 +35,23 @@ def run_daily_data():
         report_filename = "client_summary_log_" + export_name + "_" + filename_date + "_to_" + filename_date + ".csv"
         report_path = output_path + report_filename
 
+        # download report if it doesn't exist
+        if not os.path.exists(report_path) and args.downloadreport:
+            print(f"RUNNING: Downloading {location_name} report from the Corsalis")
+            subprocess.run(["/usr/bin/python3 salt/run_corsalis_report.py -l \"{0}\" -d {1}".format(location_key, date_str)], shell=True)
+            time.sleep(5)
+
+        # if report path still doesn't exist, end run
         if not os.path.exists(report_path):
             print("ERROR: Downloaded report for " + location_name + " cannot be found")
             with open(log_report_path, 'a') as f:
                 f.write("ERROR: Downloaded report for " + location_name + " cannot be found")
+            return
+
+        # double check that report has been downloaded / exists
+        report_path = output_path + report_filename
+        if not os.path.exists(report_path):
+            print("ERROR: Downloaded report from SALT cannot be found")
             return
 
         # download pretty xlsx file to upload to drive
@@ -107,6 +121,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--date")
 parser.add_argument("-lu", "--leaveunlocked", action="store_true")
 parser.add_argument("-sfr", "--skipfirstrun", action="store_true")
+parser.add_argument("-dr", "--downloadreport", action="store_true")
 
 args = parser.parse_args()
 

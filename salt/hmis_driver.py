@@ -751,6 +751,8 @@ class Driver:
             field_identified_date_id = '90688_Renderer'
             button_save_and_close_id = 'Renderer_SAVEFINISH'
 
+            # added extra wait as it seems to crash here frequently
+            time.sleep(1)
             try:
                 WebDriverWait(self.browser, self.wait_time).until(
                     EC.element_to_be_clickable((By.ID, field_identified_date_id))
