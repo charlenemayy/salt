@@ -90,7 +90,7 @@ class DailyData:
                                             'ITEMS': object,
                                             'Tags': object,
                                             'Locations Visited': object},
-                                            skiprows=4)
+                                            skiprows=5)
 
         if self.df.empty:
             print("No data to enter into HMIS today, closing now")
