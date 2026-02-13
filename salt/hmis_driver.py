@@ -425,8 +425,10 @@ class Driver:
             option_salt_enrollment_value = "1226"
         elif project == "APO":
             option_salt_enrollment_value = "2329"
-        elif project == "HURRICANE":
+        elif project == "HURRICANE_HELENE_MILTON":
             option_salt_enrollment_value = "2334"
+        elif project == "HURRICANE_IAN":
+            option_salt_enrollment_value = "2355"
         else:
             print("IMPORTANT!!! ENROLLMENT CODE FOR NEW LOCATION HAS NOT BEEN ADDED TO THE CODE. PLEASE UPDATE")
             print("Quitting now...")
@@ -534,6 +536,7 @@ class Driver:
             # if the household has multiple members, look for the current client to enroll
             rows_family_members = self.browser.find_elements(By.XPATH, table_row_family_members_xpath)
 
+            '''
             if len(rows_family_members) < 2:
                 field_project_date = self.browser.find_elements(By.XPATH, field_project_date_xpath)[2]
                 field_date_of_engagement = self.browser.find_elements(By.XPATH, field_date_of_engagement_xpath)[4]
@@ -567,6 +570,31 @@ class Driver:
 
                 field_project_date = stored_row.find_elements(By.XPATH, './td/span[@class="DateField input-group"]/input')[2]
                 field_date_of_engagement = stored_row.find_elements(By.XPATH, './td/span[@class="DateField input-group"]/input')[4]
+            '''
+            # regarding above commented code: now must select user in table before continuing enrollment workflow even if the only family member
+            self.browser.switch_to.default_content()
+            label_client_name_xpath = '//span[@aria-label="Name"]'
+            str = self.browser.find_element(By.XPATH, label_client_name_xpath).text
+            client_name = str.split(' ')[1] + ", " + str.split(' ')[0]
+            self.__switch_to_iframe(self.iframe_id)
+
+            stored_row = rows_family_members[0]
+            max_score = 0
+            for row in rows_family_members:
+                row_name = row.find_element(By.XPATH, "./th").text
+                score = self.__similar(row_name, client_name)
+                if score > max_score:
+                    stored_row = row
+                    max_score = score
+
+            option_self = stored_row.find_element(By.XPATH, './/select//option[@value="SL"]')
+            time.sleep(1)
+            self.browser.execute_script("arguments[0].scrollIntoView({block: 'end'});", stored_row.find_element(By.XPATH,'.//select'))
+            time.sleep(1)
+            option_self.click()
+
+            field_project_date = stored_row.find_elements(By.XPATH, './td/span[@class="DateField input-group"]/input')[2]
+            field_date_of_engagement = stored_row.find_elements(By.XPATH, './td/span[@class="DateField input-group"]/input')[4]
 
             time.sleep(2)
             self.browser.execute_script("arguments[0].scrollIntoView({block: 'center'});", field_project_date)
@@ -741,7 +769,7 @@ class Driver:
             return False
 
         # BARRIER ASSESSMENT
-        barrier_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
+        barrier_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
         no_barrier_assessment_projects = []
 
         if project not in barrier_assessment_projects and project not in no_barrier_assessment_projects:
@@ -794,8 +822,8 @@ class Driver:
                 return False
 
         # DOMESTIC VIOLENCE ASSESSMENT
-        domestic_violence_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO']
-        no_domestic_violence_assessment_projects = ['HURRICANE']
+        domestic_violence_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE_IAN']
+        no_domestic_violence_assessment_projects = ['HURRICANE_HELENE_MILTON']
 
         if project not in domestic_violence_assessment_projects and project not in no_domestic_violence_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO DOMESTIC VIOLENCE ENROLLMENT LIST, FIX AND RERUN")
@@ -834,7 +862,7 @@ class Driver:
                 return False
 
         # INCOME ASSESSMENT
-        income_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
+        income_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
         no_income_assessment_projects = []
 
         if project not in income_assessment_projects and project not in no_income_assessment_projects:
@@ -874,7 +902,7 @@ class Driver:
 
         # RHY ASSESSMENT
         rhy_assessment_projects = ['YYA']
-        no_rhy_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'HURRICANE']
+        no_rhy_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'HURRICANE_HELENE_MILTON']
 
         if project not in rhy_assessment_projects and project not in no_rhy_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO RHY ENROLLMENT LIST, FIX AND RERUN")
@@ -907,7 +935,7 @@ class Driver:
 
 
         # CURRENT LIVING SITUATION ASSESSMENT
-        living_situation_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE']
+        living_situation_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE_HELENE_MILTON']
         no_living_situation_assessment_projects = []
 
         if project not in living_situation_assessment_projects and project not in no_living_situation_assessment_projects:
@@ -939,7 +967,7 @@ class Driver:
 
         # YOUTH EDUCATION ASSESSMENT
         youth_education_assessment_projects = ['YYA']
-        no_youth_education_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'HURRICANE']
+        no_youth_education_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'HURRICANE_HELENE_MILTON']
 
         if project not in youth_education_assessment_projects and project not in no_youth_education_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO YOUTH EDUCATION ENROLLMENT LIST, FIX AND RERUN")
@@ -975,7 +1003,7 @@ class Driver:
 
         # TRANSLATION ASSISTANCE ASSESSMENT
         translation_assistance_assessment_projects = []
-        no_translation_assistance_assessment_projects = ['HURRICANE', 'APO', 'BIT', 'ORL', 'YYA', 'SEM']
+        no_translation_assistance_assessment_projects = ['HURRICANE_HELENE_MILTON', 'HURRICANE_IAN', 'APO', 'BIT', 'ORL', 'YYA', 'SEM']
 
         if project not in translation_assistance_assessment_projects and project not in no_translation_assistance_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO LIVING SITUATION ENROLLMENT LIST, FIX AND RERUN")

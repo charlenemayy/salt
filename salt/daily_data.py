@@ -308,8 +308,12 @@ class DailyData:
         project = client_dict['Location']
 
         if "hurricane" in client_dict["Tags"].lower():
-            salt_enrollment_names = ["SALT Outreach-Helene/Milton"]
-            project = "HURRICANE"
+            if "ian" in client_dict["Tags"].lower():
+                salt_enrollment_names = ["SALT Outreach-Ian"]
+                project = "HURRICANE_IAN"
+            else:
+                salt_enrollment_names = ["SALT Outreach-Helene/Milton"]
+                project = "HURRICANE_HELENE_MILTON"
         elif client_dict['Location'] == "SEM":
             salt_enrollment_names = ["SALT Outreach-SEM Street Outreach"]
         elif client_dict['Location'] == "BIT":
@@ -363,6 +367,8 @@ class DailyData:
         transportation_item_codes = DailyData.transportation_item_codes
         healthcare_item_codes = DailyData.healthcare_item_codes
         storage_item_codes = DailyData.storage_item_codes
+        mail_access_item_codes = DailyData.mail_access_item_codes
+        substance_use_treatment_item_codes = DailyData.substance_use_treatment_item_codes
         street_outreach_item_codes = DailyData.street_outreach_item_codes
         
         if self.show_output:
