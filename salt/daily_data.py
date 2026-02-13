@@ -53,6 +53,7 @@ class DailyData:
     healthcare_item_codes = ['hope and help']
     storage_item_codes = ['storage']
     mail_access_item_codes = ['mail']
+    substance_use_treatment_item_codes = ['substance use treatment']
     street_outreach_item_codes = ['general service']
 
 
@@ -718,6 +719,22 @@ class DailyData:
                 items_dict['Mail Access'] = mail_access_count
             if self.show_output:
                 print("Mail Access: " + str(mail_access_count))
+
+        # Substance Use Treatment
+        substance_use_treatment_count = 0
+        for item in substance_use_treatment_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                string_list = row_items.split(item)
+                substring = string_list[1]
+                i = substring.index(':')
+                if substring[i+2].isdigit():
+                    substance_use_treatment_count += int(substring[i+2])
+            if substance_use_treatment_count > 0:
+                items_string = (items_string + "Substance Use Treatment Count: " + str(substance_use_treatment_count) + "\n")
+                items_dict['Substance Use Treatment'] = substance_use_treatment_count
+            if self.show_output:
+                print("Substance Use Treatment: " + str(substance_use_treatment_count))
 
         # Street Outreach
         if location in ["BIT", "SEM", "ORL", "APO"]:

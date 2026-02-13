@@ -290,6 +290,7 @@ class Driver:
                                   'Information': '535',
                                   'Transportation': '363',
                                   'Mail Access': '582',
+                                  'Substance Use Treatment': '444',
                                   'Street Outreach': '352'}
         
         field_units_id = "82939_Renderer"
