@@ -52,7 +52,9 @@ class DailyData:
     transportation_item_codes = ['transportation', 'bike repair']
     healthcare_item_codes = ['hope and help']
     storage_item_codes = ['storage']
+    mail_access_item_codes = ['mail']
     street_outreach_item_codes = ['general service']
+
 
     # Locations
     location_codes = ["BIT", "SEM", "ORL", "YYA", "APO"]
@@ -700,6 +702,22 @@ class DailyData:
                 items_dict['Storage'] = storage_count
             if self.show_output:
                 print("Storage: " + str(storage_count))
+
+        # Mail Access
+        mail_access_count = 0
+        for item in mail_access_item_codes:
+            index = row_items.find(item)
+            if index >= 0:
+                string_list = row_items.split(item)
+                substring = string_list[1]
+                i = substring.index(':')
+                if substring[i+2].isdigit():
+                    mail_access_count += int(substring[i+2])
+            if mail_access_count > 0:
+                items_string = (items_string + "Mail Access Count: " + str(mail_access_count) + "\n")
+                items_dict['Mail Access'] = mail_access_count
+            if self.show_output:
+                print("Mail Access: " + str(mail_access_count))
 
         # Street Outreach
         if location in ["BIT", "SEM", "ORL", "APO"]:
