@@ -902,7 +902,7 @@ class Driver:
 
         # RHY ASSESSMENT
         rhy_assessment_projects = ['YYA']
-        no_rhy_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'HURRICANE_HELENE_MILTON']
+        no_rhy_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
 
         if project not in rhy_assessment_projects and project not in no_rhy_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO RHY ENROLLMENT LIST, FIX AND RERUN")
