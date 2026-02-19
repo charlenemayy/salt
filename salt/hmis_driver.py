@@ -757,7 +757,7 @@ class Driver:
 
             dropdown_covered_by_health_ins = self.browser.find_element(By.ID, dropdown_covered_by_health_ins_id)
             if self.__dropdown_empty(dropdown_covered_by_health_ins):
-                self.__select_assessment_dropdown_option(dropdown_covered_by_health_ins, option_no_id)
+                self.__select_assessment_dropdown_option(dropdown_covered_by_health_ins, option_data_not_collected_id)
 
             # Save
             button_save = self.browser.find_element(By.ID, button_save_id)
@@ -935,7 +935,7 @@ class Driver:
 
 
         # CURRENT LIVING SITUATION ASSESSMENT
-        living_situation_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE_HELENE_MILTON']
+        living_situation_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
         no_living_situation_assessment_projects = []
 
         if project not in living_situation_assessment_projects and project not in no_living_situation_assessment_projects:
@@ -967,7 +967,7 @@ class Driver:
 
         # YOUTH EDUCATION ASSESSMENT
         youth_education_assessment_projects = ['YYA']
-        no_youth_education_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'HURRICANE_HELENE_MILTON']
+        no_youth_education_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
 
         if project not in youth_education_assessment_projects and project not in no_youth_education_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO YOUTH EDUCATION ENROLLMENT LIST, FIX AND RERUN")
