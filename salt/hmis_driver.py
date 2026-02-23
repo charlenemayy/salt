@@ -756,8 +756,11 @@ class Driver:
             self.__wait_until_page_fully_loaded('Universal Data Assessment')
 
             dropdown_covered_by_health_ins = self.browser.find_element(By.ID, dropdown_covered_by_health_ins_id)
+            self.__select_assessment_dropdown_option(dropdown_covered_by_health_ins, option_data_not_collected_id) # feb 22 2026 - current bug with 'no' on insurance
+            '''
             if self.__dropdown_empty(dropdown_covered_by_health_ins):
                 self.__select_assessment_dropdown_option(dropdown_covered_by_health_ins, option_data_not_collected_id)
+            '''
 
             # Save
             button_save = self.browser.find_element(By.ID, button_save_id)
