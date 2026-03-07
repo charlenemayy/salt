@@ -58,7 +58,7 @@ class DailyData:
 
 
     # Locations
-    location_codes = ["BIT", "SEM", "ORL", "YYA", "APO"]
+    location_codes = ["BIT", "SEM", "ORL", "YYA", "APO", "KIS"]
 
     def __init__(self, filename, automate, manual, show_output, list_items):
         self.automate = automate
@@ -236,7 +236,8 @@ class DailyData:
                                'bithlo': 'BIT',
                                'youth and young adult': 'YYA',
                                'sanford rom': 'SEM',
-                               'sanford fumc': 'SEM'}
+                               'sanford fumc': 'SEM',
+                               'kissimmee': 'KIS'}
             if location in valid_locations:
                 client_dict['Location'] = valid_locations[location]
             else:
@@ -322,6 +323,8 @@ class DailyData:
             salt_enrollment_names = ["SALT Outreach-YHDP Drop In Center"]
         elif client_dict['Location'] == "APO":
             salt_enrollment_names = ["SALT Outreach-Apopka Street Outreach"]
+        elif client_dict['Location'] == "KIS":
+            salt_enrollment_names = ["SALT Outreach-Kissimmee"]
         else:
             salt_enrollment_names = ["SALT Outreach-ORL ESG Street Outreach", 
                                      "SALT Outreach-ORN ESG-CV Street Outreach",
@@ -743,7 +746,7 @@ class DailyData:
                 print("Substance Use Treatment: " + str(substance_use_treatment_count))
 
         # Street Outreach
-        if location in ["BIT", "SEM", "ORL", "APO"]:
+        if location in ["BIT", "SEM", "ORL", "APO", "KIS"]:
             street_outreach_count = 1 # every interaction counts for one street outreach
         else:
             street_outreach_count = 0

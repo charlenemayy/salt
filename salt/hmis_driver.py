@@ -425,6 +425,8 @@ class Driver:
             option_salt_enrollment_value = "1226"
         elif project == "APO":
             option_salt_enrollment_value = "2329"
+        elif project == "KIS":
+            option_salt_enrollment_value = "2359"
         elif project == "HURRICANE_HELENE_MILTON":
             option_salt_enrollment_value = "2334"
         elif project == "HURRICANE_IAN":
@@ -641,6 +643,7 @@ class Driver:
         option_no_id = '0'
         option_orange_county_id = '1'
         option_sem_county_id = '2'
+        option_osceola_county_id = '3'
         option_place_not_meant_for_habitation_id = '16'
         option_client_prefers_not_to_answer_id = '9'
         button_save_id = 'Renderer_SAVE'
@@ -718,6 +721,8 @@ class Driver:
             if self.__dropdown_empty(dropdown_county):
                 if location == 'ORL' or location == 'BIT' or location == 'YYA' or location == 'ORL' or location == 'APO':
                     option_county_id = option_orange_county_id
+                elif location == 'KIS':
+                    option_county_id = option_osceola_county_id
                 else:
                     option_county_id = option_sem_county_id
                 self.__select_assessment_dropdown_option(dropdown_county, option_county_id)
@@ -772,7 +777,7 @@ class Driver:
             return False
 
         # BARRIER ASSESSMENT
-        barrier_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
+        barrier_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'KIS', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
         no_barrier_assessment_projects = []
 
         if project not in barrier_assessment_projects and project not in no_barrier_assessment_projects:
@@ -825,7 +830,7 @@ class Driver:
                 return False
 
         # DOMESTIC VIOLENCE ASSESSMENT
-        domestic_violence_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE_IAN']
+        domestic_violence_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'KIS', 'HURRICANE_IAN']
         no_domestic_violence_assessment_projects = ['HURRICANE_HELENE_MILTON']
 
         if project not in domestic_violence_assessment_projects and project not in no_domestic_violence_assessment_projects:
@@ -865,7 +870,7 @@ class Driver:
                 return False
 
         # INCOME ASSESSMENT
-        income_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
+        income_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'KIS', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
         no_income_assessment_projects = []
 
         if project not in income_assessment_projects and project not in no_income_assessment_projects:
@@ -905,7 +910,7 @@ class Driver:
 
         # RHY ASSESSMENT
         rhy_assessment_projects = ['YYA']
-        no_rhy_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
+        no_rhy_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'KIS', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
 
         if project not in rhy_assessment_projects and project not in no_rhy_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO RHY ENROLLMENT LIST, FIX AND RERUN")
@@ -938,7 +943,7 @@ class Driver:
 
 
         # CURRENT LIVING SITUATION ASSESSMENT
-        living_situation_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
+        living_situation_assessment_projects = ['ORL', 'SEM', 'YYA', 'BIT', 'APO', 'KIS', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
         no_living_situation_assessment_projects = []
 
         if project not in living_situation_assessment_projects and project not in no_living_situation_assessment_projects:
@@ -970,7 +975,7 @@ class Driver:
 
         # YOUTH EDUCATION ASSESSMENT
         youth_education_assessment_projects = ['YYA']
-        no_youth_education_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
+        no_youth_education_assessment_projects = ['BIT', 'SEM', 'ORL', 'APO', 'KIS', 'HURRICANE_HELENE_MILTON', 'HURRICANE_IAN']
 
         if project not in youth_education_assessment_projects and project not in no_youth_education_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO YOUTH EDUCATION ENROLLMENT LIST, FIX AND RERUN")
@@ -1006,7 +1011,7 @@ class Driver:
 
         # TRANSLATION ASSISTANCE ASSESSMENT
         translation_assistance_assessment_projects = []
-        no_translation_assistance_assessment_projects = ['HURRICANE_HELENE_MILTON', 'HURRICANE_IAN', 'APO', 'BIT', 'ORL', 'YYA', 'SEM']
+        no_translation_assistance_assessment_projects = ['HURRICANE_HELENE_MILTON', 'HURRICANE_IAN', 'KIS', 'APO', 'BIT', 'ORL', 'YYA', 'SEM']
 
         if project not in translation_assistance_assessment_projects and project not in no_translation_assistance_assessment_projects:
             print("DID NOT ADD NEW PROJECT TO LIVING SITUATION ENROLLMENT LIST, FIX AND RERUN")
