@@ -29,7 +29,6 @@ class DailyData:
     shower_item_codes = ['shower']
     laundry_item_codes = ['laundry']
     case_management_item_codes = ['case management']
-    charging_item_codes = ['charging', 'charge']
     clothing_item_codes = ['belt', 'bra', 'boxer', 'backpack', 'hat', 'jewelry', 'pants', 'purse', 'shirt', 'shoes', 
                                  'socks', 'sunglasses', 'ties', 'underwear', 'gloves', 'hand warmer', 'phone case', 'glasses',
                                  'scarf', 'suitcase', 'clothing', 'bottom', 'top', 'black bags']
@@ -48,7 +47,7 @@ class DailyData:
     petgoods_item_codes = ['cat food', 'dog food']
     lounge_access_item_codes = ['lounge access']
     information_item_codes = ['information']
-    device_charging_item_codes = ['device charging']
+    device_charging_item_codes = ['charging']
     transportation_item_codes = ['transportation', 'bike repair']
     healthcare_item_codes = ['hope and help']
     storage_item_codes = ['storage']
@@ -750,20 +749,21 @@ class DailyData:
             street_outreach_count = 1 # every interaction counts for one street outreach
         else:
             street_outreach_count = 0
-        for item in street_outreach_item_codes:
-            index = row_items.find(item)
-            if index >= 0:
-                string_list = row_items.split(item)
-                substring = string_list[1]
+        if location not in ["YYA"]: # ignore for Youth, possibly other locations
+            for item in street_outreach_item_codes:
+                index = row_items.find(item)
+                if index >= 0:
+                    string_list = row_items.split(item)
+                    substring = string_list[1]
 
-                i = substring.index(':')
-                if substring[i+2].isdigit():
-                    street_outreach_count += int(substring[i+2])
-            if street_outreach_count > 0:
-                items_string = (items_string + "Street Outreach Count: " + str(street_outreach_count) + "\n")
-                items_dict['Street Outreach'] = street_outreach_count
-            if self.show_output:
-                print("Street Outreach: " + str(street_outreach_count))
+                    i = substring.index(':')
+                    if substring[i+2].isdigit():
+                        street_outreach_count += int(substring[i+2])
+                if street_outreach_count > 0:
+                    items_string = (items_string + "Street Outreach Count: " + str(street_outreach_count) + "\n")
+                    items_dict['Street Outreach'] = street_outreach_count
+                if self.show_output:
+                    print("Street Outreach: " + str(street_outreach_count))
 
         return items_dict
     
