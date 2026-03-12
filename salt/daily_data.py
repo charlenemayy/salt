@@ -138,7 +138,6 @@ class DailyData:
                 print("Skipping empty row...")
                 self.failed_df = self.failed_df.drop([row_index])
                 self.__export_failed_automation_data()
-                row_index += 1
                 continue
 
             # HMIS ID
@@ -205,6 +204,8 @@ class DailyData:
             # check if multiple locations were visited
             if ';' in locations_visited: 
                 locations = locations_visited.split(';')
+                self.df = self.df.drop([row_index])
+                self.failed_df = self.failed_df.drop([row_index])
                 for cur_location in locations:
                     no_special_char_name = re.sub(r'[^a-zA-Z0-9\s]', '', cur_location)
                     location = no_special_char_name.strip()
@@ -214,17 +215,17 @@ class DailyData:
                     # new_row_data = {'':'', 'DoB':row['DoB'], 'Client Name': row['Client Name'], 'HMIS ID':row['HMIS ID'], 'Services':row['Service'], 'ITEMS':row['Items'], 'Tags':row['Tags'], 'Locations Visited':location}
                     new_row = pd.DataFrame([new_row_data])
 
-                    insert_at_index = row_index + 1
+                    insert_at_index = row_index
 
                     df_part1 = self.df.iloc[:insert_at_index]
                     df_part2 = self.df.iloc[insert_at_index:]
-
                     self.df = pd.concat([df_part1, new_row, df_part2]).reset_index(drop=True)
+
+                    failed_df_part1 = self.failed_df.iloc[:insert_at_index]
+                    failed_df_part2 = self.failed_df.iloc[insert_at_index:]
+                    self.failed_df = pd.concat([failed_df_part1, new_row, failed_df_part2]).reset_index(drop=True)
                     # self.failed_df = self.df.copy()
                 print("Successfully split multiple locations into new rows for client:", row['Client Name'], "continuing automation")
-                self.failed_df = self.failed_df.drop([row_index])
-                self.__export_failed_automation_data()
-                row_index += 1
                 continue
             else:
                 location = locations_visited
@@ -241,9 +242,9 @@ class DailyData:
                 client_dict['Location'] = valid_locations[location]
             else:
                 print("Skipping invalid location", location)
-                self.failed_df = self.failed_df.drop([row_index])
+                self.df = self.df.drop([row_index]).reset_index(drop=True)
+                self.failed_df = self.failed_df.drop([row_index]).reset_index(drop=True)
                 self.__export_failed_automation_data()
-                row_index += 1
                 continue
 
             # SERVICES AND ITEMS 
