@@ -86,13 +86,17 @@ def run_daily_data():
             subprocess.run(["/usr/bin/python3 salt/run_daily_data.py -f {0} -a >> {1}".format(failed_report_path, log_report_path)], shell=True)
 
             # upload final instance of the failed entry report to drive
+            '''
             gauth = GoogleAuth() 
             drive = GoogleDrive(gauth)
+            '''
 
     # upload failed report path to google drive
+    '''
     gfile = drive.CreateFile({'parents': [{'id': '15sT6EeVyeUsMd_vinRYgSpncosPW7B2s'}], 'title': failed_report_filename}) 
     gfile.SetContentFile(failed_report_path)
     gfile.Upload()
+    '''
 
     print(f"SUCCESS: Finished running {location_name} entries!\n")
     with open(log_report_path, 'a') as f:
