@@ -278,6 +278,7 @@ class DailyData:
 
     def __automate_service_entry(self, client_dict, row_index):
         print("\nEntering Client: " + client_dict['First Name'], client_dict['Last Name'], "for", client_dict['Location'], "location", "(" + client_dict['Tags'] + ")")
+        print("Current Row Index: " + row_index)
         success = False
         # STEP ONE: SEARCH FOR CLIENT
         # Search by ID
