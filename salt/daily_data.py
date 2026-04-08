@@ -28,7 +28,7 @@ class DailyData:
     # Global Item Keys
     shower_item_codes = ['shower']
     laundry_item_codes = ['laundry']
-    case_management_item_codes = ['case management']
+    case_management_item_codes = []
     clothing_item_codes = ['belt', 'bra', 'boxer', 'backpack', 'hat', 'jewelry', 'pants', 'purse', 'shirt', 'shoes', 
                                  'socks', 'sunglasses', 'ties', 'underwear', 'gloves', 'hand warmer', 'phone case', 'glasses',
                                  'scarf', 'suitcase', 'clothing', 'bottom', 'top', 'black bags']
