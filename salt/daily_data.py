@@ -204,7 +204,6 @@ class DailyData:
             # check if multiple locations were visited
             if ';' in locations_visited: 
                 locations = locations_visited.split(';')
-                self.df = self.df.drop([row_index])
                 self.failed_df = self.failed_df.drop([row_index])
                 for cur_location in locations:
                     no_special_char_name = re.sub(r'[^a-zA-Z0-9\s]', '', cur_location)
@@ -216,10 +215,6 @@ class DailyData:
                     new_row = pd.DataFrame([new_row_data])
 
                     insert_at_index = row_index
-
-                    df_part1 = self.df.iloc[:insert_at_index]
-                    df_part2 = self.df.iloc[insert_at_index:]
-                    self.df = pd.concat([df_part1, new_row, df_part2]).reset_index(drop=True)
 
                     failed_df_part1 = self.failed_df.iloc[:insert_at_index]
                     failed_df_part2 = self.failed_df.iloc[insert_at_index:]
@@ -242,7 +237,6 @@ class DailyData:
                 client_dict['Location'] = valid_locations[location]
             else:
                 print("Skipping invalid location", location)
-                self.df = self.df.drop([row_index]).reset_index(drop=True)
                 self.failed_df = self.failed_df.drop([row_index]).reset_index(drop=True)
                 self.__export_failed_automation_data()
                 continue
