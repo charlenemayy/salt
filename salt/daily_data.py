@@ -237,7 +237,7 @@ class DailyData:
                 client_dict['Location'] = valid_locations[location]
             else:
                 print("Skipping invalid location", location)
-                self.failed_df = self.failed_df.drop([row_index]).reset_index(drop=True)
+                self.failed_df = self.failed_df.drop([row_index])
                 self.__export_failed_automation_data()
                 continue
 
