@@ -138,6 +138,7 @@ class DailyData:
                 print("Skipping empty row...")
                 self.failed_df = self.failed_df.drop([row_index])
                 self.__export_failed_automation_data()
+                row_index += 1
                 continue
 
             # HMIS ID
@@ -218,9 +219,10 @@ class DailyData:
 
                     failed_df_part1 = self.failed_df.iloc[:insert_at_index]
                     failed_df_part2 = self.failed_df.iloc[insert_at_index:]
-                    self.failed_df = pd.concat([failed_df_part1, new_row, failed_df_part2]).reset_index(drop=True)
+                    self.failed_df = pd.concat([failed_df_part1, new_row, failed_df_part2])
                     # self.failed_df = self.df.copy()
                 print("Successfully split multiple locations into new rows for client:", row['Client Name'], "continuing automation")
+                row_index += 1
                 continue
             else:
                 location = locations_visited
@@ -239,6 +241,7 @@ class DailyData:
                 print("Skipping invalid location", location)
                 self.failed_df = self.failed_df.drop([row_index])
                 self.__export_failed_automation_data()
+                row_index += 1
                 continue
 
             # SERVICES AND ITEMS 
