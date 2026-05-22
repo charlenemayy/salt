@@ -310,9 +310,12 @@ class DailyData:
             if "ian" in client_dict["Tags"].lower():
                 salt_enrollment_names = ["SALT Outreach-Ian"]
                 project = "HURRICANE_IAN"
+            '''
+            COMMENTING OUT HURRICANE MILTON AS PROJECT IS FULL
             else:
                 salt_enrollment_names = ["SALT Outreach-Helene/Milton"]
                 project = "HURRICANE_HELENE_MILTON"
+            '''
         elif client_dict['Location'] == "SEM":
             salt_enrollment_names = ["SALT Outreach-SEM Street Outreach"]
         elif client_dict['Location'] == "BIT":
