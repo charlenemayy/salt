@@ -306,14 +306,17 @@ class DailyData:
         # in most cases, PROJECT = LOCATION
         project = client_dict['Location']
 
-        if "hurricane" in client_dict["Tags"].lower():
-            if "ian" in client_dict["Tags"].lower():
-                salt_enrollment_names = ["SALT Outreach-Ian"]
-                project = "HURRICANE_IAN"
-            # COMMENTING OUT HURRICANE MILTON AS PROJECT IS FULL
+        # COMMENTING OUT HURRICANE MILTON AS PROJECT IS FULL
+        # if "hurricane" in client_dict["Tags"].lower():
+            # if "ian" in client_dict["Tags"].lower():
+                # salt_enrollment_names = ["SALT Outreach-Ian"]
+                # project = "HURRICANE_IAN"
             # else:
                 # salt_enrollment_names = ["SALT Outreach-Helene/Milton"]
                 # project = "HURRICANE_HELENE_MILTON"
+        if "hurricane" in client_dict["Tags"].lower() and "ian" in client_dict["Tags"].lower():
+            salt_enrollment_names = ["SALT Outreach-Ian"]
+            project = "HURRICANE_IAN"
         elif client_dict['Location'] == "SEM":
             salt_enrollment_names = ["SALT Outreach-SEM Street Outreach"]
         elif client_dict['Location'] == "BIT":
