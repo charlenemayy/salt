@@ -408,10 +408,10 @@ class DailyData:
         # Shower
         shower_count = 0
         for item in shower_item_codes:
-            shower_count = 1 # OVERRIDING SHOWER COUNT TO ACCOUNT FOR ENTRY ERRORS
-            '''
             index = row_items.find(item)
             if index >= 0:
+                shower_count = 1 # OVERRIDING SHOWER COUNT TO ACCOUNT FOR ENTRY ERRORS
+                '''
                 # find num value attributed to item code
                 string_list = row_items.split(item, 1) # maxsplit: 1
                 substring = string_list[1]
@@ -420,7 +420,7 @@ class DailyData:
                 i = substring.index(':')
                 if substring[i+2].isdigit():
                     shower_count += int(substring[i+2])
-            '''
+                '''
         if shower_count > 0:
             items_string = (items_string + "Shower: " + str(shower_count) + "\n")
             items_dict['Shower'] = shower_count
