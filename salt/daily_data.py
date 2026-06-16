@@ -45,7 +45,7 @@ class DailyData:
     homebased_item_codes = ['highlighters', 'printing paper', 'reusable bag', 'reusable container', 'scotch tape',
                                    'sharpies']
     petgoods_item_codes = ['cat food', 'dog food']
-    lounge_access_item_codes = ['lounge access']
+    lounge_access_item_codes = ['lounge access', 'cooling center']
     information_item_codes = ['information']
     device_charging_item_codes = ['charging']
     transportation_item_codes = ['transportation', 'bike repair']
