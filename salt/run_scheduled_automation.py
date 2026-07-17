@@ -18,7 +18,7 @@ This was developed based on my personal environment in MacOS and will not work i
 '''
 
 def run_daily_data():
-    export_name = "Apopka" #TODO: eventually change to 'all_locations'
+    export_name = "All_Locations" #TODO: eventually change to 'all_locations'
     location_name = "All SALT Locations"
     location_key = "ALLSALT"
 
