@@ -349,8 +349,11 @@ class Driver:
                                 break
                 # enroll the client and try again, enrollment should be found in recursive call
                 if not enrollment_found:
-                    print("Client is not enrolled -- Enrolling client")
                     self.navigate_to_client_dashboard()
+                    # For now, all YYA clients will need to be enrolled manually
+                    if project == "YYA":
+                        return False
+                    print("Client is not enrolled -- Enrolling client")
                     if not self.enroll_client(service_date, project, location):
                         print("Couldn't enroll client successfully -- Canceling")
                         self.cancel_intake_workflow()
@@ -649,6 +652,7 @@ class Driver:
         button_save_id = 'Renderer_SAVE'
         button_default_assessment_id = 'B1000006792_Renderer'
 
+        time.sleep(2)
 
         self.__default_last_assessment(button_default_assessment_id)
         self.__wait_until_page_fully_loaded('Universal Data Assessment')
@@ -691,8 +695,11 @@ class Driver:
                 button_default_assessment_id = 'B1000006761_Renderer'
                 dropdown_covered_by_health_ins_id = '1000006802_Renderer'
 
+            # CLIENT INFORMATION
+            dropdown_disabling_condition = self.browser.find_element(By.ID, dropdown_disabling_condition_id)
+            if self.__dropdown_empty(dropdown_disabling_condition):
+                self.__select_assessment_dropdown_option(dropdown_disabling_condition, option_no_id)
 
-            # Client Information
             field_assessment_date = self.browser.find_element(By.ID, field_assessment_date_id)
             if service_date:
                 field_assessment_date.click()
@@ -704,10 +711,6 @@ class Driver:
                 if not assess_date or assess_date == "": 
                     assess_date = str(datetime.today().strftime('%m%d%Y'))
                 service_date = assess_date.replace("/", "")
-
-            dropdown_disabling_condition = self.browser.find_element(By.ID, dropdown_disabling_condition_id)
-            if self.__dropdown_empty(dropdown_disabling_condition):
-                self.__select_assessment_dropdown_option(dropdown_disabling_condition, option_no_id)
 
             # Enrollment CoC
             option_orange_coc_id = '77'
@@ -755,6 +758,7 @@ class Driver:
             dropdown_months_homeless = self.browser.find_element(By.ID, dropdown_months_homeless_id)
             if self.__dropdown_empty(dropdown_months_homeless):
                 self.__select_assessment_dropdown_option(dropdown_months_homeless, option_client_prefers_not_to_answer_id)
+
 
             # Insurance Status
             self.__default_last_assessment(button_default_assessment_id)
@@ -1082,7 +1086,7 @@ class Driver:
             )
             button_default_assessment = self.browser.find_element(By.ID, button_default_assessment_id)
             button_default_assessment.click()
-            time.sleep(3)
+            time.sleep(2)
         except Exception as e:
             # sometimes this button doesn't exist, just skip over
             print("Couldn't click last assessment button -- ignoring")
@@ -1274,7 +1278,7 @@ class Driver:
     # Mimics logic of 'update_date_of_engagement', 'navigate_to_edit_enrollment' and 'open_link_in_enrollment_action_menu'
     #   special case scenario - fix for error reports from HSN
     #       # @return: [bool] success / fail
-    def fix_enrollment_entry_assessment(self, enrollment_id, viable_enrollment_list, entry_date):
+    def fix_enrollment_entry_assessment(self, enrollment_id, viable_enrollment_list, entry_date, project, location):
         table_row_family_members_xpath = '//table[@id="RendererResultSet"]//tbody/tr'
 
         self.navigate_to_client_dashboard()
@@ -1328,13 +1332,14 @@ class Driver:
             )
             button_save = self.browser.find_element(By.ID, button_save_id)
             button_save.click()
+            print("clicked!")
             time.sleep(1)
         except Exception as e:
             print("Couldn't save 'Program Enrollment' section of Intake")
             print(traceback.format_exc())
             return False
         
-        return self.__assess_client(None, 'ORL')
+        return self.__assess_client(None, project, location)
 
     '''
     ------------------------ NAVIGATION ------------------------
@@ -1515,7 +1520,8 @@ class Driver:
                         break
                 # if row contains enrollment data
                 else:
-                    label_enrollment_name = row.find_element(By.XPATH, './td[7]').text
+                    label_enrollment_name = row.find_element(By.XPATH, './td[6]').text
+                    print(label_enrollment_name, viable_enrollment_list)
                     for enrollment, ranking in enrollment_ranking_dict.items():
                         if enrollment in label_enrollment_name and ranking < stored_ranking:
                             # ranking indicates that we'd like to update newer enrollments over older ones
@@ -1527,7 +1533,7 @@ class Driver:
             # click the best match
             if stored_ranking < len(enrollment_ranking_dict):
                 menu_action = stored_row.find_element(By.CLASS_NAME, 'action-menu')
-                print(stored_row.find_element(By.XPATH, './td[7]').text)
+                print(stored_row.find_element(By.XPATH, './td[6]').text)
                 self.browser.execute_script("arguments[0].scrollIntoView();", menu_action)
                 time.sleep(2)
             else:

@@ -32,7 +32,7 @@ class ErrorFixes:
         self.output_path = settings["output_path"]
 
     # Parse each row and process client data
-    def read_and_process_data(self):
+    def read_and_process_data(self, project, location):
         self.driver = hmis_driver.Driver()
         self.driver.open_clienttrack()
         if not self.driver.login_clienttrack(self.username, self.password):
@@ -67,11 +67,11 @@ class ErrorFixes:
             client_dict['Issue'] = row['Issue']
             client_dict['Project Name'] = row['Project Name']
 
-            self.__automate_enrollment_entry_assessment_fix(client_dict, row_index)
+            self.__automate_enrollment_entry_assessment_fix(client_dict, row_index, project, location)
 
         # For Loop End
 
-    def __automate_enrollment_entry_assessment_fix(self, client_dict, row_index):
+    def __automate_enrollment_entry_assessment_fix(self, client_dict, row_index, project, location):
         print("\nFixing Error for Client:" + client_dict['Client ID'])
         success = False
         # STEP ONE: SEARCH FOR CLIENT
@@ -89,7 +89,7 @@ class ErrorFixes:
         
         # STEP TWO: START WORKFLOW
         viable_enrollment_list = [client_dict['Project Name']]
-        success = self.driver.fix_enrollment_entry_assessment(client_dict['Project ID'], viable_enrollment_list, client_dict['Entry Date'])
+        success = self.driver.fix_enrollment_entry_assessment(client_dict['Project ID'], viable_enrollment_list, client_dict['Entry Date'], project, location)
         if not success:
             print("Enrollment entry assessment could not be fixed")
             print(client_dict)
