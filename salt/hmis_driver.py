@@ -45,16 +45,40 @@ class Driver:
         self.browser.close()
 
     def login_clienttrack(self, username, password):
-        field_username = self.browser.find_element(By.ID, "UserName")
-        field_password = self.browser.find_element(By.ID, "Password")
+        field_username_id = "username"
+        field_password_id = "password"
+
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable((By.ID, field_username_id))
+            )
+            field_username = self.browser.find_element(By.ID, field_username_id)
+            field_username.click()
+            field_username.send_keys(username)
+            time.sleep(1)
+            field_username.send_keys(Keys.RETURN)
+        except Exception as e:
+            print("Couldn't find 'Username' field")
+            print(traceback.format_exc())
+            return False
 
         time.sleep(1)
-        field_username.send_keys(username)
-        time.sleep(1)
-        field_password.send_keys(password)
-        time.sleep(1)
-        field_password.send_keys(Keys.RETURN)
-        time.sleep(1)
+
+        try:
+            WebDriverWait(self.browser, self.wait_time).until(
+                EC.element_to_be_clickable((By.ID, field_password_id))
+            )
+            field_password = self.browser.find_element(By.ID, field_password_id)
+            field_password.click()
+            field_password.send_keys(password)
+
+            time.sleep(1)
+            field_password.send_keys(Keys.RETURN)
+        except Exception as e:
+            print("Couldn't find 'Username' field")
+            print(traceback.format_exc())
+            return False
+
         return True
     
     '''
