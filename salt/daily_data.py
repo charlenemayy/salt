@@ -496,7 +496,7 @@ class DailyData:
                 i = substring.index(':')
                 if substring[i+2].isdigit():
                     if item == "hygiene bag":
-                        grooming_count += int(substring[i+2])*10
+                        grooming_count += int(substring[i+2])*5
                     else:
                         grooming_count += int(substring[i+2])
         # add body wash + shampoo for each shower
