@@ -15,7 +15,7 @@ class DailyData:
     service_item_codes_orl = ['Shower', 'Laundry']
     clothing_item_codes_orl = ['top', 'btm', 'und', 'sks', 'sho', 'bxr', 'diabetic socks', 'backpacks', 'belts']
     grooming_item_codes_orl = ['ddr', 'tbr', 'tps', 'razors', 'adult depends', 'band aid', 'tampons', 'bar soap', 
-                               'deodorant', 'qtips', 'hygiene bag', 'comb', 'nail clippers', 'q-tips', 'conditioner',
+                               'deodorant', 'qtips', 'hygiene bag', 'miles to go bags', 'comb', 'nail clippers', 'q-tips', 'conditioner',
                                'chapstick']
     food_item_codes_orl = ['sbg']
     bedding_item_codes_orl = ['blankets']
@@ -497,6 +497,8 @@ class DailyData:
                 if substring[i+2].isdigit():
                     if item == "hygiene bag":
                         grooming_count += int(substring[i+2])*5
+                    elif item == "miles to go bag":
+                        grooming_count += int(substring[i+2])*14
                     else:
                         grooming_count += int(substring[i+2])
         # add body wash + shampoo for each shower
